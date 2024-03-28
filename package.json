@@ -12,6 +12,7 @@
     "next": "14.0.4",
     "postgres": "^3.4.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-jss": "^10.10.0"
   }
 }
