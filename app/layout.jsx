@@ -1,6 +1,4 @@
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import Registry from './registry'
 
 export const metadata = {
     title: 'Create Next App',
@@ -8,16 +6,13 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-    const base = {
-        height: "100%",
-        width: "100%",
-        margin: "auto",
-        overscrollBehavior: "none"
-    }
-
     return (
-        <html lang="en" style={base}>
-            <body className={inter.className} style={base} >{children}</body>
+        <html lang="en">
+            <body>
+                <Registry>
+                    {children}
+                </Registry>
+            </body>
         </html>
     )
 }
