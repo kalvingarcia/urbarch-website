@@ -55,6 +55,24 @@ const cssStyleReset = createUseStyles({
         },
         ":target": {
             scrollMarginBlock: "5ex"
+        },
+        ".material-icons": {
+            fontFamily: "var(--material-icons)",
+            fontWeight: "normal",
+            fontStyle: "normal",
+            fontSize: "48px",
+            display: "inline-block",
+            lineHeight: 1,
+            textTransform: "none",
+            letterSpacing: "normal",
+            wordWrap: "normal",
+            whiteSpace: "nowrap",
+            direction: "ltr",
+
+            "-webkit-font-smoothing": "antialiased",
+            textRendering: "optimizeLegibility",
+            "-moz-osx-font-smoothing": "grayscale",
+            fontFeatureSettings: "'liga'"
         }
     }
 })

@@ -1,4 +1,27 @@
-import Registry from './registry'
+import Local from 'next/font/local';
+import {Roboto} from 'next/font/google';
+import Registry from './registry';
+
+const material_icons = Local({
+    variable: "--material-icons",
+    src: [
+        {
+            path: './assets/icons//MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2',
+            weight: '400',
+            style: 'normal'
+        },
+        {
+            path: './assets/icons/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].woff2',
+            weight: '400',
+            style: 'italic'
+        },
+    ]
+});
+
+const roboto = Roboto({
+    weight: "400",
+    subsets: ['latin']
+});
 
 export const metadata = {
     title: 'Create Next App',
@@ -8,7 +31,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body>
+            <body className={`${roboto.className} ${material_icons.variable}`}>
                 <Registry>
                     {children}
                 </Registry>
