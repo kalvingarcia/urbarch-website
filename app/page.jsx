@@ -1,7 +1,7 @@
 "use client"
 // import  {useState, useEffect} from 'react';
 import {createUseStyles} from 'react-jss';
-
+import Header from './components/header';
 import Hero from './components/hero';
 
 const cssStyleReset = createUseStyles({
@@ -82,6 +82,7 @@ export default function Home() {
 
     return (
         <main>
+            <Header />
             <Hero />
             <div style={{backgroundColor: "white", height: "2000px", width: "100%"}} />
         </main>
