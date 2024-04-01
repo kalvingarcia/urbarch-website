@@ -1,5 +1,4 @@
 "use client"
-// import  {useState, useEffect} from 'react';
 import {createUseStyles} from 'react-jss';
 import Header from './components/header';
 import Hero from './components/hero';
