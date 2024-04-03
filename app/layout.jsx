@@ -1,6 +1,5 @@
 import Local from 'next/font/local';
-import {Roboto} from 'next/font/google';
-import Registry from './registry';
+import Theme from './components/theme';
 
 const material_icons = Local({
     variable: "--material-icons",
@@ -30,11 +29,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
-            <body className={`${roboto.className} ${material_icons.variable}`}>
+                <Theme>
                 <Registry>
                     {children}
                 </Registry>
+                </Theme>
             </body>
         </html>
     )

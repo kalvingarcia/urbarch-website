@@ -3,7 +3,7 @@ import {createUseStyles} from 'react-jss';
 import Header from './components/header';
 import Hero from './components/hero';
 
-const cssStyleReset = createUseStyles({
+const cssStyleReset = createUseStyles(theme => ({
     // Here we have the CSS global reset
     "@global": {
         "*": {
@@ -24,6 +24,7 @@ const cssStyleReset = createUseStyles({
             listStyle: "none"
         },
         body: {
+            backgroundColor: theme.background,
             minHeight: "100vh",
             lineHeight: 1.5,
             overscrollBehavior: "none" // This part was specifically to avoid MacOS overscroll, which was bugging me.
