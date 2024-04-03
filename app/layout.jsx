@@ -1,5 +1,8 @@
 import Local from 'next/font/local';
+import {Roboto, Cinzel} from 'next/font/google';
+import Registry from './components/registry';
 import Theme from './components/theme';
+import Header from './components/header';
 
 const material_icons = Local({
     variable: "--material-icons",
@@ -17,8 +20,22 @@ const material_icons = Local({
     ]
 });
 
+const urban_icons = Local({
+    variable: "--urban-icons",
+    src: [{
+        path: './assets/icons/UrbanIcons.woff',
+        weight: '400',
+        style: 'normal'
+    }]
+});
+
 const roboto = Roboto({
-    weight: "400",
+    weight: ["400", "700"],
+    subsets: ['latin']
+});
+
+const cinzel = Cinzel({
+    variable: "--cinzel",
     subsets: ['latin']
 });
 
@@ -29,10 +46,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
+        <html lang="en" className={`${roboto.className} ${cinzel.variable} ${material_icons.variable} ${urban_icons.variable}`}>
+            <body>
                 <Theme>
-                <Registry>
-                    {children}
-                </Registry>
+                    <Registry>
+                        <Header />
+                        {children}
+                    </Registry>
                 </Theme>
             </body>
         </html>
