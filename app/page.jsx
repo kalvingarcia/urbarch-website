@@ -1,6 +1,5 @@
 "use client"
 import {createUseStyles} from 'react-jss';
-import Header from './components/header';
 import Hero from './components/hero';
 
 const cssStyleReset = createUseStyles(theme => ({
@@ -25,6 +24,7 @@ const cssStyleReset = createUseStyles(theme => ({
         },
         body: {
             backgroundColor: theme.background,
+            transition: "background-color 300ms ease-in-out",
             minHeight: "100vh",
             lineHeight: 1.5,
             overscrollBehavior: "none" // This part was specifically to avoid MacOS overscroll, which was bugging me.
@@ -73,20 +73,36 @@ const cssStyleReset = createUseStyles(theme => ({
             textRendering: "optimizeLegibility",
             "-moz-osx-font-smoothing": "grayscale",
             fontFeatureSettings: "'liga'"
+        },
+        ".urban-icons": {
+            fontFamily: "var(--urban-icons)",
+            fontWeight: "normal",
+            fontStyle: "normal",
+            fontSize: "48px",
+            display: "inline-block",
+            lineHeight: 1,
+            textTransform: "none",
+            letterSpacing: "normal",
+            wordWrap: "normal",
+            whiteSpace: "nowrap",
+            direction: "ltr",
+
+            "-webkit-font-smoothing": "antialiased",
+            textRendering: "optimizeLegibility",
+            "-moz-osx-font-smoothing": "grayscale",
+            fontFeatureSettings: "'liga'"
         }
     }
-})
+}));
 
 export default function Home() {
     cssStyleReset();
-
     return (
         <main>
-            <Header />
             <Hero />
-            <div style={{backgroundColor: "white", height: "2000px", width: "100%"}} />
+            <div style={{backgroundColor: "transparent", height: "2000px", width: "100%"}} />
         </main>
-    )
+    );
 }
 
 // useEffect(() => {
