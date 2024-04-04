@@ -15,8 +15,8 @@ const air_force = "#799EB3"; // Primary Mid Color
 const prussian_blue = "#113A54"; // Primary Dark Color
 
 const alabaster = "#E8E8DA"; // Secondary Light Color
-const vanilla = "#E7DAAB"; // Secondary Mid Color
-const flax = "#E5CB7B"; // Secondary Dark Color
+const flax = "#C8AD6C"; // Secondary Mid Color
+const lion = "##AB8F5C"; // Secondary Dark Color
 
 const clot = "#C2AEAE"; // Error Light Color
 const wine = "#4F1E2B"; // Error Dark Color
@@ -25,7 +25,7 @@ const lightTheme = {
     title: prussian_blue,
     subtitle: flax,
     heading: air_force,
-    subheading: vanilla,
+    subheading: flax,
     body: raisin_black,
 
     lightFont: sea_salt,
@@ -34,10 +34,10 @@ const lightTheme = {
     background: sea_salt,
     surface: platinum,
 
-    primary: prussian_blue,
-    onPrimary: alice_blue,
-    secondary: flax,
-    onSecondary: alabaster,
+    primary: alice_blue,
+    onPrimary: prussian_blue,
+    secondary: alabaster,
+    onSecondary: flax,
 
     error: wine,
     onError: clot
@@ -56,10 +56,10 @@ const darkTheme = {
     background: raisin_black,
     surface: onyx,
 
-    primary: alice_blue,
-    onPrimary: prussian_blue,
-    secondary: alabaster,
-    onSecondary: flax,
+    primary: prussian_blue,
+    onPrimary: alice_blue,
+    secondary: lion,
+    onSecondary: alabaster,
 
     error: clot,
     onError: wine
