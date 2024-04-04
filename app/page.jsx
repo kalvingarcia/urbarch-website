@@ -14,7 +14,10 @@ const cssStyleReset = createUseStyles(theme => ({
         "html": {
             "-moz-text-size-adjust": "none",
             "-webkit-text-size-adjust": "none",
-            textSizeAdjust: "none"
+            textSizeAdjust: "none",
+            "& *": {
+                transition: "background-color 300ms ease-in-out"
+            }
         },
         "body, h1, h2, h3, h4, p, figure, blockquote, dl, dd": {
             margin: 0
@@ -23,9 +26,12 @@ const cssStyleReset = createUseStyles(theme => ({
             listStyle: "none"
         },
         body: {
-            backgroundColor: theme.background,
-            transition: "background-color 300ms ease-in-out",
+            position: "relative",
+            width: "100%",
+            maxWidth: "100%",
+            overflowX: "hidden",
             minHeight: "100vh",
+            backgroundColor: theme.background,
             lineHeight: 1.5,
             overscrollBehavior: "none" // This part was specifically to avoid MacOS overscroll, which was bugging me.
         },
@@ -56,6 +62,8 @@ const cssStyleReset = createUseStyles(theme => ({
         ":target": {
             scrollMarginBlock: "5ex"
         },
+
+        // globally available material-icons class
         ".material-icons": {
             fontFamily: "var(--material-icons)",
             fontWeight: "normal",
@@ -74,6 +82,8 @@ const cssStyleReset = createUseStyles(theme => ({
             "-moz-osx-font-smoothing": "grayscale",
             fontFeatureSettings: "'liga'"
         },
+
+        // globally available urban-icons class
         ".urban-icons": {
             fontFamily: "var(--urban-icons)",
             fontWeight: "normal",
