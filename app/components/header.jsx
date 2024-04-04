@@ -1,17 +1,23 @@
 "use client"
 import Link from 'next/link';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {createUseStyles} from 'react-jss';
 import {DarkModeContext} from './theme';
 
 const useStyles = createUseStyles(theme => ({
+    // Declaring the styles we're going to use inside the header
     branding: {},
     urban: {},
     archaeology: {},
     menu: {},
     navigation: {},
-    hamburger: {},
+    modalButton: {},
     darkMode: {},
+    modal: {},
+    scrim: {},
+    buttons: {},
+
+    // This is where the styling for the header actually takes place
     header: {
         // This is the styling to keep the header formatted in an appealing way
         width: "100%",
@@ -27,12 +33,11 @@ const useStyles = createUseStyles(theme => ({
 
         // This styles the background and text colors which will change when the user
         // hovers or scrolls since the header is fixed to the top
-        backgroundColor: ({hovered, moved}) => hovered || moved? theme.surface : "transparent", // For some reason dynamic values only work after mounting a second time
-        transition: "background-color 300ms ease-in-out",
-        color: ({hovered, moved}) => hovered || moved? theme.body : theme.lightFont, // For some reason dynamic values only work after mounting a second time
+        backgroundColor: ({hovered, moved, open}) => hovered || moved || open? theme.surface : "transparent", // For some reason dynamic values only work after mounting a second time
+        color: ({hovered, moved, open}) => hovered || moved || open? theme.body : theme.lightFont, // For some reason dynamic values only work after mounting a second time
         "& a": {
             textDecoration: "none",
-            color: ({hovered, moved}) => hovered || moved? theme.body : theme.lightFont // For some reason dynamic values only work after mounting a second time
+            color: ({hovered, moved, open}) => hovered || moved || open? theme.body : theme.lightFont // For some reason dynamic values only work after mounting a second time
         },
 
         // The branding part of the header
@@ -45,7 +50,10 @@ const useStyles = createUseStyles(theme => ({
             "& $urban": {
                 fontWeight: "bold",
                 fontSize: "1.25rem",
-                margin: "10px"
+                margin: "10px",
+                '@media (max-width: 500px)': { // On mobile, we hide the logo text
+                    display: "none"
+                }
             },
             "& $archaeology": {
                 fontFamily: "var(--cinzel)",
@@ -53,6 +61,9 @@ const useStyles = createUseStyles(theme => ({
                 fontSize: "1.25rem",
                 fontKerning: "none",
                 letterSpacing: "0.5rem",
+                '@media (max-width: 500px)': { // On mobile, we hide the logo text
+                    display: "none"
+                }
             }
         },
 
@@ -75,7 +86,7 @@ const useStyles = createUseStyles(theme => ({
                     display: "none"
                 }
             },
-            "& $hamburger": {
+            "& $modalButton": {
                 display: "none",
                 '@media (max-width: 900px)': {
                     display: "block",
@@ -83,8 +94,58 @@ const useStyles = createUseStyles(theme => ({
                 }
             },
             "& $darkMode": {
-                '@media (max-width: 600px)': {
-                    display: "none"
+                '@media (max-width: 600px)': { // When the text is close enough to the buttons it starts to push them off the page
+                    display: "none" // I'd rather hide the buttons
+                }
+            }
+        },
+
+        // When the window is thin enough, we display a button to open a modal navigation menu
+        "& $modal": {
+            height: 0,
+            width: "100vw",
+            display: "block",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            "& $scrim": { // This is the slightly transparent background that hides the content behind the modal
+                height: "100vh",
+                width: "100vw",
+                display: ({open}) => open? "block" : "none",
+                position: "absolute",
+                backgroundColor: theme.darkFont,
+                opacity: 0.5
+            },
+            "& $navigation": { // Here we restyle the navigation class to be inside the modal
+                width: ({open}) => open? "400px" : 0,
+                height: "100vh",
+                position: "absolute",
+                right: 0,
+                float: "right",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                padding: "20px",
+                paddingLeft: ({open}) => open? "20px" : 0,
+                paddingRight: ({open}) => open? "20px" : 0,
+
+                gap: "20px",
+
+                backgroundColor: theme.surface,
+                borderRadius: "20px 0px 0px 20px",
+                transition: ({open}) => {
+                    return open? 
+                        ["width 300ms ease-in", "padding 300ms cubic-bezier(0,1,0,1)", "background-color 300ms ease-in-out"]
+                        : ["width 300ms ease-out", "padding 300ms cubic-bezier(1,0,1,0)", "background-color 300ms ease-in-out"]
+                },
+                "& $buttons": {
+                    display: "flex",
+                    gap: "40px",
+                    alignItems: "center",
+                    justifyContent: "end",
+                    "& $modalButton": {
+                        fontSize: "36px"
+                    }
                 }
             }
         }
@@ -98,13 +159,14 @@ export default function Header() {
         window.addEventListener('scroll', () => {
             setMoved(true)
             if(window.scrollY == 0)
-                setMoved(false)
+                setMoved(false);
         });
     }, []);
 
-    const [darkMode, toggleDarkMode] = useContext(DarkModeContext);
+    const [open, setOpen] = useState(false);
 
-    const styles = useStyles({hovered, moved});
+    const [darkMode, toggleDarkMode] = useContext(DarkModeContext);
+    const styles = useStyles({hovered, moved, open});
     return (
         <section className={styles.header} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
             <Link className={styles.branding} href="/">
@@ -121,8 +183,20 @@ export default function Header() {
                     <Link href="/gallery">Gallery</Link>
                     <i className='material-icons'>shopping_cart</i>
                 </div>
-                <i className={`material-icons ${styles.hamburger}`}>menu_open</i>
                 <i className={`material-icons ${styles.darkMode}`} onClick={toggleDarkMode}>{darkMode? "dark_mode" : "light_mode"}</i>
+                <i className={`material-icons ${styles.modalButton}`} onClick={() => setOpen(true)}>menu_open</i>
+            </div>
+            <div className={styles.modal}>
+                <div className={styles.scrim} />
+                <div className={styles.navigation}>
+                    <div className={styles.buttons}>
+                        <i className={`material-icons ${styles.darkMode}`} onClick={toggleDarkMode}>{darkMode? "dark_mode" : "light_mode"}</i>
+                        <i className={`material-icons ${styles.modalButton}`} onClick={() => setOpen(false)}>close</i>
+                    </div>
+                    <Link href="/catalog">Catalog</Link>
+                    <Link href="/salvage">Salvage</Link>
+                    <Link href="/gallery">Gallery</Link>
+                </div>
             </div>
         </section>
     );
