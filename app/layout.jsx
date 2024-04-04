@@ -58,3 +58,14 @@ export default function RootLayout({ children }) {
         </html>
     )
 }
+
+// Using this to patch out a warning that gets spammed
+// because the JSS team hasn't fixed a 4 year old bug
+if (typeof window === "undefined") {
+    const originalWarn = console.warn;
+    console.warn = (...args) => {
+        if (args[0] !== 'Warning: [JSS] Rule is not linked. Missing sheet option "link: true".') {
+            originalWarn(...args);
+        }
+    };
+}
