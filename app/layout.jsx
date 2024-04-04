@@ -3,6 +3,7 @@ import {Roboto, Cinzel} from 'next/font/google';
 import Registry from './components/registry';
 import Theme from './components/theme';
 import Header from './components/header';
+import Footer from './components/footer';
 
 const material_icons = Local({
     variable: "--material-icons",
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
                     <Registry>
                         <Header />
                         {children}
+                        <Footer />
                     </Registry>
                 </Theme>
             </body>
