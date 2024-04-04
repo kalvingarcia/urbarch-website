@@ -2,7 +2,7 @@
 import {createUseStyles} from 'react-jss';
 import Hero from './components/hero';
 
-const cssStyleReset = createUseStyles(theme => ({
+const cssStyleReset = createUseStyles({
     // Here we have the CSS global reset
     "@global": {
         "*": {
@@ -31,7 +31,6 @@ const cssStyleReset = createUseStyles(theme => ({
             maxWidth: "100%",
             overflowX: "hidden",
             minHeight: "100vh",
-            backgroundColor: theme.background,
             lineHeight: 1.5,
             overscrollBehavior: "none" // This part was specifically to avoid MacOS overscroll, which was bugging me.
         },
@@ -103,14 +102,22 @@ const cssStyleReset = createUseStyles(theme => ({
             fontFeatureSettings: "'liga'"
         }
     }
+});
+
+const useStyles = createUseStyles(theme => ({
+    page: {
+        backgroundColor: theme.background,
+        color: theme.body
+    }
 }));
 
 export default function Home() {
     cssStyleReset();
+    const styles = useStyles();
     return (
-        <main>
+        <main className={styles.page}>
             <Hero />
-            <div style={{backgroundColor: "transparent", height: "2000px", width: "100%"}} />
+            <div style={{height: "400px"}} />
         </main>
     );
 }
