@@ -104,7 +104,6 @@ const useStyles = createUseStyles(theme => ({
         "& $modal": {
             height: 0,
             width: "100vw",
-            display: "block",
             position: "absolute",
             top: 0,
             left: 0,
@@ -112,14 +111,16 @@ const useStyles = createUseStyles(theme => ({
                 height: "100vh",
                 width: "100vw",
                 display: ({open}) => open? "block" : "none",
-                position: "absolute",
+                position: "fixed",
+                top: 0,
+                left: 0,
                 backgroundColor: theme.darkFont,
-                opacity: 0.5
+                opacity: 0.5,
             },
             "& $navigation": { // Here we restyle the navigation class to be inside the modal
                 width: ({open}) => open? "400px" : 0,
                 height: "100vh",
-                position: "absolute",
+                position: "fixed",
                 right: 0,
                 float: "right",
                 display: "flex",
@@ -187,7 +188,7 @@ export default function Header() {
                 <i className={`material-icons ${styles.modalButton}`} onClick={() => setOpen(true)}>menu_open</i>
             </div>
             <div className={styles.modal}>
-                <div className={styles.scrim} />
+                <div className={styles.scrim} onMouseDown={() => setOpen(false)} />
                 <div className={styles.navigation}>
                     <div className={styles.buttons}>
                         <i className={`material-icons ${styles.darkMode}`} onClick={toggleDarkMode}>{darkMode? "dark_mode" : "light_mode"}</i>
