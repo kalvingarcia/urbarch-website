@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link';
-import React from 'react';
+import React, {useState} from 'react';
 import {createUseStyles} from "react-jss";
 import Heading from './heading';
 import Subheading from './subheading';
@@ -12,6 +12,7 @@ const useStyles = createUseStyles(theme => ({
     locations: {},
     navigation: {},
     icons: {},
+    contact: {},
     socials: {},
     links: {},
     info: {},
@@ -19,6 +20,9 @@ const useStyles = createUseStyles(theme => ({
     terms: {},
     accredation: {},
     credits: {},
+    scrim: {},
+    popup: {},
+    modal: {},
     footer: {
         width: "100%",
 
@@ -80,6 +84,14 @@ const useStyles = createUseStyles(theme => ({
                             fontSize: "32px"
                         }
                     },
+                    "& $contact": {
+                        display: "none",
+                        "@media (max-width: 800px)": {
+                            display: "block",
+                            alignSelf: "center",
+                            marginTop: "30px"
+                        }
+                    },
                     "@media (max-width: 800px)": {
                         width: "50%"
                     }
@@ -96,6 +108,7 @@ const useStyles = createUseStyles(theme => ({
             alignItems: "center",
             padding: "20px",
 
+            textAlign: "center",
             backgroundColor: theme.primary,
             color: theme.onPrimary,
             "& a": {
@@ -107,12 +120,61 @@ const useStyles = createUseStyles(theme => ({
                 fontSize: "0.75rem",
                 padding: "10px"
             }
+        },
+
+        "& $modal": {
+            height: 0,
+            width: "100vw",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            "& $scrim": { // This is the slightly transparent background that hides the content behind the modal
+                height: "100vh",
+                width: "100vw",
+                display: ({open}) => open? "block" : "none",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                backgroundColor: theme.darkFont,
+                opacity: 0.5,
+                zIndex: 1000,
+            },
+            "& $popup": {
+                height:"60%",
+                width:"60%",
+                top: "20%",
+                left: "20%",
+                display: ({open}) => open? "flex" : "none",
+                flexDirection: "column",
+                gap: "20px",
+                overflow: "auto",
+                position: "fixed",
+                padding: "30px",
+
+                backgroundColor: theme.surface,
+                borderRadius: "20px",
+
+                zIndex: 1000,
+                "& $location": {
+                    display: "flex",
+                    flexDirection: "column"
+                },
+                "& $divider": {
+                    height: "1pt",
+                    width: "66%",
+                    alignSelf: "center",
+                    backgroundColor: theme.body,
+                    opacity: 0.5
+                },
+            }
         }
     }
 }));
 
 export default function Footer() {
-    const styles = useStyles({});
+    const [open, setOpen] = useState(false);
+
+    const styles = useStyles({open});
     return (
         <section className={styles.footer}>
             <div className={styles.info}>
@@ -187,6 +249,54 @@ export default function Footer() {
                 <span className={styles.copyright}>Copyright © 2012-2024 Urban Archaeology Ltd. All rights reserved.</span>
                 <Link className={styles.terms} href="/terms">Terms and conditions apply.</Link>
                 <span className={styles.accredation}>Designed and built by <Link href="https://github.com/ochakaru">Kalvin Garcia</Link></span>
+            </div>
+            <div className={styles.modal}>
+                <div className={styles.scrim} onMouseDown={() => setOpen(false)} />
+                <div className={styles.popup}>
+                    <Heading>Locations</Heading>
+                    <div className={styles.location}>
+                        <Subheading>New York</Subheading>
+                        <span>156 Franklin Street, New York, NY 10013</span>
+                        <span>Phone: (212) 371-4646</span>
+                        <span>Fax: (212) 371-1601</span>
+                        <Link href="ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
+                    </div>
+                    <div className={styles.location}>
+                        <b>Showroom Hours</b>
+                        <span>Monday-Friday: 8:00 AM to 5:00 PM</span>
+                        <span>Saturday and Sunday: Closed</span>
+                        {/* <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.939308536255!2d-74.01069595827086!3d40.7193525372826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258e5d67c4c2b%3A0xecfd9b6a06dfc53!2sUrban%20Archaeology!5e0!3m2!1sen!2sus!4v1712259752936!5m2!1sen!2sus"
+                            style={{border: 0}}
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                        /> */}
+                    </div>
+                    <div className={styles.location}>
+                        <Subheading>Long Island City</Subheading>
+                        <span>43-34 32nd Place, 2R Long Island City, NY 11101</span>
+                        <span>Phone: (212) 413-4646</span>
+                        <span>Fax: (212) 334-4659</span>
+                        <Link href="gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
+                    </div>
+                    <div className={styles.divider} />
+                    <div className={styles.location}>
+                        <Subheading>Boston and San Francisco</Subheading>
+                        <span>Phone: (617) 737-4646</span>
+                        <span>Fax: (617) 737 6699</span>
+                        <Link href="mary@urbanarchaeology.com">mary@urbanarchaeology.com</Link>
+                    </div>
+                    <div className={styles.location}>
+                        <Subheading>Chicago</Subheading>
+                        <span>Phone: (312) 371 2249</span>
+                        <Link href="melissa@urbanarchaeology.com">melissa@urbanarchaeology.com</Link>
+                    </div>
+                    <div className={styles.location}>
+                        <Subheading>Southeast</Subheading>
+                        <span>Phone: (917) 685-6113</span>
+                        <Link href="adrienne@urbanarchaeology.com">adrienne@urbanarchaeology.com</Link>
+                    </div>
+                </div>
             </div>
         </section>
     );
