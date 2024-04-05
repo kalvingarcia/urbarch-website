@@ -4,6 +4,7 @@ import React from 'react';
 import {createUseStyles} from "react-jss";
 import Heading from './heading';
 import Subheading from './subheading';
+import Button from './button';
 
 const useStyles = createUseStyles(theme => ({
     location: {},
@@ -178,7 +179,7 @@ export default function Footer() {
                             <Link className='urban-icons' href="https://pinterest.com/urbanarchltd/">pinterest_logo</Link>
                             <Link className='urban-icons' href="https://www.linkedin.com/company/urban-archaeology/">linkedin_logo</Link>
                         </div>
-                        {/* <Button>Contact Us</Button> */}
+                        <Button className={styles.contact} role="primary" style="filled" onPress={() => setOpen(true)}>Contact Us</Button>
                     </div>
                 </div>
             </div>

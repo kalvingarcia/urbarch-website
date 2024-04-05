@@ -1,6 +1,7 @@
 "use client"
 import {createUseStyles} from 'react-jss';
 import Hero from './components/hero';
+import Button from './components/button';
 
 const cssStyleReset = createUseStyles({
     // Here we have the CSS global reset
@@ -117,7 +118,9 @@ export default function Home() {
     return (
         <main className={styles.page}>
             <Hero />
-            <div style={{height: "400px"}} />
+            <div style={{height: "400px"}}>
+                <Button>Contact Us</Button>
+            </div>
         </main>
     );
 }
