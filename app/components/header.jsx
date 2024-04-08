@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {createUseStyles} from 'react-jss';
 import {DarkModeContext} from './theme';
+import IconButton from './icon-button';
+import "../assets/styles/components/header.scss";
 
 const useStyles = createUseStyles(theme => ({
     // Declaring the styles we're going to use inside the header
@@ -89,8 +91,8 @@ const useStyles = createUseStyles(theme => ({
             "& $modalButton": {
                 display: "none",
                 '@media (max-width: 900px)': {
-                    display: "block",
-                    fontSize: "36px",
+                    color: ({hovered, moved, open}) => hovered || moved || open? theme.body : theme.lightFont, // For some reason dynamic values only work after mounting a second time
+                    display: "flex"
                 }
             },
             "& $darkMode": {
@@ -134,65 +136,69 @@ const useStyles = createUseStyles(theme => ({
 
                 backgroundColor: theme.surface,
                 borderRadius: "20px 0px 0px 20px",
-                transition: ({open}) => {
-                    return open? 
+                transition: ({open}) => (
+                    open? // depending on if the modal is open or closed, the transition is different
                         ["width 300ms ease-in", "padding 300ms cubic-bezier(0,1,0,1)", "background-color 300ms ease-in-out"]
                         : ["width 300ms ease-out", "padding 300ms cubic-bezier(1,0,1,0)", "background-color 300ms ease-in-out"]
-                },
+                ),
                 "& $buttons": {
                     display: "flex",
                     gap: "40px",
                     alignItems: "center",
-                    justifyContent: "end",
-                    "& $modalButton": {
-                        fontSize: "36px"
-                    }
+                    justifyContent: "end"
                 }
             }
         }
     }
 }));
 
+/**
+ * This is the header component for the website. The idea is that it's persistent along the length of the page.
+ * This means it's fixed to the top of the page, but while it's resting at scroll 0 (when the user hasn't scrolled
+ * along the page) and the user isn't hovering it, the header's background is transparent, so that it can blend
+ * with the hero/banner at the top of the page.
+ */
 export default function Header() {
-    const [hovered, setHovered] = useState(false);
-    const [moved, setMoved] = useState(false);
+    const [hovered, setHovered] = useState(false); // Keeps track of if the header is hovered
+    const [moved, setMoved] = useState(false); // Keeps track of if the header has scrolled
+    // Here we create the event listener for scrolling
     useEffect(() => {
         window.addEventListener('scroll', () => {
-            setMoved(true)
+            setMoved(true) // The moved is by default set to true
             if(window.scrollY == 0)
-                setMoved(false);
+                setMoved(false); // If the window has returned to scroll 0, then it gets set back to false
         });
     }, []);
+    
+    const [open, setOpen] = useState(false); // This keeps track of the modal state
 
-    const [open, setOpen] = useState(false);
-
-    const [darkMode, toggleDarkMode] = useContext(DarkModeContext);
-    const styles = useStyles({hovered, moved, open});
+    const [darkMode, toggleDarkMode] = useContext(DarkModeContext); // This is the dark mode context
+    const styles = useStyles({hovered, moved, open}); // Here we get the jss styles for the header
     return (
-        <section className={styles.header} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-            <Link className={styles.branding} href="/">
+        <section className={["header", open? "open" : "", moved? "moved" : ""].join(" ")} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+            <Link className="branding" href="/">
                 <i className='urban-icons'>urbarch_logo</i>
                 <div>
-                    <span className={styles.urban}>urban</span>
-                    <span className={styles.archaeology}>ARCHAEOLOGY</span>
+                    <span className="urban">urban</span>
+                    <span className="archaeology">ARCHAEOLOGY</span>
                 </div>
             </Link>
-            <div className={styles.menu}>
-                <div className={styles.navigation}>
+            <div className="menu">
+                <div className="navigation">
                     <Link href="/catalog">Catalog</Link>
                     <Link href="/salvage">Salvage</Link>
                     <Link href="/gallery">Gallery</Link>
                     <i className='material-icons'>shopping_cart</i>
                 </div>
-                <i className={`material-icons ${styles.darkMode}`} onClick={toggleDarkMode}>{darkMode? "dark_mode" : "light_mode"}</i>
-                <i className={`material-icons ${styles.modalButton}`} onClick={() => setOpen(true)}>menu_open</i>
+                <IconButton className="darkMode" role="secondary" style="outlined" icon={darkMode? "dark_mode" : "light_mode"} onPress={toggleDarkMode} />
+                <IconButton className="modalButton" role="primary" style="text" icon="menu_open" onPress={() => setOpen(true)} />
             </div>
-            <div className={styles.modal}>
-                <div className={styles.scrim} onMouseDown={() => setOpen(false)} />
-                <div className={styles.navigation}>
-                    <div className={styles.buttons}>
-                        <i className={`material-icons ${styles.darkMode}`} onClick={toggleDarkMode}>{darkMode? "dark_mode" : "light_mode"}</i>
-                        <i className={`material-icons ${styles.modalButton}`} onClick={() => setOpen(false)}>close</i>
+            <div className="modal">
+                <div className="scrim" onMouseDown={() => setOpen(false)} />
+                <div className="navigation">
+                    <div className="buttons">
+                        <IconButton className="darkMode" role="secondary" style="outlined" icon={darkMode? "dark_mode" : "light_mode"} onPress={toggleDarkMode} />
+                        <IconButton icon="close" onPress={() => setOpen(false)} />
                     </div>
                     <Link href="/catalog">Catalog</Link>
                     <Link href="/salvage">Salvage</Link>

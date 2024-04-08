@@ -1,0 +1,167 @@
+@use "../theme" as *;
+
+.header {
+    // This is the styling to keep the header formatted in an appealing way
+    width: 100%;
+    padding: 20px;
+
+    // This is the styling to make the header stay at the top of the screen
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+
+    & a {
+        text-decoration: none;
+    }
+
+    // This styles the background and text colors which will change when the user
+    // hovers or scrolls since the header is fixed to the top
+    background-color: transparent;
+    @include themed() {
+        color: t('light-font');
+        & a {
+            color: t('light-font');
+        }
+    }
+    &:hover, &.moved, &.open {
+        @include themed() {
+            background-color: t('surface');
+            color: t('body');
+            & a {
+                color: t('body');
+            }
+            & .menu .modalButton.text {
+                color: t('body');
+            }
+        }
+    }
+
+    &.open {
+        & .modal {
+            & .scrim {
+                display: block;
+            }
+            & .navigation {
+                width: 80%;
+                max-width: 400px;
+                padding-left: 20px;
+                padding-right: 20px;
+                transition: width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
+            }
+        }
+    }
+
+    // The branding part of the header
+    // Formatting the logo icon and logo text
+    & .branding {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        & .urban {
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin: 10px;
+            @media (max-width: 500px) { // On mobile, we hide the logo text
+                display: none;
+            }
+        }
+        & .archaeology {
+            font-family: var(--cinzel);
+            font-weight: bold;
+            font-size: 1.25rem;
+            font-kerning: none;
+            letter-spacing: 0.5rem;
+            @media (max-width: 500px) { // On mobile, we hide the logo text
+                display: none;
+            }
+        }
+    }
+
+    & .menu {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        // The navigation part of the header where the text is evenly spaced
+        // We use media queries to make the text go away and instead show a hamburger
+        & .navigation {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            & i {
+                font-size: 24px;
+            }
+            @media (max-width: 900px) {
+                display: none;
+            }
+        }
+        & .modalButton.text {
+            display: none;
+            @media (max-width: 900px) {
+                @include themed() {
+                    color: t('light-font');
+                }
+                display: flex;
+            }
+        }
+        & .darkMode {
+            @media (max-width: 600px) { // When the text is close enough to the buttons it starts to push them off the page
+                display: none; // I'd rather hide the buttons
+            }
+        }
+    }
+
+    // When the window is thin enough, we display a button to open a modal navigation menu
+    & .modal {
+        height: 0;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+        & .scrim { // This is the slightly transparent background that hides the content behind the modal
+            height: 100vh;
+            width: 100vw;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            @include themed() {
+                background-color: t('dark-font');
+            }
+            opacity: 0.5,
+        }
+        & .navigation { // Here we restyle the navigation class to be inside the modal
+            width: 0;
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            float: right;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 20px;
+            padding-left: 0;
+            padding-right: 0;
+
+            gap: 20px;
+
+            border-radius: 20px 0px 0px 20px;
+
+            @include themed() {
+                background-color: t('surface');
+            }
+            // depending on if the modal is open or closed, the transition is different
+            transition: width 300ms ease-out, padding 300ms cubic-bezier(1,0,1,0), background-color 300ms ease-in-out;
+
+            & .buttons {
+                display: flex;
+                gap: 40px;
+                align-items: center;
+                justify-content: end;
+            }
+        }
+    }
+}
+
