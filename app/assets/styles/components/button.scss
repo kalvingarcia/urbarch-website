@@ -1,0 +1,153 @@
+@use '../theme' as *;
+
+.button {
+    outline: none;
+    border: none;
+
+    max-width: fit-content;
+    position: relative;
+    overflow: hidden;
+    padding: 10px 20px;
+
+    border-radius: 2000px;
+
+    &::after { // Here we create the hover effect
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute; // this allows us to overlay the after pseudoelement over the button
+        top: 0;
+        left: 0;
+
+        opacity: 0;
+        transition: opacity 300ms ease-in-out;
+    }
+    &:hover { // when we hover we set the opacity to a higher value
+        &::after {
+            opacity: 0.3;
+        }
+    }
+
+    & .ripple {
+        position: absolute; // Once again, we want to overlay the effect over the button
+        transform: scale(0);
+
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: ripple-effect 1800ms forwards; // We play the animation forward so the style persists
+        &.fade {
+            animation: ripple-effect 1200ms forwards, fade-effect 600ms forwards; // Forwards so the style persists
+        }
+    }
+
+    &.filled {
+        @include themed() {
+            &.primary {
+                background-color: t('on-primary');
+                color: t('primary');
+                &::after {
+                    background-color: t('primary');
+                }
+                & .ripple {
+                    background-color: t('primary');
+                }
+            }
+            &.secondary {
+                background-color: t('on-secondary');
+                color: t('secondary');
+                &::after {
+                    background-color: t('secondary');
+                }
+                & .ripple {
+                    background-color: t('secondary');
+                }
+            }
+        }
+    }
+    &.tonal {
+        @include themed() {
+            &.primary {
+                background-color: t('primary');
+                color: t('on-primary');
+                &::after {
+                    background-color: t('on-primary');
+                }
+                & .ripple {
+                    background-color: t('on-primary');
+                }
+            }
+            &.secondary {
+                background-color: t('secondary');
+                color: t('on-secondary');
+                &::after {
+                    background-color: t('on-secondary');
+                }
+                & .ripple {
+                    background-color: t('on-secondary');
+                }
+            }
+        }
+    }
+    &.outlined {
+        @include themed() {
+            &.primary {
+                border: 1pt solid t('on-primary');
+                background-color: transparent;
+                color: t('on-primary');
+                &::after {
+                    background-color: t('on-primary');
+                }
+                & .ripple {
+                    background-color: t('on-primary');
+                }
+            }
+            &.secondary {
+                border: 1pt solid t('on-secondary');
+                background-color: transparent;
+                color: t('on-secondary');
+                &::after {
+                    background-color: t('on-secondary');
+                }
+                & .ripple {
+                    background-color: t('on-secondary');
+                }
+            }
+        }
+    }
+    &.text {
+        @include themed() {
+            &.primary {
+                background-color: transparent;
+                color: t('on-primary');
+                &::after {
+                    background-color: t('on-primary');
+                }
+                & .ripple {
+                    background-color: t('on-primary');
+                }
+            }
+            &.secondary {
+                background-color: transparent;
+                color: t('on-secondary');
+                &::after {
+                    background-color: t('on-secondary');
+                }
+                & .ripple {
+                    background-color: t('on-secondary');
+                }
+            }
+        }
+    }
+}
+
+@keyframes fade-effect {
+    to {
+        opacity: 0; // The fade makes the opacity quickly become 0
+    }
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4); // The ripple slowly scales the up to 4
+    }
+}

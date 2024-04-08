@@ -1,129 +1,44 @@
 "use client"
-import React, {useState, useEffect, useCallback} from 'react';
-import {createUseStyles, useTheme} from 'react-jss';
+import React, {useCallback} from 'react';
+import "../assets/styles/components/button.scss";
 
-const useStyles = createUseStyles({
-    ripple: {},
-    button: {
-        outline: "none",
-        border: ({outlined, font}) => outlined? `1pt solid ${font}` : "none",
-
-        maxWidth: "fit-content",
-        position: "relative",
-        overflow: "hidden",
-        padding: "10px 20px",
-
-        backgroundColor: ({background}) => background,
-        borderRadius: "200px",
-        color: ({font}) => font,
-        "&::after": {
-            content: "''",
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-
-            backgroundColor: ({font}) => font,
-            opacity: 0,
-            transition: "opacity 300ms ease-in-out"
-        },
-        "&:hover": {
-            "&::after": {
-                opacity: 0.2
-            }
-        },
-
-        "& $ripple": {
-            position: "absolute",
-
-            transform: "scale(0)",
-            backgroundColor: ({font}) => font,
-            borderRadius: "50%",
-            opacity: 0.2,
-            animation: "$ripple 1800ms forwards",
-            "&.fade": {
-                animation: "$fade 600ms forwards, $ripple 1200ms forwards",
-            }
-        }
-    },
-    "@keyframes ripple": {
-        to: {
-            transform: "scale(4)"
-        }
-    },
-    "@keyframes fade": {
-        to: {
-            opacity: 0,
-        }
-    }
-});
-
-export default function Button({className, role, style, onPress, children}) {
-    const theme = useTheme();
-    const [background, setBackground] = useState(theme.onPrimary); // default primary filled button
-    const [font, setFont] = useState(theme.primary); // default primary filled button
-    const [outlined, setOutlined] = useState(false);
-
-    // Styling the button based the on the role and style props
-    useEffect(() => {
-        switch(style) {
-            case "filled": // high contrast button compared to the background
-                setBackground(role == "primary"? theme.onPrimary : theme.onSecondary);
-                setFont(role == "primary"? theme.primary : theme.secondary);
-                break;
-            case "tonal": // lower contrast button compared to the background
-                setBackground(role == "primary"? theme.primary : theme.secondary);
-                setFont(role == "primary"? theme.onPrimary : theme.onSecondary);
-                break;
-            case "outlined": // outlined button
-                setBackground("transparent");
-                setFont(role == "primary"? theme.onPrimary : theme.onSecondary);
-                setOutlined(true);
-                break;
-            case "text": // plain text that's also a button
-                setBackground("transparent");
-                setFont(role == "primary"? theme.onPrimary : theme.onSecondary);
-                break;
-            default:
-                setBackground(role == "primary"? theme.onPrimary : theme.onSecondary);
-                setFont(role == "primary"? theme.primary : theme.secondary);
-                break; // leave it as the filled button
-        }
-    }, [role, style]);
-
-
-    const styles = useStyles({background, font, outlined});
-
+export default function Button({className, role = "primary", style = "filled", onPress, children}) {
+    // Here we have the onMouseDown, which will be just the ripple animation
+    // The goal is to have the circle grow slowly as the user holds the button
     const onMouseDown = useCallback(event => {
-        const button = event.currentTarget;
+        const button = event.currentTarget; // We find the button being used
 
+        // We create a circle
         const circle = document.createElement("span");
         const diameter = Math.max(button.clientWidth, button.clientHeight);
         const radius = diameter / 2
 
+        // We set the styles for the circle
         circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.pageX - button.offsetLeft - radius}px`;
-        circle.style.top = `${event.pageY - button.offsetTop - radius}px`;
-        circle.classList.add(styles.ripple);
+        circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+        circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+        circle.classList.add("ripple");
 
-        const ripple = button.getElementsByClassName(styles.ripple)[0];
+        // We check if there is already a ripple on the button
+        const ripple = button.getElementsByClassName("ripple")[0];
         if(ripple)
-            ripple.remove();
+            ripple.remove(); // We remove any ripples already on the button
 
-        button.appendChild(circle);
-    }, [styles.ripple]);
+        button.appendChild(circle); // We add our new ripple
+    }, []); // Ideally this callback should only be recached if the style changes for some reason
 
+    // Here we complete the ripple effect by speeding up the scaling and fading the circle away
+    // when the user lifts the mouse button
     const onMousUp = useCallback(event => {
-        const button = event.currentTarget;
+        const button = event.currentTarget; // Finding our button
 
-        const ripple = button.getElementsByClassName(styles.ripple)[0];
+        const ripple = button.getElementsByClassName("ripple")[0]; // checking if there is a ripple in place
         if(ripple)
-            ripple.classList.add("fade");
-    }, [styles.ripple]);
+            ripple.classList.add("fade"); // adding the fade style to the ripple
+    }, []);
 
     return (
-        <button className={[styles.button, className? className : ""].join(" ")} onMouseDown={onMouseDown} onMouseUp={onMousUp} onClick={onPress}>
+        <button className={["button", role, style, className? className : ""].join(" ")} onMouseDown={onMouseDown} onMouseUp={onMousUp} onClick={onPress}>
             {children}
         </button>
     );
