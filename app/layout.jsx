@@ -4,6 +4,7 @@ import Registry from './components/registry';
 import Theme from './components/theme';
 import Header from './components/header';
 import Footer from './components/footer';
+import './assets/styles/global.scss';
 
 const material_icons = Local({
     variable: "--material-icons",

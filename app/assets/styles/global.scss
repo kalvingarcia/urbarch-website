@@ -1,0 +1,116 @@
+@use 'theme' as *;
+
+* {
+    box-sizing: border-box;
+    &::before, &::after {
+        box-sizing: border-box;
+    }
+}
+
+html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    & * {
+        transition: background-color 300ms ease-in-out;
+    }
+}
+
+body, h1, h2, h3, h4, p, figure, blockquote, dl, dd {
+    margin: 0;
+}
+
+ul[role="list"], ol[role="list"] {
+    list-style: none;
+}
+
+body {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    min-height: 100vh;
+    line-height: 1.5;
+    overscroll-behavior: none; // This part was specifically to avoid MacOS overscroll, which was bugging me.
+}
+
+.body {
+    @include themed() {
+        background-color: t('background');
+        color: t('body');
+    }
+}
+
+h1, h2, h3, h4, button, input, label {
+    line-height: 1;
+}
+
+h1, h2, h3, h4 {
+    text-wrap: balance;
+}
+
+a {
+    &:not([class]) {
+        text-decoration-skip-ink: auto;
+        color: currentcolor;
+    }
+}
+
+img, picture {
+    max-width: 100%;
+    display: block;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+textarea {
+    &:not([rows]) {
+        min-height: 10em;
+    }
+}
+
+:target {
+    scroll-margin-block: 5ex;
+}
+
+// globally available material-icons class
+.material-icons {
+    font-family: var(--material-icons);
+    font-weight: normal;
+    font-style: normal;
+    font-size: 48px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+}
+
+// globally available urban-icons class
+.urban-icons {
+    font-family: var(--urban-icons);
+    font-weight: normal;
+    font-style: normal;
+    font-size: 48px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+}
