@@ -1,0 +1,80 @@
+$sea_salt: #F6F6F6; // Light Font Color or Light Background Color
+$raisin_black: #1C1E26; // Dark Font Color or Dark Background Color
+
+$platinum: #EBEBEC; // Light Surface Color
+$onyx: #1D212F; // Dark Surface Color
+
+$alice_blue: #E0F0F6; // Primary Light Color
+$air_force: #799EB3; // Primary Mid Color
+$prussian_blue: #113A54; // Primary Dark Color
+
+$alabaster: #E8E8DA; // Secondary Light Color
+$flax: #C8AD6C; // Secondary Mid Color
+$lion: #AB8F5C; // Secondary Dark Color
+
+$clot: #C2AEAE; // Error Light Color
+$wine: #4F1E2B; // Error Dark Color
+
+
+$themes: (
+    light: (
+        title: $prussian_blue,
+        subtitle: $flax,
+        heading: $air_force,
+        subheading: $flax,
+        body: $raisin_black,
+    
+        light-font: $sea_salt,
+        dark-font: $raisin_black,
+    
+        background: $sea_salt,
+        surface: $platinum,
+    
+        primary: $alice_blue,
+        on-primary: $prussian_blue,
+        secondary: $alabaster,
+        on-secondary: $flax,
+    
+        error: $wine,
+        on-error: $clot
+    ),
+    dark: (
+        title: $alice_blue,
+        subtitle: $flax,
+        heading: $air_force,
+        subheading: $alabaster,
+        body: $sea_salt,
+    
+        light-font: $sea_salt,
+        dark-font: $raisin_black,
+    
+        background: $raisin_black,
+        surface: $onyx,
+    
+        primary: $prussian_blue,
+        on-primary: $alice_blue,
+        secondary: $lion,
+        on-secondary: $alabaster,
+    
+        error: $clot,
+        on-error: $wine
+    )
+);
+
+@mixin themed() {
+    @each $theme, $map in $themes {
+        .theme--#{$theme} & {
+            $theme-map: () !global;
+            @each $key, $submap in $map {
+                $value: map-get(map-get($themes, $theme), '#{$key}');
+                $theme-map: map-merge($theme-map, ($key: $value)) !global;
+            }
+            @content;
+            $theme-map: null !global;
+        }
+    }
+}
+
+@function t($key) {
+    @return map-get($theme-map, $key);
+}
