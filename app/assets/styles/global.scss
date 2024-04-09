@@ -34,7 +34,7 @@ body {
     overscroll-behavior: none; // This part was specifically to avoid MacOS overscroll, which was bugging me.
 }
 
-.body {
+.website {
     @include themed() {
         background-color: t('background');
         color: t('body');
