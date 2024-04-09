@@ -1,13 +1,14 @@
-"use client"
 import Hero from './components/hero';
-import Button from './components/button';
+import Card from './components/card';
 
 export default function Home() {
     return (
         <main>
-            <Hero />
-            <div style={{height: "400px"}}>
-                <Button role="primary" style="filled">Contact Us</Button>
+            <Hero src="../assets/backgrounds/home.png"/>
+            <div>
+                <Card name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                <Card type="small" name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                <Card type="list" name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
             </div>
         </main>
     );
