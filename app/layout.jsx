@@ -1,6 +1,5 @@
 import Local from 'next/font/local';
 import {Roboto, Cinzel} from 'next/font/google';
-import Registry from './components/registry';
 import Theme from './components/theme';
 import Header from './components/header';
 import Footer from './components/footer';
@@ -51,11 +50,9 @@ export default function RootLayout({ children }) {
         <html lang="en" className={`${roboto.className} ${cinzel.variable} ${material_icons.variable} ${urban_icons.variable}`}>
             <body>
                 <Theme>
-                    <Registry>
-                        <Header />
-                        {children}
-                        <Footer />
-                    </Registry>
+                    <Header />
+                    {children}
+                    <Footer />
                 </Theme>
             </body>
         </html>

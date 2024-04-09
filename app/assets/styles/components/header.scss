@@ -33,23 +33,8 @@
             & a {
                 color: t('body');
             }
-            & .menu .modalButton.text {
+            & .menu .modal-button.text {
                 color: t('body');
-            }
-        }
-    }
-
-    &.open {
-        & .modal {
-            & .scrim {
-                display: block;
-            }
-            & .navigation {
-                width: 80%;
-                max-width: 400px;
-                padding-left: 20px;
-                padding-right: 20px;
-                transition: width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
             }
         }
     }
@@ -83,7 +68,7 @@
     & .menu {
         display: flex;
         align-items: center;
-        gap: 40px;
+        gap: 30px;
         // The navigation part of the header where the text is evenly spaced
         // We use media queries to make the text go away and instead show a hamburger
         & .navigation {
@@ -97,7 +82,7 @@
                 display: none;
             }
         }
-        & .modalButton.text {
+        & .modal-button.text {
             display: none;
             @media (max-width: 900px) {
                 @include themed() {
@@ -106,7 +91,7 @@
                 display: flex;
             }
         }
-        & .darkMode {
+        & .dark-mode {
             @media (max-width: 600px) { // When the text is close enough to the buttons it starts to push them off the page
                 display: none; // I'd rather hide the buttons
             }
@@ -130,7 +115,7 @@
             @include themed() {
                 background-color: t('dark-font');
             }
-            opacity: 0.5,
+            opacity: 0.75,
         }
         & .navigation { // Here we restyle the navigation class to be inside the modal
             width: 0;
@@ -156,10 +141,33 @@
             transition: width 300ms ease-out, padding 300ms cubic-bezier(1,0,1,0), background-color 300ms ease-in-out;
 
             & .buttons {
+                overflow: hidden;
+                margin-left: 20px;
+                margin-right: 20px;
                 display: flex;
-                gap: 40px;
+                gap: 30px;
                 align-items: center;
                 justify-content: end;
+            }
+
+            & .links {
+                margin-left: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    }
+
+    &.open {
+        & .modal {
+            & .scrim {
+                display: block;
+            }
+            & .navigation {
+                width: 400px;
+                max-width: 80%;
+                transition: width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
             }
         }
     }
