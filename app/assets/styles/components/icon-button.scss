@@ -1,0 +1,14 @@
+@use '../theme' as *;
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    & i {
+        font-size: 30px;
+    }
+}
