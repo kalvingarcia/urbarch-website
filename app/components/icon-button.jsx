@@ -1,10 +1,10 @@
-import React, {} from 'react';
-import {createUseStyles} from 'react-jss';
+import Button from './button';
+import '../assets/styles/components/icon-button.scss';
 
-export default function IconButton({icon}) {
+export default function IconButton({className, icon, onPress, ...props}) {
     return (
-        <div>
-            <i>{icon}</i>
-        </div>
+        <Button className={["icon-button", className? className : ""].join(" ")} onPress={onPress} {...props}>
+            <i className="material-icons">{icon}</i>
+        </Button>
     );
 }
