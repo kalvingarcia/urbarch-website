@@ -1,14 +1,32 @@
+"use client"
+import {useEffect, useState} from 'react';
 import Hero from './components/hero';
 import Card from './components/card';
+import Display from './components/display';
+import Button from './components/button';
+import useWindowSize from './hooks/window';
 
 export default function Home() {
+    const [listView, setListView] = useState(false);
+    const {width} = useWindowSize();
+    useEffect(() => {
+        setListView(false);
+        if(width < 800)
+            setListView(true);
+    }, [width]);
+
     return (
         <main>
-            <Hero src="../assets/backgrounds/home.png"/>
+            <Hero>
+                <Display size="medium" style={{fontFamily: "var(--cinzel)"}}>An Exploration of</Display>
+                <Display>urban <span style={{fontFamily: "var(--cinzel)"}}>ARCHAEOLOGY</span></Display>
+                <Display size="small">May 16th-17th and 20th-23rd </Display>
+                <Display size="small">@ 7:00 AM - 4:00 PM</Display>
+                <Button role="secondary" style="outlined">RSVP Here!</Button>
+            </Hero>
             <div>
-                <Card name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
-                <Card type="small" name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
-                <Card type="list" name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                
+                <Card type={listView? "list" : "normal"} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
             </div>
         </main>
     );

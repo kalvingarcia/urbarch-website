@@ -2,14 +2,14 @@
 import Image from 'next/image';
 import  {useCallback, useEffect, useState} from 'react';
 import IconButton from './icon-button';
-import background from '../assets/backgrounds/home.png';
+import background from '../assets/backgrounds/home.jpg';
 import '../assets/styles/components/hero.scss';
 
 export default function Hero({src, children}) {
     // Here we have a callback for showing the hero content on mouse move
     const [hide, setHide] = useState(true);
     const [timer, setTimer] = useState(undefined);
-    const timedHide = useCallback(() => {
+    const timedHide = useCallback(timer => {
         setHide(false); // We unhide the hero's content
         if(timer) // If there is a timer already
             clearTimeout(timer); // We stop it
@@ -22,7 +22,7 @@ export default function Hero({src, children}) {
     }, []);
 
     return (
-        <section className={['hero', hide? "hide" : ""].join(" ")} onMouseMove={timedHide}>
+        <section className={['hero', hide? "hide" : ""].join(" ")} onMouseMove={() => timedHide(timer)}>
             <figure className='parallax-container'>
                 <Image className='parallax-image' src={background} alt="Hompage background image" priority/>
             </figure>
