@@ -22,7 +22,7 @@ export default function Home() {
                 <Display>urban <span style={{fontFamily: "var(--cinzel)"}}>ARCHAEOLOGY</span></Display>
                 <Display size="small">May 16th-17th and 20th-23rd </Display>
                 <Display size="small">@ 7:00 AM - 4:00 PM</Display>
-                <Button role="secondary" style="outlined">RSVP Here!</Button>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdL1pVylvGkvPjGTv31c1-C0y_04Xfp3KzbrWaPNWAe2u-SJg/viewform"><Button role="secondary" style="outlined">RSVP Here!</Button></a>
             </Hero>
             <div>
                 
