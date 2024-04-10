@@ -24,7 +24,7 @@ export default function Card({type = "normal", name, category, price, uaid}) {
             <div className='content'>
                 <div className='metadata'>
                     <span className='name'>{name}</span>
-                    <span className='categrpy'>{category}</span>
+                    <span className='category'>{category}</span>
                     <span className='price'>{price}</span>
                 </div>
                 <span className='uaid'>{uaid}</span>
