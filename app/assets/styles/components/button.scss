@@ -13,6 +13,8 @@
 
     border-radius: 2000px;
 
+    transition: background-color 300ms ease-in-out, color 300ms ease-in-out, border-color 300ms ease-in-out !important;
+
     &::after { // Here we create the hover effect
         content: '';
         width: 100%;
