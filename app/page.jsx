@@ -1,18 +1,19 @@
 "use client"
 import {useEffect, useState} from 'react';
 import Hero from './components/hero';
+import Featured from './components/featured';
 import Card from './components/card';
 import Display from './components/display';
 import Button from './components/button';
 import useWindowSize from './hooks/window';
 
 export default function Home() {
-    const [listView, setListView] = useState(false);
+    const [view, setView] = useState("normal");
     const {width} = useWindowSize();
     useEffect(() => {
-        setListView(false);
-        if(width < 800)
-            setListView(true);
+        setView("normal");
+        if(width < 1000)
+            setView("list");
     }, [width]);
 
     return (
@@ -24,9 +25,15 @@ export default function Home() {
                 <Display size="small">@ 7:00 AM - 4:00 PM</Display>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdL1pVylvGkvPjGTv31c1-C0y_04Xfp3KzbrWaPNWAe2u-SJg/viewform"><Button role="secondary" style="outlined">RSVP Here!</Button></a>
             </Hero>
+            <Featured>
+                <Card type={view} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                <Card type={view} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                <Card type={view} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+            </Featured>
             <div>
-                
-                <Card type={listView? "list" : "normal"} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
+                <Display size="small">Making dreams come true!</Display>
+                <span>If you do not see what you are looking for on this website, we are able to customize new pieces to meet your specifications.</span>
+                <Button role="secondary" style="outlined">Contact Us</Button>
             </div>
         </main>
     );
