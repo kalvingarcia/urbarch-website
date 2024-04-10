@@ -9,20 +9,12 @@ export default function Hero({src, children}) {
     // Here we have a callback for showing the hero content on mouse move
     const [hide, setHide] = useState(true);
     const [timer, setTimer] = useState(undefined);
-    const timedHide = useCallback(timer => {
+    const unhide = useCallback(() => {
         setHide(false); // We unhide the hero's content
-        if(timer) // If there is a timer already
-            clearTimeout(timer); // We stop it
-
-        // Here we (re)set a timer for 5 seconds
-        setTimer(setTimeout(() => {
-            setHide(true);
-            setTimer(undefined); // Set Timer to undefined by default
-        }, 5000));
     }, []);
 
     return (
-        <section className={['hero', hide? "hide" : ""].join(" ")} onMouseMove={() => timedHide(timer)}>
+        <section className={['hero', hide? "hide" : ""].join(" ")} onMouseMove={() => unhide()}>
             <figure className='parallax-container'>
                 <Image className='parallax-image' src={background} alt="Hompage background image" priority/>
             </figure>
