@@ -1,0 +1,29 @@
+@use "../theme" as *;
+
+.featured {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+
+    & .divider {
+        height: 1pt;
+        width: 66%;
+        @include themed() {
+            background-color: t('body');
+        }
+        opacity: 0.5;
+    }
+
+    & .cards {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+
+        @media (max-width: 1000px) {
+            flex-direction: column;
+        }
+    }
+}
