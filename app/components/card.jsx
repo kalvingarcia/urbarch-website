@@ -1,8 +1,8 @@
 "use client"
+import Image from 'next/image';
 import {useEffect, useState} from 'react';
 import useRippleEffect from '../hooks/ripple';
 import '../assets/styles/components/card.scss';
-import Image from 'next/image';
 
 export default function Card({type = "normal", name, category, price, uaid}) {
     const [loading, setLoading] = useState(true);
