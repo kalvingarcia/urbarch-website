@@ -1,0 +1,23 @@
+.ripple {
+    position: fixed; // Once again, we want to overlay the effect over the button
+    transform: scale(0);
+
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: ripple-effect 1800ms forwards; // We play the animation forward so the style persists
+    &.fade {
+        animation: ripple-effect 1200ms forwards, fade-effect 600ms forwards; // Forwards so the style persists
+    }
+}
+
+@keyframes fade-effect {
+    to {
+        opacity: 0; // The fade makes the opacity quickly become 0
+    }
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4); // The ripple slowly scales the up to 4
+    }
+}

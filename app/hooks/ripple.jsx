@@ -1,5 +1,6 @@
 "use client"
 import {useCallback} from 'react';
+import '../assets/styles/hooks/ripple.scss';
 
 export default function useRippleEffect() {
     // Here we have the onMouseDown, which will be just the ripple animation
@@ -14,8 +15,8 @@ export default function useRippleEffect() {
 
         // We set the styles for the circle
         circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.clientX - target.offsetLeft - radius}px`;
-        circle.style.top = `${event.clientY - target.offsetTop - radius}px`;
+        circle.style.left = `${event.clientX - radius}px`;
+        circle.style.top = `${event.clientY - radius}px`;
         circle.classList.add("ripple");
 
         // We check if there is already a ripple on the button
