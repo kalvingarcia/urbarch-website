@@ -33,6 +33,12 @@
             & a {
                 color: t('body');
             }
+            & .menu .navigation .cart.text {
+                color: t('body');
+            }
+            & .modal .navigation .buttons .cart.text {
+                color: t('body');
+            }
             & .menu .modal-button.text {
                 color: t('body');
             }
@@ -75,11 +81,15 @@
             display: flex;
             align-items: center;
             gap: 30px;
-            & i {
-                font-size: 24px;
-            }
+
             @media (max-width: 900px) {
                 display: none;
+            }
+
+            & .cart.text {
+                @include themed() {
+                    color: t('light-font');
+                }
             }
         }
         & .modal-button.text {
@@ -147,7 +157,7 @@
                 display: flex;
                 gap: 30px;
                 align-items: center;
-                justify-content: end;
+                justify-content: flex-end;
             }
 
             & .links {
