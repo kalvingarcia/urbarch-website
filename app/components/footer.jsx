@@ -30,7 +30,7 @@ export default function Footer() {
                         <span>Monday-Friday: 8:00 AM to 5:00 PM</span>
                         <span>Saturday and Sunday: Closed</span>
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.939308536255!2d-74.01069595827086!3d40.7193525372826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258e5d67c4c2b%3A0xecfd9b6a06dfc53!2sUrban%20Archaeology!5e0!3m2!1sen!2sus!4v1712259752936!5m2!1sen!2sus"
-                            style={{border: 0}}
+                            style={{border: 0, aspectRatio: 16 / 9, maxWidth: "500px"}}
                             allowFullScreen=""
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
@@ -104,7 +104,7 @@ export default function Footer() {
                         <span>Monday-Friday: 8:00 AM to 5:00 PM</span>
                         <span>Saturday and Sunday: Closed</span>
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.939308536255!2d-74.01069595827086!3d40.7193525372826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258e5d67c4c2b%3A0xecfd9b6a06dfc53!2sUrban%20Archaeology!5e0!3m2!1sen!2sus!4v1712259752936!5m2!1sen!2sus"
-                            style={{border: 0}}
+                            style={{border: 0, aspectRatio: 16 /9}}
                             allowFullScreen=""
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
