@@ -10,6 +10,7 @@
     & .divider {
         height: 1pt;
         width: 66%;
+        max-width: 1000px;
         @include themed() {
             background-color: t('body');
         }
