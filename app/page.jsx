@@ -1,10 +1,10 @@
 "use client"
 import {useEffect, useState} from 'react';
 import Hero from './components/hero';
-import Featured from './components/featured';
-import Card from './components/card';
 import Display from './components/display';
 import Button from './components/button';
+import Featured from './components/featured';
+import Card from './components/card';
 import Banner from './components/banner';
 import useWindowSize from './hooks/window';
 
@@ -19,7 +19,7 @@ export default function Home() {
 
     return (
         <main>
-            <Hero>
+            <Hero src="home.jpg">
                 <Display size="medium" style={{fontFamily: "var(--cinzel)"}}>An Exploration of</Display>
                 <Display>urban <span style={{fontFamily: "var(--cinzel)"}}>ARCHAEOLOGY</span></Display>
                 <Display size="small">May 16th-17th and 20th-23rd </Display>

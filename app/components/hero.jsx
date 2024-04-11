@@ -2,10 +2,16 @@
 import Image from 'next/image';
 import  {useCallback, useEffect, useState} from 'react';
 import IconButton from './icon-button';
-import background from '../assets/backgrounds/home.jpg';
 import '../assets/styles/components/hero.scss';
 
 export default function Hero({src, children}) {
+    const [image, setImage] = useState("");
+    useEffect(() => {
+        (async () => {
+            setImage(await import(`../assets/backgrounds/${src}`));
+        })();
+    }, [src]);
+
     // Here we have a callback for showing the hero content on mouse move
     const [hide, setHide] = useState(true);
     const [timer, setTimer] = useState(undefined);
@@ -16,9 +22,9 @@ export default function Hero({src, children}) {
     return (
         <section className={['hero', hide? "hide" : ""].join(" ")} onMouseMove={() => unhide()}>
             <figure className='parallax-container'>
-                <Image className='parallax-image' src={background} alt="Hompage background image" priority/>
+                <Image className='parallax-image' src={image} alt="Hompage background image" />
             </figure>
-            <div className='gradient' />
+            <div className='overlay' />
             <div className='content'>
                 {children}
             </div>
