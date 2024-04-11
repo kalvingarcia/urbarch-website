@@ -21,12 +21,15 @@
         top: 0;
         left: 0;
 
+        @include themed() {
+            background-color: t('on-primary');
+        }
         opacity: 0;
         transition: opacity 300ms ease-in-out;
     }
     &:hover { // when we hover we set the opacity to a higher value
         &::after {
-            opacity: 0.3;
+            opacity: 0.2;
         }
     }
 
