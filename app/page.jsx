@@ -5,6 +5,7 @@ import Featured from './components/featured';
 import Card from './components/card';
 import Display from './components/display';
 import Button from './components/button';
+import Banner from './components/banner';
 import useWindowSize from './hooks/window';
 
 export default function Home() {
@@ -30,11 +31,11 @@ export default function Home() {
                 <Card type={view} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
                 <Card type={view} name="Banded Beacon [Small]" category="Lighting" price="$300" uaid="UA0000" />
             </Featured>
-            <div>
+            <Banner src="custom.png">
                 <Display size="small">Making dreams come true!</Display>
                 <span>If you do not see what you are looking for on this website, we are able to customize new pieces to meet your specifications.</span>
                 <Button role="secondary" style="outlined">Contact Us</Button>
-            </div>
+            </Banner>
         </main>
     );
 }
