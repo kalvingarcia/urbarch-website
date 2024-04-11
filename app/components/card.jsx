@@ -5,13 +5,10 @@ import useRippleEffect from '../hooks/ripple';
 import '../assets/styles/components/card.scss';
 
 export default function Card({type = "normal", name, category, price, uaid}) {
-    const [loading, setLoading] = useState(true);
     const [image, setImage] = useState("");
     useEffect(() => {
         (async () => {
-            setLoading(true);
             setImage(await import(`../assets/products/${uaid}.jpg`));
-            setLoading(false);
         })();
     }, [uaid]);
 
