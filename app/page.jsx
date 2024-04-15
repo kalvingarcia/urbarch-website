@@ -23,17 +23,3 @@ export default function Home() {
         </main>
     );
 }
-
-// useEffect(() => {
-//     fetch("http://localhost:3000/api/tag").then(response => {
-//         return response.json();
-//     }).then(result => {
-//         const tag_list = [];
-//         for(const [name, category] of Object.entries(result)) {
-//             for(const tag of category) {
-//                 tag_list.push(tag.name);
-//             }
-//         }
-//         set_tags(tag_list);
-//     });
-// }, []);
