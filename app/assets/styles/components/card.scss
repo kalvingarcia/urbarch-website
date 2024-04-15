@@ -1,3 +1,4 @@
+@use 'sass:color' as *;
 @use '../theme' as *;
 
 .card {
@@ -11,6 +12,66 @@
     @include themed() {
         background-color: t('primary');
         color: t('on-primary');
+    }
+
+    &.skeleton {
+        @include themed() {
+            background-image: linear-gradient(135deg, t('surface'), adjust(t('body'), $alpha: -0.8));
+            background-position: 0% 0%;
+            background-size: 200% 200%;
+            animation: loading-gradient 3s infinite;
+        }
+
+        &:hover { // when we hover we set the opacity to a higher value
+            &::after {
+                opacity: 0;
+            }
+        }
+
+        & .image {
+            @include themed() {
+                background-color: t('background');
+            }
+            opacity: 0.2;
+        }
+
+        & .content {
+            & .metadata {
+                & .name {
+                    height: 1.25rem;
+                    width: 50%;
+                    @include themed() {
+                        background-color: t('body');
+                    }
+                    opacity: 0.2;
+                    border-radius: 2000px;
+                }
+                & .category {
+                    height: 1rem;
+                    opacity: 0.2;
+                }
+            }
+
+            & .uaid {
+                height: 1rem;
+                width: 50px;
+                @include themed() {
+                    background-color: t('body');
+                }
+                opacity: 0.2;
+                border-radius: 2000px;
+            }
+        }
+
+        &.small {
+            & .content {
+                & .metadata {
+                    & .name {
+                        height: 1rem;
+                    }
+                }
+            }
+        }
     }
 
     &::after { // Here we create the hover effect
@@ -127,5 +188,17 @@
         @include themed() {
             background-color: t('on-primary');
         }
+    }
+}
+
+@keyframes loading-gradient {
+    0% {
+        background-position: 0% 10%;
+    }
+    50% {
+        background-position: 100% 90%;
+    }
+    100% {
+        background-position: 0% 10%;
     }
 }
