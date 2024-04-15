@@ -1,0 +1,60 @@
+@use '../theme' as *;
+
+.display {
+    &.small {
+        font-size: 1.75rem;
+    }
+    &.medium {
+        font-size: 3rem;
+    }
+    &.large {
+        font-size: 4.5rem;
+    }
+
+
+    font-weight: bold;
+
+    @media (max-width: 700px) {
+        &.small {
+            font-size: 1rem;
+        }
+        &.medium {
+            font-size: 1.5rem;
+        }
+        &.large {
+            font-size: 2rem;
+        }
+    }
+}
+
+.title {
+    @include themed() {
+        color: t('title')
+    }
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.title {
+    @include themed() {
+        color: t('subtitle')
+    }
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.heading {
+    @include themed() {
+        color: t('heading')
+    }
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.subheading {
+    @include themed() {
+        color: t('subheading')
+    }
+    font-size: 1.2rem;
+    font-weight: bold;
+}

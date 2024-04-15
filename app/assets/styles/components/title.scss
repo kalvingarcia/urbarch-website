@@ -1,9 +1,0 @@
-@use '../theme' as *;
-
-.title {
-    @include themed() {
-        color: t('title')
-    }
-    font-size: 2rem;
-    font-weight: bold;
-}
