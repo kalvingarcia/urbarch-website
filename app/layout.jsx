@@ -1,20 +1,20 @@
 import Local from 'next/font/local';
 import {Roboto, Cinzel} from 'next/font/google';
-import Theme from './components/theme';
-import Header from './components/header';
-import Footer from './components/footer';
+import Theme from './assets/components/theme';
+import Header from './assets/components/header';
+import Footer from './assets/components/footer';
 import './assets/styles/global.scss';
 
 const material_icons = Local({
     variable: "--material-icons",
     src: [
         {
-            path: './assets/icons//MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2',
+            path: './assets/fonts/icons//MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2',
             weight: '400',
             style: 'normal'
         },
         {
-            path: './assets/icons/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].woff2',
+            path: './assets/fonts/icons/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].woff2',
             weight: '400',
             style: 'italic'
         },
@@ -24,7 +24,7 @@ const material_icons = Local({
 const urban_icons = Local({
     variable: "--urban-icons",
     src: [{
-        path: './assets/icons/UrbanIcons.woff',
+        path: './assets/fonts/icons/UrbanIcons.woff',
         weight: '400',
         style: 'normal'
     }]

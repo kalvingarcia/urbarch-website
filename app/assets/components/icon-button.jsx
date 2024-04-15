@@ -1,5 +1,5 @@
 import Button from './button';
-import '../assets/styles/components/icon-button.scss';
+import '../styles/components/icon-button.scss';
 
 export default function IconButton({className, icon, onPress, ...props}) {
     return (

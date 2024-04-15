@@ -1,6 +1,6 @@
 "use client"
 import {useCallback} from 'react';
-import '../assets/styles/hooks/ripple.scss';
+import '../styles/hooks/ripple.scss';
 
 export default function useRippleEffect() {
     // Here we have the onMouseDown, which will be just the ripple animation

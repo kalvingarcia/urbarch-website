@@ -1,10 +1,9 @@
 "use client"
 import Link from 'next/link';
 import {useState} from 'react';
-import Heading from './heading';
-import Subheading from './subheading';
+import {Heading, Subheading} from './typography';
 import Button from './button';
-import '../assets/styles/components/footer.scss';
+import '../styles/components/footer.scss';
 
 /**
  * This is the footer of the website. It will hold the company location/contact information,

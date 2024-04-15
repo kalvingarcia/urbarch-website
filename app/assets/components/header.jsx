@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {useState, useEffect, useContext} from 'react';
 import {DarkModeContext} from './theme';
 import IconButton from './icon-button';
-import "../assets/styles/components/header.scss";
+import "../styles/components/header.scss";
 
 /**
  * This is the header component for the website. The idea is that it's persistent along the length of the page.

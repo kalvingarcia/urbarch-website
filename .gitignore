@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # non-source files
-/app/sessions
+/app/assets/sessions
 /demos

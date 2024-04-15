@@ -1,6 +1,6 @@
 "use client"
 import useRippleEffect from '../hooks/ripple';
-import "../assets/styles/components/button.scss";
+import "../styles/components/button.scss";
 
 export default function Button({className, role = "primary", style = "filled", onPress, children}) {
     const [rippleExpand, rippleFade] = useRippleEffect();

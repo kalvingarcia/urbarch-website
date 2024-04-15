@@ -2,13 +2,13 @@
 import Image from 'next/image';
 import  {useCallback, useEffect, useState} from 'react';
 import IconButton from './icon-button';
-import '../assets/styles/components/hero.scss';
+import '../styles/components/hero.scss';
 
 export default function Hero({src, children}) {
     const [image, setImage] = useState("");
     useEffect(() => {
         (async () => {
-            setImage(await import(`../assets/backgrounds/${src}`));
+            setImage(await import(`../images/backgrounds/${src}`));
         })();
     }, [src]);
 
