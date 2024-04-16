@@ -17,7 +17,7 @@ export default function Theme({children}) {
     return (
         <DarkModeContext.Provider value={[darkMode, toggleDarkMode]}>
             <div className={darkMode? 'theme--dark' : 'theme--light'}>
-                <div className="website">
+                <div className="root">
                     {children}
                 </div>
             </div>

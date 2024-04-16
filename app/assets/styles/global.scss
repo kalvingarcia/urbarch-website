@@ -39,7 +39,7 @@ html, body {
     font-style: normal;
 }
 
-.website {
+.root {
     width: 100%;
     @include themed() {
         background-color: t('background');
