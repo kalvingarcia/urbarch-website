@@ -8,8 +8,8 @@ export default function Home() {
     return (
         <main>
             <Hero src="home.jpg">
-                <Display size="medium" style={{fontFamily: "var(--cinzel)"}}>An Exploration of</Display>
-                <Display>urban <span style={{fontFamily: "var(--cinzel)"}}>ARCHAEOLOGY</span></Display>
+                <Display size="medium" style={{fontFamily: "var(--trajan)"}}>An Exploration of</Display>
+                <Display>urban <span style={{fontFamily: "var(--trajan)"}}>ARCHAEOLOGY</span></Display>
                 <Display size="small">May 16th-17th and 20th-23rd </Display>
                 <Display size="small">@ 7:00 AM - 4:00 PM</Display>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdL1pVylvGkvPjGTv31c1-C0y_04Xfp3KzbrWaPNWAe2u-SJg/viewform"><Button role="secondary" style="outlined">RSVP Here!</Button></a>

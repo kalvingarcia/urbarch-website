@@ -33,6 +33,10 @@ html, body {
     min-height: 100vh;
     line-height: 1.5;
     overscroll-behavior: none; // This part was specifically to avoid MacOS overscroll, which was bugging me.
+
+    font-family: var(--univers);
+    font-weight: 400;
+    font-style: normal;
 }
 
 .website {
