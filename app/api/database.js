@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import environment from '../sessions/database-env.json'
+import environment from '../assets/sessions/database-env.json'
 
 const Database = postgres(environment);
 
