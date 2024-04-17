@@ -14,7 +14,7 @@ export default function Banner({src, children}) {
     return (
         <section className="banner">
             <figure className='parallax-container'>
-                <Image className='parallax-image' src={image} alt="Custom banner image" />
+                <Image className='parallax-image' src={image} alt="Banner image" />
             </figure>
             <div className='overlay' />
             <div className='content'>

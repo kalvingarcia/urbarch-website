@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image';
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense} from 'react';
 import useRippleEffect from '../hooks/ripple';
 import '../styles/components/card.scss';
 

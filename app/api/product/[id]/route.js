@@ -29,5 +29,5 @@ export async function GET(request, {params: {id}}) {
 
     return new Response(JSON.stringify(result), {
         "status": 200
-    })
+    });
 }
