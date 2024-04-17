@@ -11,9 +11,9 @@ export default function QueryHandler({children}) {
         for(const [parameter, value] of searchParameters.entries())
             if(parameter === "search")
                 setSearch(value);
-            else for(id of value.replace("(", "").replace(")", "").split("|"))
+            else for(const id of value.replace("(", "").replace(")", "").split("|"))
                 addFilter(parameter, id);
-    }, [searchParameters]);
+    }, []);
 
     const addFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
@@ -23,15 +23,17 @@ export default function QueryHandler({children}) {
         setQueryParameter({...queryParameters, filters: filters});
     }, [queryParameters]);
 
-    const removeFilter = useCallback(filterID => {
+    const removeFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
-        delete filters[filterID];
+        filters[filterCategory] = filters[filterCategory].filter(element => element !== filterID);
+        if(filters[filterCategory].length === 0)
+            delete filters[filterCategory];
         setQueryParameter({...queryParameters, filters: filters});
     }, [queryParameters]);
 
     const hasFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
-        return filters.hasOwnProperty(fifilterCategorylterID) && filters[filterCategory].includes(filterID);
+        return filters.hasOwnProperty(filterCategory) && filters[filterCategory].includes(filterID);
     }, [queryParameters]);
 
     const setSearch = useCallback(searchText => {
