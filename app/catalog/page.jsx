@@ -4,11 +4,8 @@ import QueryHandler from "../assets/components/query-handler";
 import Filters from "../assets/components/filters";
 // import Search from "../assets/components/search";
 import Listings from "../assets/components/listings";
-import {GET_PRODUCTS, GET_TAGS} from "../api";
 
 export default function Catalog({searchParams}) {
-    const filters = fetch(GET_TAGS);
-    // const listings = fetch(`${GET_PRODUCTS}?${searchParams.toString()}`);
     return (
         <main>
             <Banner src="catalog.jpg">
@@ -16,10 +13,10 @@ export default function Catalog({searchParams}) {
             </Banner>
             <QueryHandler>
                 <div>
-                    <Filters filterPromise={filters}/>
+                    <Filters />
                     <div>
                         {/* <Search /> */}
-                        {/* <Listings listingsPromise={listings} /> */}
+                        <Listings searchParams={searchParams} />
                     </div>
                 </div>
             </QueryHandler>
