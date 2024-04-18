@@ -1,5 +1,5 @@
 "use client"
-import {Suspense, use, useCallback, useState, useContext} from "react";
+import {Suspense, useCallback, useState, useContext} from "react";
 import {QueryContext} from "./query-handler";
 import {Title} from './typography';
 import Button from "./button";
