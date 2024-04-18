@@ -6,14 +6,18 @@ export const QueryContext = createContext();
 
 export default function QueryHandler({children}) {
     const searchParameters = useSearchParams();
-    const [queryParameters, setQueryParameter] = useState({search: "", filters: {}});
-    useEffect(() => {
+    const [queryParameters, setQueryParameter] = useState(() => {
+        var {search, filters} = {search: "", filters: {}};
         for(const [parameter, value] of searchParameters.entries())
             if(parameter === "search")
-                setSearch(value);
-            else for(const id of value.replace("(", "").replace(")", "").split("|"))
-                addFilter(parameter, id);
-    }, []);
+                search = value;
+            else for(const id of value.split("|")) {
+                if(!filters.hasOwnProperty(parameter))
+                    filters[parameter] = [];
+                filters[parameter].push(id);
+            }
+        return {search, filters};
+    });
 
     const addFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
@@ -49,7 +53,8 @@ export default function QueryHandler({children}) {
         if(queryParameters.hasOwnProperty("filters") && Object.keys(queryParameters.filters).length !== 0)
             for(const [key, value] of Object.entries(queryParameters.filters))
                 queryStringList.push(`${key}=${value}`);
-        const queryString = queryStringList.join("&").replace("\"", "").replace("[", "(").replace("]", ")").replace(",", "+");
+
+        const queryString = queryStringList.join("&").replace(/,/g, "%7C");
         if(queryString !== "")
             router.push(`${pathname}?${queryString}`);
     }, [queryParameters]);
