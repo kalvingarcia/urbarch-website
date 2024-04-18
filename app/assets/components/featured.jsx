@@ -28,7 +28,7 @@ async function AsyncFeatured({view}) {
             <div className="divider" />
             <div className="cards">
                 {featured.map(data => (
-                    <Card key={data.id} type={view} uaid={data.id} name={data.name} category={data.category} price={data.price} />
+                    <Card key={data.id} type={view} id={data.id} name={data.name} category={data.category} price={data.price} />
                 ))}
             </div>
         </section>

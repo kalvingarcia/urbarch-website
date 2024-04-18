@@ -20,8 +20,8 @@ export function CardSkeleton({type = "normal"}) {
     );
 }
 
-async function AsyncCard({type = "normal", name, category, price, uaid, rippleExpand, rippleFade}) {
-    const image = await import(`../images/products/${uaid}.jpg`);
+async function AsyncCard({type = "normal", name, category, price, id, rippleExpand, rippleFade}) {
+    const image = await import(`../images/products/${id}.jpg`);
     return (
         <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade}>
             <div className='image'>
@@ -33,7 +33,7 @@ async function AsyncCard({type = "normal", name, category, price, uaid, rippleEx
                     <span className='category'>{category}</span>
                     <span className='price'>${price}</span>
                 </div>
-                <span className='uaid'>{uaid}</span>
+                <span className='uaid'>{id}</span>
             </div>
         </div>
     );
