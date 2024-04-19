@@ -128,7 +128,7 @@
             opacity: 0.75,
         }
         & .navigation { // Here we restyle the navigation class to be inside the modal
-            width: 0;
+            max-width: 0;
             height: 100vh;
             position: fixed;
             right: 0;
@@ -148,7 +148,7 @@
                 background-color: t('surface');
             }
             // depending on if the modal is open or closed, the transition is different
-            transition: width 300ms ease-out, padding 300ms cubic-bezier(1,0,1,0), background-color 300ms ease-in-out;
+            transition: max-width 300ms ease-out, padding 300ms cubic-bezier(1,0,1,0), background-color 300ms ease-in-out;
 
             & .buttons {
                 overflow: hidden;
@@ -175,9 +175,9 @@
                 display: block;
             }
             & .navigation {
-                width: 400px;
+                width: fit-content;
                 max-width: 80%;
-                transition: width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
+                transition: max-width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
             }
         }
     }

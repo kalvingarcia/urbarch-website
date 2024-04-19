@@ -17,10 +17,10 @@
     &.skeleton {
         @include themed() {
             background-image: linear-gradient(135deg, t('surface'), adjust(t('body'), $alpha: -0.8));
-            background-position: 0% 0%;
-            background-size: 200% 200%;
-            animation: loading-gradient 3s infinite;
         }
+        background-position: 0% 0%;
+        background-size: 200% 200%;
+        animation: loading-gradient 3s infinite;
 
         &:hover { // when we hover we set the opacity to a higher value
             &::after {

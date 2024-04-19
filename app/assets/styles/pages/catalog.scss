@@ -1,0 +1,12 @@
+@use '../theme.scss' as *;
+
+.catalog {
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+
+    & .listings {
+        width: 100%;
+    }
+}
