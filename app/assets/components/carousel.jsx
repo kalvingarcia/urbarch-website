@@ -1,59 +1,79 @@
 "use client"
-import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {SwitchTransition, CSSTransition} from 'react-transition-group';
+import React, {useState, useEffect, useCallback, createRef, forwardRef, memo} from 'react';
+import Button from './button';
 import IconButton from './icon-button';
 
-const DEFAULT_PER_PAGE = 10;
+const DEFAULT_PER_PAGE = 15;
 
-function Slide({ref, children}) {
+function Slide({children}) {
     return (
-        <div ref={ref}>
+        <div className='slide'>
             {children}
         </div>
     );
 }
 
-function Pagination({count, activeSlide, changeSlide}) {
-    const generatePageButtons = useCallback(() => {
+function PageButton({number, ...props}) {
+    return (
+        <Button className="page-button" {...props}>
+            {number}
+        </Button>
+    );
+}
 
-    }, [])
+function Pagination({count, activeSlide, changeSlide}) {
+    const generatePageButtons = useCallback(count => {
+        const pageButtons = [];
+        for(let i = 0; i < count; i++)
+            pageButtons.push(<PageButton key={i} role="primary" style={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
+        return pageButtons;
+    }, [activeSlide]);
 
     return (
-        <div>
-            <IconButton role="primary" style="tonal" icon="navigate_before" onPress={() => changeSlide(activeSlide - 1)} />
+        <div className='pagination'>
+            <IconButton className="left" role="primary" style="tonal" icon="navigate_before" onPress={() => changeSlide(activeSlide - 1)} />
             <div>
                 {generatePageButtons(count)}
             </div>
-            <IconButton role="primary" style="tonal" icon="navigate_next" onPress={() => changeSlide(activeSlide + 1)} />
+            <IconButton className="left" role="primary" style="tonal" icon="navigate_next" onPress={() => changeSlide(activeSlide + 1)} />
         </div>
     );
 }
 
 export default function Carousel({children}) {
-    const slideRefs = useRef([]);
-    const [slides, setSlides] = useState(() => {
-        const count = 0;
+    const [slides] = useState(() => {
+        let count = 0;
         const cardList = React.Children.toArray(children);
-        const slideList = [];
+        const slides = [];
         for(let i = 0; i < cardList.length; i += DEFAULT_PER_PAGE) {
             const cards = cardList.slice(i, i + DEFAULT_PER_PAGE);
-            slideList.push(<Slide key={count} ref={element => slideRefs.current[count] = element}>{cards}</Slide>);
+            slides.push(<Slide key={count}>{cards}</Slide>);
+            count++;
         }
-        return slideList;
+        return slides;
     });
 
     const [activeSlide, setActiveSlide] = useState(0);
     const [direction, setDirection] = useState("left");
+    const changeSlide = useCallback(nextSlide => {
+        if(nextSlide === activeSlide)
+            return;
 
-    const endListener = useCallback((node, done) => node.addEventListener("transitioned", done, flase), []);
+        nextSlide = nextSlide > slides.length - 1? slides.length - 1 : nextSlide;
+        nextSlide = nextSlide < 0? 0 : nextSlide;
+        
+        if(nextSlide > activeSlide)
+            setDirection("right");
+        else
+            setDirection("left");
+        console.log(activeSlide, nextSlide);
+        setActiveSlide(nextSlide);
+    }, [direction]);
+
     return (
-        <div>
-            <SwitchTransition>
-                <CSSTransition key={activeSlide} nodeRef={slideRefs.current[activeSlide]} addEndListener={endListener} classNames={`product-slide-${direction}-transition`}>
-                    {slides[activeSlide]}
-                </CSSTransition>
-            </SwitchTransition>
-            <Pagination />
+        <div className='carousel'>
+            {slides[activeSlide]}
+            <Pagination count={slides.length} activeSlide={activeSlide} changeSlide={changeSlide} />
         </div>
     )
 }
