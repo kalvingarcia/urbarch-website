@@ -29,9 +29,11 @@ export default function QueryHandler({children}) {
 
     const removeFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
-        filters[filterCategory] = filters[filterCategory].filter(element => element !== filterID);
-        if(filters[filterCategory].length === 0)
-            delete filters[filterCategory];
+        if(filters.hasOwnProperty(filterCategory)) {
+            filters[filterCategory] = filters[filterCategory].filter(element => element !== filterID);
+            if(filters[filterCategory].length === 0)
+                delete filters[filterCategory];
+        }
         setQueryParameter({...queryParameters, filters: filters});
     }, [queryParameters]);
 
@@ -43,6 +45,16 @@ export default function QueryHandler({children}) {
     const setSearch = useCallback(searchText => {
         setQueryParameter({...queryParameters, search: searchText})
     }, [queryParameters]);
+
+    const [clearEvent, setClearEvent] = useState(true);
+    const triggerClearEvent = useCallback(() => {
+        setClearEvent(!clearEvent);
+    }, [clearEvent])
+
+    const [requestEvent, setRequestEvent] = useState(true);
+    const triggerRequestEvent = useCallback(() => {
+        setRequestEvent(!requestEvent);
+    }, [requestEvent])
 
     const pathname = usePathname();
     const router = useRouter();
@@ -60,7 +72,7 @@ export default function QueryHandler({children}) {
     }, [queryParameters]);
 
     return (
-        <QueryContext.Provider value={{addFilter, removeFilter, hasFilter, setSearch}} >
+        <QueryContext.Provider value={{addFilter, removeFilter, hasFilter, setSearch, clearEvent, triggerClearEvent, requestEvent, triggerRequestEvent}} >
             {children}
         </QueryContext.Provider>
     );
