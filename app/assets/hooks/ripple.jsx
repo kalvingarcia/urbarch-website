@@ -33,8 +33,10 @@ export default function useRippleEffect() {
         const target = event.currentTarget; // Finding our button
 
         const ripple = target.getElementsByClassName("ripple")[0]; // checking if there is a ripple in place
-        if(ripple)
+        if(ripple) {
             ripple.classList.add("fade"); // adding the fade style to the ripple
+            setTimeout(() => ripple?.remove(), 600);
+        }
     }, []);
 
     return [rippleExpand, rippleFade];
