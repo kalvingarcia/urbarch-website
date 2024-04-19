@@ -13,7 +13,7 @@ export async function GET(request) {
                 SELECT DISTINCT listing_id AS id, tag.name AS category
                 FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id  /* First we combine the tag and tag category information */
                     INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-                WHERE tag_categories.name = 'Category' AND listing_id IN (SELECT listing_id FROM product_variations)
+                WHERE tag_categories.name = 'Class' AND listing_id IN (SELECT listing_id FROM product_variations)
             )
             SELECT id, name, category, MIN(price) AS price
             FROM product_listing INNER JOIN prices USING(id) INNER JOIN categories USING(id)
