@@ -5,8 +5,8 @@ import Card from "./card";
 
 function ListingsPreloader() {
     return (
-        <section>
-            <div />
+        <section className="preloader">
+            <i className="urban-icons">urbarch_logo</i>
         </section>
     );
 }
@@ -19,7 +19,7 @@ async function AsyncListings({searchParams}) {
     return (
         <section>
             <Carousel>
-                {listings.map(product => <Card key={product.id} type="list" id={product.id} name={product.id} category={product.id} price={product.price} />)}
+                {listings.map(product => <Card key={product.id} type="list" id={product.id} name={product.name} category={product.category} price={product.price} />)}
             </Carousel>
         </section>
     );
