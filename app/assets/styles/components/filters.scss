@@ -1,0 +1,308 @@
+@use 'sass:color' as *;
+@use '../theme' as *;
+
+.filter-modal-wrapper {
+    max-width: fit-content;
+
+    @media (max-width: 1000px) {
+        display: block;
+        position: fixed;
+        width: 80%;
+        height: 80%;
+        top: 10%;
+        left: 10%;
+        z-index: 1000;
+
+        & .scrim {
+            display: none;
+        }
+        & .filters {
+            display: none;
+        }
+
+        &.open {
+            & .scrim {
+                display: block;
+            }
+            & .filters {
+                display: flex;
+            }
+            & .filter-button {
+                display: none;
+            }
+        }
+    }
+
+    & .scrim {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        @include themed() {
+            background-color: t('dark-font');
+        }
+        opacity: 0.5;
+
+        @media (min-width: 1000px) {
+            display: none;
+        }
+    }
+
+    .filters {
+        width: 400px;
+        height: fit-content;
+        flex-direction: column;
+        padding: 40px;
+        border-radius: 20px;
+        gap: 20px;
+    
+        @include themed() {
+            background-color: t('primary');
+            color: t('on-primary');
+        }
+    
+        @media (max-width: 1000px) {
+            position: fixed;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+        }
+    
+        & .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+    
+            & .close {
+                @media (min-width: 1000px) {
+                    display: none;
+                }
+            }
+        }
+    
+        & .filter-list {
+            display: flex;
+            flex-direction: column;
+            max-height: 2000px;
+            overflow-y: auto;
+    
+            &.skeleton {
+                & .filter-group {
+                    & .name {
+                        opacity: 0.5;
+                        @include themed() {
+                            background-image: linear-gradient(135deg, t('primary'), adjust(t('on-primary'), $alpha: -0.8));
+                        }
+                        background-position: 0% 0%;
+                        background-size: 200% 200%;
+                        animation: loading-gradient 3s infinite;
+    
+                        &:hover {
+                            &::after {
+                                opacity: 0;
+                            }
+                        }
+    
+                        & .label {
+                            height: 1rem;
+                            width: 50%;
+                            border-radius: 2000px;
+                            @include themed() {
+                                background-color: t('on-primary');
+                            }
+                        }
+                    }
+        
+                    & .drawer {
+                        & .filter {
+                            opacity: 0.5;
+                            @include themed() {
+                                background-image: linear-gradient(135deg, t('primary'), adjust(t('on-primary'), $alpha: -0.8));
+                            }
+                            background-position: 0% 0%;
+                            background-size: 200% 200%;
+                            animation: loading-gradient 3s infinite;
+                            border-radius: 2000px;
+    
+                            & .switch {
+                                height: 20px;
+                                width: 20px;
+                                border-radius: 2000px;
+                                @include themed() {
+                                    background-color: t('on-primary');
+                                }
+                            }
+    
+                            & .label {
+                                height: 1rem;
+                                width: 50%;
+                                border-radius: 2000px;
+                                @include themed() {
+                                    background-color: t('on-primary');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    
+            & .filter-group {
+                display: flex;
+                flex-direction: column;
+    
+                & .name {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    position: relative;
+                    border-radius: 2000px;
+                    overflow: hidden;
+                    clip-path: inset(0 0 0 0 round 2000px);
+                    padding: 10px 20px;
+    
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+    
+                        opacity: 0;
+                        transition: opacity 300ms ease-in-out;
+                        @include themed() {
+                            background-color: t('on-primary');
+                        }
+                    }
+                    &:hover {
+                        &::after {
+                            opacity: 0.3;
+                        }
+                    }
+    
+                    & .expand {
+                        font-size: 36px;
+                        transition: transform 300ms ease-in-out;
+    
+                        &.open {
+                            transform: rotate(-180deg);
+                        }
+                    }
+    
+                    & .ripple {
+                        @include themed() {
+                            background-color: t('on-primary');
+                        }
+                    }
+                }
+    
+                & .drawer {
+                    display: flex;
+                    flex-direction: column;
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 300ms ease-in-out;
+                    margin-left: 40px;
+                    &.open {
+                        height: fit-content;
+                        max-height: 2000px;
+                    }
+    
+                    & .filter {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding: 10px 20px;
+    
+                        & input {
+                            opacity: 0;
+                            width: 0;
+                            height: 0;
+                        }
+    
+                        & .switch {
+                            position: relative;
+                            width: 60px;
+                            height: 34px;
+                            @include themed() {
+                                background-color: t('on-primary');
+                            }
+                            opacity: 0.5;
+                            border-radius: 2000px;
+                            transition: opacity 300ms ease-in-out;
+    
+                            & .slider {
+                                position: absolute;
+                                height: 26px;
+                                width: 26px;
+                                left: 4px;
+                                bottom: 4px;
+                                border-radius: 2000px;
+                                overflow: hidden;
+                                clip-path: inset(0 0 0 0 round 2000px);
+                                @include themed() {
+                                    background-color: t('background');
+                                }
+                                cursor: pointer;
+                                transition: transform 300ms ease-in-out;
+    
+                                & .ripple {
+                                    @include themed() {
+                                        background-color: t('on-primary');
+                                    }
+                                }
+                            }
+    
+                            &.on {
+                                opacity: 1;
+    
+                                & .slider {
+                                    transform: translateX(26px);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        & .buttons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: auto;
+            gap: 20px;
+        }
+    }
+
+    & .filter-button {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        min-height: 80px !important;
+        min-width: 80px !important;
+        & i {
+            font-size: 40px;
+        }
+
+        @media (min-width: 1000px) {
+            display: none;
+        }
+    }
+}
+
+
+
+@keyframes loading-gradient {
+    0% {
+        background-position: 0% 10%;
+    }
+    50% {
+        background-position: 100% 90%;
+    }
+    100% {
+        background-position: 0% 10%;
+    }
+}
