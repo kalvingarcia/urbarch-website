@@ -1,45 +1,90 @@
 "use client"
-import {Suspense, useCallback, useState, useContext} from "react";
+import {Suspense, useState, useContext, useEffect, memo} from "react";
 import {QueryContext} from "./query-handler";
-import {Title} from './typography';
-import Button from "./button";
+import {Title, Heading} from './typography';
+import Button from './button';
+import IconButton from "./icon-button";
 import useRippleEffect from "../hooks/ripple";
 import {GET_TAGS} from '../../api';
+import "../styles/components/filters.scss";
 
 export function FilterListSkeleton() {
     return (
-        <div>
-            <div>
-                <div />
-                <div>
-                    <div />
-                    <div />
-                    <div />
+        <div className="filter-list skeleton">
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+                <div className="drawer open">
+                    <div className="filter">
+                        <div className="switch" />
+                        <div className="label" />
+                    </div>
+                    <div className="filter">
+                        <div className="switch" />
+                        <div className="label" />
+                    </div>
                 </div>
             </div>
-            <div />
-            <div />
-            <div />
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
+            <div className="filter-group">
+                <div className="name ">
+                    <div className="label" />
+                    <i className="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
         </div>
     );
 }
 
 function Filter({id, name, category}) {
-    const {addFilter, removeFilter, hasFilter} = useContext(QueryContext);
+    const {addFilter, removeFilter, hasFilter, requestEvent, clearEvent} = useContext(QueryContext);
     const [on, setOn] = useState(hasFilter(category, id));
 
-    const toggleFilter = useCallback(() => {
+    useEffect(() => {
         if(on)
-            removeFilter(category, id);
-        else
             addFilter(category, id);
-        setOn(!on);
-    }, [category, id]);
+        else
+            removeFilter(category, id);
+    }, [requestEvent])
+
+    useEffect(() => {
+        if(on) {
+            removeFilter(category, id);
+            setOn(false);
+        }
+    }, [clearEvent]);
 
     return (
-        <div>
-            <div />
-            <span>{name}</span>
+        <div className="filter">
+            <div className={["switch", on? "on" : ""].join(" ")} onClick={() => setOn(!on)}>
+                <div className="slider"/>
+            </div>
+            <span className="label">{name}</span>
         </div>
     );
 }
@@ -47,10 +92,14 @@ function Filter({id, name, category}) {
 function FilterGroup({name, children}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
     const [open, setOpen] = useState(false);
+
     return (
         <div className="filter-group">
-            <span className="name" onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setOpen(!open)}>{name}</span>
-            <div className={["drawer", open? "open" : ""].join()}>
+            <div className="name" onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setOpen(!open)}>
+                <Heading className="label">{name}</Heading>
+                <i className={["material-icons", "expand", open? "open" : ""].join(" ")}>arrow_drop_down</i>
+            </div>
+            <div className={["drawer", open? "open" : ""].join(" ")}>
                 {children}
             </div>
         </div>
@@ -67,22 +116,34 @@ async function FilterList() {
             </FilterGroup>
         )
     return (
-        <div>
+        <div className="filter-list">
             {filterGroups}
         </div>
     );
 }
 
+const MemoizedFilterList = memo(FilterList);
+
 export default function Filters() {
+    const {triggerClearEvent, triggerRequestEvent} = useContext(QueryContext);
+    const [open, setOpen] = useState(false);
     return (
-        <section>
-            <Title>Filters</Title>
-            <div>
+        <div className={["filter-modal-wrapper", open? "open" : ""].join(" ")}>
+            <div className="scrim"  onClick={() => setOpen(false)} />
+            <section className="filters">
+                <div className="title-bar">
+                    <Title>Filters</Title>
+                    <IconButton className="close" role="primary" style="filled" icon="close" onPress={() => setOpen(false)}/>
+                </div>
                 <Suspense fallback={<FilterListSkeleton />}>
-                    <FilterList />
+                    <MemoizedFilterList />
                 </Suspense>
-            </div>
-            <Button role="primary" style="filled">Close</Button>
-        </section>
+                <div className="buttons">
+                    <Button role="secondary" style="tonal" onPress={triggerClearEvent}>Clear</Button>
+                    <Button role="primary" style="filled" onPress={triggerRequestEvent}>Filter</Button>
+                </div>
+            </section>
+            <IconButton className={["filter-button", open? "open" : ""].join(" ")} role="primary" style="filled" onPress={() => setOpen(true)} icon="filter_list" />
+        </div>
     );
 }
