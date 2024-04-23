@@ -3,6 +3,7 @@ import Image from 'next/image';
 import {Suspense} from 'react';
 import useRippleEffect from '../hooks/ripple';
 import '../styles/components/card.scss';
+import { navigate } from '../actions';
 
 export function CardSkeleton({type = "normal"}) {
     return (
@@ -20,10 +21,10 @@ export function CardSkeleton({type = "normal"}) {
     );
 }
 
-async function AsyncCard({type = "normal", name, category, price, id, rippleExpand, rippleFade}) {
+async function AsyncCard({type = "normal", name, category, price, id, extension, rippleExpand, rippleFade}) {
     const image = await import(`../images/products/${id}.jpg`);
     return (
-        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade}>
+        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => navigate(`/catalog/${id}/${extension}`)}>
             <div className='image'>
                 <Image src={image} alt="" />
             </div>
