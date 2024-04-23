@@ -92,7 +92,6 @@ function Filter({id, name, category}) {
 function FilterGroup({name, children}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
     const [open, setOpen] = useState(false);
-
     return (
         <div className="filter-group">
             <div className="name" onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setOpen(!open)}>
@@ -143,7 +142,7 @@ export default function Filters() {
                     <Button role="primary" style="filled" onPress={triggerRequestEvent}>Filter</Button>
                 </div>
             </section>
-            <IconButton className={["filter-button", open? "open" : ""].join(" ")} role="primary" style="filled" onPress={() => setOpen(true)} icon="filter_list" />
+            <IconButton className={["filter-button", open? "open" : ""].join(" ")} role="primary" style="filled" onPress={() => setOpen(true)} icon="manage_search" />
         </div>
     );
 }
