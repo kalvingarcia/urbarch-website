@@ -19,6 +19,21 @@ export default function QueryHandler({children}) {
         return {search, filters};
     });
 
+    const pathname = usePathname();
+    const router = useRouter();
+    const route = useCallback(() => {
+        const queryStringList = [];
+        if(queryParameters.hasOwnProperty("search") && queryParameters.search !== "")
+            queryStringList.push(`search=${queryParameters.search}`)
+        if(queryParameters.hasOwnProperty("filters") && Object.keys(queryParameters.filters).length !== 0)
+            for(const [key, value] of Object.entries(queryParameters.filters))
+                queryStringList.push(`${key}=${value}`);
+
+        const queryString = queryStringList.join("&").replace(/,/g, "%7C");
+        if(queryString !== "")
+            router.push(`${pathname}?${queryString}`);
+    }, [pathname, router, queryParameters]);
+
     const addFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
         if(!filters.hasOwnProperty(filterCategory))
@@ -43,33 +58,21 @@ export default function QueryHandler({children}) {
     }, [queryParameters]);
 
     const setSearch = useCallback(searchText => {
-        setQueryParameter({...queryParameters, search: searchText})
+        setQueryParameter({...queryParameters, search: searchText});
+        route();
     }, [queryParameters]);
 
     const [clearEvent, setClearEvent] = useState(true);
     const triggerClearEvent = useCallback(() => {
         setClearEvent(!clearEvent);
-    }, [clearEvent])
+        route();
+    }, [clearEvent]);
 
     const [requestEvent, setRequestEvent] = useState(true);
     const triggerRequestEvent = useCallback(() => {
         setRequestEvent(!requestEvent);
-    }, [requestEvent])
-
-    const pathname = usePathname();
-    const router = useRouter();
-    useEffect(() => {
-        const queryStringList = [];
-        if(queryParameters.hasOwnProperty("search") && queryParameters.search !== "")
-            queryStringList.push(`search=${queryParameters.search}`)
-        if(queryParameters.hasOwnProperty("filters") && Object.keys(queryParameters.filters).length !== 0)
-            for(const [key, value] of Object.entries(queryParameters.filters))
-                queryStringList.push(`${key}=${value}`);
-
-        const queryString = queryStringList.join("&").replace(/,/g, "%7C");
-        if(queryString !== "")
-            router.push(`${pathname}?${queryString}`);
-    }, [queryParameters]);
+        route();
+    }, [requestEvent]);
 
     return (
         <QueryContext.Provider value={{addFilter, removeFilter, hasFilter, setSearch, clearEvent, triggerClearEvent, requestEvent, triggerRequestEvent}} >
