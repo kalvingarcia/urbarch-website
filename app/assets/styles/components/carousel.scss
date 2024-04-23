@@ -1,0 +1,36 @@
+@use '../theme' as *;
+
+.carousel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    & .slide {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    & .pagination {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        & .button-list {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            & .page-button {
+                min-height: 50px;
+                min-width: 50px;
+                padding: 10px;
+                text-align: center;
+            }
+        }
+    }
+}
