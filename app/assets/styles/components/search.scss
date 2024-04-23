@@ -1,0 +1,37 @@
+@use "../theme" as *;
+
+.search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 58px;
+    border-radius: 2000px;
+    padding-left: 30px;
+    gap: 5px;
+
+    @include themed() {
+        background-color: t('surface');
+    }
+
+    & .textbox {
+        height: 100%;
+        width: 100%;
+        outline: none;
+        border: none;
+        background-color: transparent;
+
+        @include themed() {
+            color: t('body');
+        }
+    }
+
+    & .divider {
+        width: 1pt;
+        height: 60%;
+        opacity: 0.5;
+
+        @include themed() {
+            background-color: t('body');
+        }
+    }
+}
