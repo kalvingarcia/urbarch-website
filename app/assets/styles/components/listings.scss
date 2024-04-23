@@ -5,7 +5,9 @@
     height: 100vh;
     position: relative;
 
-    & i {
+    & .progress {
+        height: fit-content;
+        width: fit-content;
         position: absolute;
         top: 50%;
         left: 50%;
