@@ -39,9 +39,9 @@ export default function Featured() {
     const [view, setView] = useState("normal");
     const {width} = useWindowSize();
     useEffect(() => {
-        if(width < 1000 && view === "normal")
+        if(width <= 1000 && view === "normal")
             setView("list");
-        else if(width >= 1000 && view === "list")
+        else if(width > 1000 && view === "list")
             setView("normal");
     }, [width]);
 
