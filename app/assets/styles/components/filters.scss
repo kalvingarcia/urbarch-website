@@ -51,7 +51,9 @@
 
     .filters {
         width: 400px;
+        min-height: 1000px;
         height: fit-content;
+        display: flex;
         flex-direction: column;
         padding: 40px;
         border-radius: 20px;
@@ -63,9 +65,11 @@
         }
     
         @media (max-width: 1000px) {
+            display: none;
             position: fixed;
             width: 80%;
             height: 80%;
+            min-height: 80%;
             top: 10%;
             left: 10%;
         }
