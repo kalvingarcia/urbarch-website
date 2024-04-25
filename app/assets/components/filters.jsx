@@ -1,5 +1,6 @@
 "use client"
-import {Suspense, useState, useContext, useEffect, memo} from "react";
+import {useSearchParams} from "next/navigation";
+import {useState, useContext, useEffect} from "react";
 import {QueryContext} from "./query-handler";
 import {Title, Heading} from './typography';
 import Button from './button';
@@ -61,28 +62,47 @@ export function FilterListSkeleton() {
     );
 }
 
-function Filter({id, name, category}) {
-    const {addFilter, removeFilter, hasFilter, requestEvent, clearEvent} = useContext(QueryContext);
-    const [on, setOn] = useState(hasFilter(category, id));
-
+function Chip({id, name, category}) {
+    const [rippleExpand, rippleFade] = useRippleEffect();
+    const {hasFilter, addFilter, removeFilter} = useContext(QueryContext);
+    const [on, setOn] = useState(hasFilter(category,id));
     useEffect(() => {
         if(on)
             addFilter(category, id);
         else
             removeFilter(category, id);
-    }, [requestEvent])
+    }, [on]);
 
+    return (
+        <button className={["chip", on? "on" : ""].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setOn(!on)}>
+            <i className={["urban-icons", "icon"].join(" ")}>{name.toLowerCase()}</i>
+            <span className="label">{name}</span>
+        </button>
+    );
+}
+
+function ChipGroup({children}) {
+    return (
+        <div className="chip-group">
+            {children}
+        </div>
+    );
+}
+
+function Filter({id, name, category}) {
+    const {hasFilter, addFilter, removeFilter} = useContext(QueryContext);
+    const [on, setOn] = useState(hasFilter(category,id));
     useEffect(() => {
-        if(on) {
+        if(on)
+            addFilter(category, id);
+        else
             removeFilter(category, id);
-            setOn(false);
-        }
-    }, [clearEvent]);
+    }, [on]);
 
     return (
         <div className="filter">
             <div className={["switch", on? "on" : ""].join(" ")} onClick={() => setOn(!on)}>
-                <div className="slider"/>
+                <div className="slider" />
             </div>
             <span className="label">{name}</span>
         </div>
