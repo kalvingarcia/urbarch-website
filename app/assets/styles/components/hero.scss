@@ -1,4 +1,3 @@
-@use 'sass:color' as *;
 @use "../theme" as *;
 
 .hero {
@@ -79,9 +78,3 @@
         }
     }
 }
-
-// @keyframes darken {
-//     to {
-//         opacity: 1;
-//     }
-// }

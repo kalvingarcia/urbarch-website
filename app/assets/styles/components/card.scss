@@ -126,7 +126,8 @@
             }
 
             & .category {
-                padding: 5px 10px;
+                font-size: 0.8rem;
+                padding: 10px 20px;
                 border-radius: 2000px;
                 min-width: fit-content;
                 max-width: fit-content;
@@ -175,6 +176,7 @@
 
     &.list {
         width: 100%;
+        max-width: 1200px;
         height: 200px;
         flex-direction: row;
 
