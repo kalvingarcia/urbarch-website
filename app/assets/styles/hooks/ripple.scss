@@ -1,6 +1,7 @@
 .ripple {
     position: fixed; // Once again, we want to overlay the effect over the button
     transform: scale(0);
+    pointer-events: none;
 
     border-radius: 50%;
     opacity: 0.3;
