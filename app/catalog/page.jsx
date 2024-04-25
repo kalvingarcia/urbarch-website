@@ -14,10 +14,10 @@ export default function Catalog() {
             </Banner>
             <QueryHandler>
                 <section className="catalog">
-                    <Filters />
+                    <Filters from="products" />
                     <div className="listings">
                         <Search />
-                        <Listings />
+                        <Listings from="products" />
                     </div>
                 </section>
             </QueryHandler>

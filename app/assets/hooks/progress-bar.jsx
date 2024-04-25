@@ -38,11 +38,11 @@ export default function useProgressBar() {
     }, [progressBarStatus, active]);
 
     const progressBarFetch = useCallback(async (url, options) => {
-        // setActive(true);
-        // setProgressBarStatus("start");
-        // checkUp();
+        setActive(true);
+        setProgressBarStatus("start");
+        checkUp();
         const response = await fetch(url, options);
-        // setActive(false);
+        setActive(false);
 
         if(response.status < 200 || response.status >= 300)
             return new Error(response.statusText);

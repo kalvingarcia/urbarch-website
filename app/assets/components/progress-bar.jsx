@@ -3,7 +3,7 @@ import useProgressBar from "../hooks/progress-bar";
 import '../styles/components/progress-bar.scss';
 
 export default function ProgressBar() {
-    const [progressBarStatus, _] = useProgressBar();
+    const {progressBarStatus} = useProgressBar();
     const [width, setWidth] = useState(0);
     const [transition, setTransition] = useState("background-color 300ms ease-in-out");
 

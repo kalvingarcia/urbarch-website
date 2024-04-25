@@ -8,8 +8,10 @@
 
     & .listings {
         width: 100%;
+        flex: 0 1 100%;
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 40px;
     }
 }
