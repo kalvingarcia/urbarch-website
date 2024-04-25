@@ -26,7 +26,8 @@
             color: t('light-font');
         }
     }
-    &:hover, &.moved, &.open {
+
+    &:hover, &.moved, &.open, &.show {
         @include themed() {
             background-color: t('surface');
             color: t('body');

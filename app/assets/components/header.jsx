@@ -1,4 +1,5 @@
 "use client"
+import {usePathname} from 'next/navigation';
 import Link from 'next/link';
 import {useState, useEffect, useContext} from 'react';
 import {DarkModeContext} from './theme';
@@ -23,12 +24,20 @@ export default function Header() {
         if(window.scrollY != 0)
                 setMoved(true); // If the window has returned to scroll 0, then it gets set back to false
     }, []);
+
+    const pathname = usePathname();
+    const [show, setShow] = useState(false);
+    useEffect(() => {
+        if(pathname.match(/\/catalog(\/[A-Za-z0-9]+)+/g) !== null)
+            setShow(true);
+        else
+            setShow(false);
+    }, [pathname]);
     
     const [open, setOpen] = useState(false); // This keeps track of the modal state
-
     const [darkMode, toggleDarkMode] = useContext(DarkModeContext); // This is the dark mode context
     return (
-        <section className={["header", open? "open" : "", moved? "moved" : ""].join(" ")}>
+        <section className={["header", open? "open" : "", moved? "moved" : "", show? "show" : ""].join(" ")}>
             <Link className="branding" href="/">
                 <i className='urban-icons'>urbarch_logo</i>
                 <div>
@@ -38,9 +47,9 @@ export default function Header() {
             </Link>
             <div className="menu">
                 <div className="navigation">
-                    <Link href="/catalog">Catalog</Link>
-                    <Link href="/salvage">Salvage</Link>
-                    <Link href="/gallery">Gallery</Link>
+                    <Link className={pathname === '/catalog'? "active" : ""} href="/catalog">Catalog</Link>
+                    <Link className={pathname === '/salvage'? "active" : ""} href="/salvage">Salvage</Link>
+                    <Link className={pathname === '/gallery'? "active" : ""} href="/gallery">Gallery</Link>
                     <IconButton className="cart" role="primary" style="text" icon='shopping_cart' />
                 </div>
                 <IconButton className="dark-mode" role="secondary" style="outlined" icon={darkMode? "dark_mode" : "light_mode"} onPress={toggleDarkMode} />
