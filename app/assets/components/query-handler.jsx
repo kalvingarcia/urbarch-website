@@ -1,6 +1,7 @@
 "use client"
 import {useRouter, usePathname, useSearchParams} from 'next/navigation';
 import {createContext, useCallback, useState, useEffect} from "react";
+import {ntob, bton} from '../auxillary/helpers';
 
 export const QueryContext = createContext();
 
@@ -13,69 +14,59 @@ export default function QueryHandler({children}) {
                 search = value;
             else for(const id of value.split("|")) {
                 if(!filters.hasOwnProperty(parameter))
-                    filters[parameter] = [];
-                filters[parameter].push(id);
+                    filters[parameter] = new Set();
+                filters[parameter].add(bton(id));
             }
         return {search, filters};
     });
 
     const pathname = usePathname();
     const router = useRouter();
-    const route = useCallback(() => {
+    const applyRoute = useCallback(() => {
         const queryStringList = [];
         if(queryParameters.hasOwnProperty("search") && queryParameters.search !== "")
             queryStringList.push(`search=${queryParameters.search}`)
         if(queryParameters.hasOwnProperty("filters") && Object.keys(queryParameters.filters).length !== 0)
             for(const [key, value] of Object.entries(queryParameters.filters))
-                queryStringList.push(`${key}=${value}`);
+                queryStringList.push(`${key}=${Array.from(value.values().map(id => ntob(id))).join("%7C")}`);
 
-        const queryString = queryStringList.join("&").replace(/,/g, "%7C");
-        if(queryString !== "")
-            router.push(`${pathname}?${queryString}`);
+        const queryString = queryStringList.join("&");
+        router.push(`${pathname}?${queryString}`);
     }, [pathname, router, queryParameters]);
+
+    const getSearch = useCallback(() => {
+        return queryParameters.search;
+    }, [queryParameters])
+
+    const setSearch = useCallback(searchText => {
+        setQueryParameter({...queryParameters, search: searchText});
+    }, [queryParameters]);
+
+    const hasFilter = useCallback((filterCategory, filterID) => {
+        const {filters} = queryParameters;
+        return filters.hasOwnProperty(filterCategory) && filters[filterCategory].has(filterID);
+    }, [queryParameters]);
 
     const addFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
         if(!filters.hasOwnProperty(filterCategory))
-            filters[filterCategory] = []
-        filters[filterCategory].push(filterID);
+            filters[filterCategory] = new Set();
+        filters[filterCategory].add(filterID);
         setQueryParameter({...queryParameters, filters: filters});
     }, [queryParameters]);
 
     const removeFilter = useCallback((filterCategory, filterID) => {
         const {filters} = queryParameters;
         if(filters.hasOwnProperty(filterCategory)) {
-            filters[filterCategory] = filters[filterCategory].filter(element => element !== filterID);
-            if(filters[filterCategory].length === 0)
+            filters[filterCategory].delete(filterID);
+            if(filters[filterCategory].size === 0)
                 delete filters[filterCategory];
         }
         setQueryParameter({...queryParameters, filters: filters});
     }, [queryParameters]);
 
-    const hasFilter = useCallback((filterCategory, filterID) => {
-        const {filters} = queryParameters;
-        return filters.hasOwnProperty(filterCategory) && filters[filterCategory].includes(filterID);
-    }, [queryParameters]);
-
-    const setSearch = useCallback(searchText => {
-        setQueryParameter({...queryParameters, search: searchText});
-        route();
-    }, [queryParameters]);
-
-    const [clearEvent, setClearEvent] = useState(true);
-    const triggerClearEvent = useCallback(() => {
-        setClearEvent(!clearEvent);
-        route();
-    }, [clearEvent]);
-
-    const [requestEvent, setRequestEvent] = useState(true);
-    const triggerRequestEvent = useCallback(() => {
-        setRequestEvent(!requestEvent);
-        route();
-    }, [requestEvent]);
-
     return (
-        <QueryContext.Provider value={{addFilter, removeFilter, hasFilter, setSearch, clearEvent, triggerClearEvent, requestEvent, triggerRequestEvent}} >
+        <QueryContext.Provider value={{getSearch, setSearch, hasFilter, addFilter, removeFilter, applyRoute}} >
             {children}
         </QueryContext.Provider>
     );
