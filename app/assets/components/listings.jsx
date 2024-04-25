@@ -1,6 +1,6 @@
 "use client"
 import {useSearchParams} from "next/navigation";
-import {Suspense, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Carousel from "./carousel";
 import Card from "./card";
 import ProgressBar from "./progress-bar";
@@ -18,27 +18,28 @@ function ListingsPreloader() {
     );
 }
 
-async function AsyncListings({queryString}) {
-    const listings = await fetch(`${GET_PRODUCTS}?${queryString}`, {cache: "no-store"}).then(response => response.json());
-    return (
-        <Carousel>
-            {listings.map(product => <Card key={product.id} type="list" id={product.id} name={product.name} category={product.category} price={product.price} />)}
-        </Carousel>
-    );
-}
-
-export default function Listings() {
+export default function Listings({from}) {
     const searchParams = useSearchParams();
-    const [queryString, setQueryString] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [listings, setListings] = useState([]);
     useEffect(() => {
         const queryStringList = []
         for(const [parameter, value] of searchParams.entries())
             queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
-        setQueryString(queryStringList.join("&"));
-    }, [searchParams.entries()]);
-    return (
-        <Suspense fallback={<ListingsPreloader />}>
-            <AsyncListings queryString={queryString} />
-        </Suspense>
+        const queryString = queryStringList.join("&");
+
+        (async () => {
+            setLoading(true);
+            setListings(await fetch(`${GET_PRODUCTS}?${queryString}`, {cache: "no-store"}).then(response => response.json()));
+            setLoading(false);
+        })();
+    }, [searchParams.toString()]);
+
+    return (loading?
+        <ListingsPreloader />
+        :
+        <Carousel>
+            {listings.map(product => <Card key={product.id} type="list" from={from} id={product.id} name={product.name} category={product.category} price={product.price} />)}
+        </Carousel>
     );
 }

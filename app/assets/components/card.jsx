@@ -1,9 +1,9 @@
 "use client"
+import {useRouter} from 'next/navigation';
 import Image from 'next/image';
-import {Suspense} from 'react';
+import {useEffect, useState} from 'react';
 import useRippleEffect from '../hooks/ripple';
 import '../styles/components/card.scss';
-import { navigate } from '../actions';
 
 export function CardSkeleton({type = "normal"}) {
     return (
@@ -21,10 +21,24 @@ export function CardSkeleton({type = "normal"}) {
     );
 }
 
-async function AsyncCard({type = "normal", name, category, price, id, extension, rippleExpand, rippleFade}) {
-    const image = await import(`../images/products/${id}.jpg`);
-    return (
-        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => navigate(`/catalog/${id}/${extension}`)}>
+export default function Card({type = "normal", from, name, category, price, id, extension}) {
+    const [rippleExpand, rippleFade] = useRippleEffect();
+    const [loading, setLoading] = useState(true);
+    const [image, setImage] = useState("");
+
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            setImage(await import(`../images/${from}/${id}.jpg`));
+            setLoading(false);
+        })();
+    }, [])
+
+    const router = useRouter();
+    return (loading?
+        <CardSkeleton type={type} />
+        :
+        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => router.push(`/catalog/${id}/${extension}`)}>
             <div className='image'>
                 <Image src={image} alt="" />
             </div>
@@ -37,14 +51,5 @@ async function AsyncCard({type = "normal", name, category, price, id, extension,
                 <span className='uaid'>{id}</span>
             </div>
         </div>
-    );
-}
-
-export default function Card({...props}) {
-    const [rippleExpand, rippleFade] = useRippleEffect();
-    return (
-        <Suspense fallback={<CardSkeleton type={props.type} />}>
-            <AsyncCard {...props} rippleExpand={rippleExpand} rippleFade={rippleFade} />
-        </Suspense>
     );
 }

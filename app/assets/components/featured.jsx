@@ -1,5 +1,5 @@
 "use client"
-import {Suspense, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Title} from "./typography";
 import Card, {CardSkeleton} from './card';
 import useWindowSize from '../hooks/window';
@@ -20,22 +20,17 @@ export function FeaturedSkeleton({view}) {
     );
 }
 
-async function AsyncFeatured({view}) {
-    const featured = await fetch(GET_FEATURED_PRODUCTS).then(response => response.json());
-    return (
-        <section className="featured">
-            <Title className="title">Featured Products</Title>
-            <div className="divider" />
-            <div className="cards">
-                {featured.map(data => (
-                    <Card key={data.id} type={view} id={data.id} name={data.name} category={data.category} price={data.price} />
-                ))}
-            </div>
-        </section>
-    );
-}
-
 export default function Featured() {
+    const [loading, setLoading] = useState(true);
+    const [featured, setFeatured] = useState();
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            setFeatured(await fetch(GET_FEATURED_PRODUCTS).then(response => response.json()));
+            setLoading(false);
+        })();
+    }, []);
+
     const [view, setView] = useState("normal");
     const {width} = useWindowSize();
     useEffect(() => {
@@ -45,9 +40,17 @@ export default function Featured() {
             setView("normal");
     }, [width]);
 
-    return (
-        <Suspense fallback={<FeaturedSkeleton view={view} />}>
-            <AsyncFeatured view={view} />
-        </Suspense>
+    return (loading?
+        <FeaturedSkeleton view={view} />
+        :
+        <section className="featured">
+            <Title className="title">Featured Products</Title>
+            <div className="divider" />
+            <div className="cards">
+                {featured.map(data => (
+                    <Card key={data.id} from="products" type={view} id={data.id} name={data.name} category={data.category} price={data.price} />
+                ))}
+            </div>
+        </section>
     );
 }

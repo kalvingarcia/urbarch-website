@@ -105,27 +105,48 @@ function FilterGroup({name, children}) {
     );
 }
 
-async function FilterList() {
-    const filterList = await fetch(GET_TAGS).then(response => response.json());
-    const filterGroups = []
-    for(const [category, tags] of Object.entries(filterList))
-        filterGroups.push(
-            <FilterGroup key={category} name={category}>
-                {tags.map(tag => <Filter key={tag.id} id={tag.id} name={tag.name} category={category} />)}
-            </FilterGroup>
-        )
-    return (
+function FilterList() {
+    const searchParams = useSearchParams();
+    const [loading, setLoading] = useState(true);
+    const [filterList, setFilterList] = useState([]);
+    useEffect(() => {
+        const queryStringList = []
+        for(const [parameter, value] of searchParams.entries())
+            queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
+        const queryString = queryStringList.join("&");
+
+        (async () => {
+            setLoading(true);
+            setFilterList(await fetch(`${GET_TAGS}?${queryString}`).then(response => response.json()));
+            setLoading(false);
+        })();
+    }, [searchParams.toString()]);
+
+    return (loading?
+        <FilterListSkeleton />
+        :
         <div className="filter-list">
-            {filterGroups}
+            {filterList.map(category => (
+                category.tags?
+                    category.name === "Class"?
+                    <ChipGroup key={category.id}>
+                        {category.tags.map(tag => <Chip key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
+                    </ChipGroup>
+                    :
+                    <FilterGroup key={category.id} name={category.name}>
+                        {category.tags.map(tag => <Filter key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
+                    </FilterGroup>
+                :
+                ""
+            ))}
         </div>
     );
 }
 
-const MemoizedFilterList = memo(FilterList);
-
 export default function Filters() {
-    const {triggerClearEvent, triggerRequestEvent} = useContext(QueryContext);
+    const {applyRoute} = useContext(QueryContext);
     const [open, setOpen] = useState(false);
+
     return (
         <div className={["filter-modal-wrapper", open? "open" : ""].join(" ")}>
             <div className="scrim"  onClick={() => setOpen(false)} />
@@ -134,12 +155,10 @@ export default function Filters() {
                     <Title>Filters</Title>
                     <IconButton className="close" role="primary" style="filled" icon="close" onPress={() => setOpen(false)}/>
                 </div>
-                <Suspense fallback={<FilterListSkeleton />}>
-                    <MemoizedFilterList />
-                </Suspense>
+                <FilterList />
                 <div className="buttons">
-                    <Button role="secondary" style="tonal" onPress={triggerClearEvent}>Clear</Button>
-                    <Button role="primary" style="filled" onPress={triggerRequestEvent}>Filter</Button>
+                    <Button role="secondary" style="tonal">Clear</Button>
+                    <Button role="primary" style="filled" onPress={() => applyRoute() || setOpen(false)}>Filter</Button>
                 </div>
             </section>
             <IconButton className={["filter-button", open? "open" : ""].join(" ")} role="primary" style="filled" onPress={() => setOpen(true)} icon="manage_search" />
