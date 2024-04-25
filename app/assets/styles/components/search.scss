@@ -1,9 +1,11 @@
+@use 'sass:color' as *;
 @use "../theme" as *;
 
 .search {
     display: flex;
     align-items: center;
     width: 100%;
+    max-width: 1000px;
     height: 58px;
     border-radius: 2000px;
     padding-left: 30px;
@@ -11,6 +13,7 @@
 
     @include themed() {
         background-color: t('surface');
+        border: 1pt solid adjust(t('body'), $alpha: -0.8);
     }
 
     & .textbox {
@@ -22,6 +25,13 @@
 
         @include themed() {
             color: t('body');
+        }
+
+        &::placeholder {
+            @include themed() {
+                color: t('body');
+                opacity: 0.25;
+            }
         }
     }
 
