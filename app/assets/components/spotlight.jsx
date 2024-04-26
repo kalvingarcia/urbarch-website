@@ -1,14 +1,15 @@
 "use client"
 import {useState, useEffect, cloneElement, useCallback, Children} from "react";
+import '../styles/components/spotlight.scss';
 
-function Stage({spotlight = false, mini = false, onClick, children}) {
+function Stage({lead = false, mini = false, onClick, children}) {
     const handleClick = useCallback(() => {
         if(mini)
             onClick();
     }, [mini]);
-    
+
     return (
-        <figure className={["stage", spotlight? "spotlight" : "", mini? "mini" : ""].join(" ")} onClick={handleClick}>
+        <figure className={["stage", lead? "lead" : "", mini? "mini" : ""].join(" ")} onClick={handleClick}>
             {children}
         </figure>
     );
@@ -18,23 +19,21 @@ export default function Spotlight({children}) {
     const [activeStage, setActiveStage] = useState(0);
     const [stages, setStages] = useState(() => {
         const imageList = Children.toArray(children);
-        let count = 0;
-        return imageList.map(image => (
-            <Stage key={count} onClick={() => setActiveStage(count++)}>{image}</Stage>
+        return imageList.map((image, index) => (
+            <Stage key={image.key} onClick={() => setActiveStage(index)}>{image}</Stage>
         ));
     });
 
     useEffect(() => {
-        let count = 0;
-        setStages(stages.map(stage => (
-            cloneElement(stage, {spotlight: activeStage === count++})
+        setStages(stages.map((stage, index) => (
+            cloneElement(stage, {lead: activeStage === index})
         )));
     }, [activeStage]);
 
     return (
-        <div>
+        <div className="spotlight">
             {stages[activeStage]}
-            <div>
+            <div className="backstage">
                 {stages.map(stage => (
                     cloneElement(stage, {mini: true})
                 ))}
