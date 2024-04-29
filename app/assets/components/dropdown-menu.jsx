@@ -35,7 +35,7 @@ export default function DropdownMenu({name, choices, onChange}) {
             clearTimeout(timer.current);
     }, []);
     const handleMouseLeave = useCallback(() => {
-        timer.current = setTimeout(() => setOpen(false));
+        timer.current = setTimeout(() => setOpen(false), 500);
     }, []);
 
     return (
