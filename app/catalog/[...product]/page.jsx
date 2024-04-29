@@ -1,18 +1,31 @@
 import {redirect} from 'next/navigation';
-import Spotlight from '../../assets/components/spotlight';
 import Image from 'next/image';
-import {Heading, Subheading, Subtitle, Title} from '../../assets/components/typography';
-import Button from '../..//assets/components/button';
-import DropdownMenu from '../..//assets/components/dropdown-menu';
+import Spotlight from '../../assets/components/spotlight';
+import Metadata from '@/app/assets/components/metadata';
+import Variations, {Variation} from '@/app/assets/components/variations';
+import Related from '../../assets/components/related';
 import '../../assets/styles/pages/product.scss';
 import {GET_PRODUCTS} from '../../api';
+
+export async function generateMetadata({params: {product: [id, extension, ...rest]}}, parent) {
+    const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
+    const variation = product.variations.find(variation => variation.extension === extension);
+    const parentTitle = (await parent).title.absolute || "";
+
+    return {
+        title: `${parentTitle} | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
+        description: product.description,
+        openGraph: {
+            title: `${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
+            description: product.description,
+            siteName: "Urban Archaeology"
+        }
+    };
+}
 
 export default async function Product({params: {product: [id, extension, ...rest]}}) {
     if(rest.length > 0)
         redirect(`/catalog/${id}/${extension}`);
-    if(extension === "DEFAULT")
-        redirect(`/catalog/${id}`);
-
     if(!extension)
         extension = "DEFAULT";
 
@@ -29,9 +42,8 @@ export default async function Product({params: {product: [id, extension, ...rest
         images.push(image);
         count++;
     }
-    const productInfo = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
-    const variationInfo = productInfo.variations.find(variation => variation.extension === extension);
 
+    const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
     return (
         <main className='product'>
             <section className='info'>
@@ -40,21 +52,24 @@ export default async function Product({params: {product: [id, extension, ...rest
                         <Image key={image.name} src={image.src} alt={image.alt} />
                     ))}
                 </Spotlight>
-                <div className='metadata'>
-                    <Title>{productInfo.name}</Title>
-                    {extension !== "DEFAULT"? <Subtitle>{variationInfo.subname}</Subtitle> : ""}
-                    <Subheading>{id}{extension !== "DEFAULT"? "-" + extension : ""}</Subheading>
-                    <Heading>${variationInfo.price}.00</Heading>
-                    <p>{productInfo.description}</p>
-                    <Button role="primary" style="filled">Product Details</Button>
-                    <div>
-                        <DropdownMenu name="Finishes" choices={variationInfo.overview.finishes} />
-                        {Object.entries(variationInfo.overview.options).map(([name, choices]) => (
-                            <DropdownMenu key={name} name={name} choices={choices} />
-                        ))}
-                    </div>
+                <div className='data'>
+                    <Metadata product={product} extension={extension} />
+                    <Variations>
+                        {product.variations.map(variation => (
+                            <Variation
+                                key={variation.extension}
+                                active={extension === variation.extension}
+                                id={product.id}
+                                extension={variation.extension}
+                                name={product.name}
+                                subname={variation.subname}
+                                price={variation.price}
+                            />
+                        ))}    
+                    </Variations>
                 </div>
             </section>
+            <Related id={id} extension={extension} />
         </main>
     );
 }

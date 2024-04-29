@@ -6,22 +6,23 @@
     & .info {
         margin: auto;
         width: 100%;
-        max-width: 1280px;
         display: flex;
         align-items: flex-start;
         justify-content: center;
         gap: 40px;
         padding: 40px;
 
-        & .metadata {
-            width: 100%;
-            height: 100%;
-        }
-
         @media (max-width: 1000px) {
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+        }
+
+        & .data {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            width: 100%;
         }
     }
 }
