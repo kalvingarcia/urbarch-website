@@ -1,0 +1,35 @@
+@use '../theme' as *;
+
+.metadata {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    & .general {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        & .title {
+            display: flex;
+            gap: 20px;
+            align-items: baseline;
+        }
+
+        & .id {
+            opacity: 0.5;
+        }
+
+        & .price {
+            font-size: 1.2rem;
+        }
+    }
+
+    & .options {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
