@@ -7,6 +7,8 @@
     width: 100%;
     max-width: 1000px;
     height: 58px;
+    overflow: hidden;
+    clip-path: inset(0 0 0 0 round 2000px);
     border-radius: 2000px;
     padding-left: 30px;
     gap: 5px;
@@ -22,6 +24,7 @@
         outline: none;
         border: none;
         background-color: transparent;
+        pointer-events: none;
 
         @include themed() {
             color: t('body');
@@ -40,6 +43,12 @@
         height: 60%;
         opacity: 0.5;
 
+        @include themed() {
+            background-color: t('body');
+        }
+    }
+
+    & .ripple {
         @include themed() {
             background-color: t('body');
         }
