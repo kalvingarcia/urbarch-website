@@ -25,6 +25,8 @@ export default function useRippleEffect() {
             ripple.remove(); // We remove any ripples already on the button
 
         target.appendChild(circle); // We add our new ripple
+
+        event.stopPropagation(); // We stop the MouseDown event from propagating outwards
     }, []); // Ideally this callback should only be recached if the style changes for some reason
 
     // Here we complete the ripple effect by speeding up the scaling and fading the circle away
@@ -37,6 +39,8 @@ export default function useRippleEffect() {
             ripple.classList.add("fade"); // adding the fade style to the ripple
             setTimeout(() => ripple?.remove(), 600);
         }
+
+        event.stopPropagation(); // we stop the MouseUp event from propagating outwards
     }, []);
 
     return [rippleExpand, rippleFade];
