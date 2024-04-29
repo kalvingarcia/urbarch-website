@@ -38,7 +38,7 @@ export default function Card({type = "normal", from, name, category, price, id, 
     return (loading?
         <CardSkeleton type={type} />
         :
-        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => router.push(`/catalog/${id}/${extension}`)}>
+        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setTimeout(() => router.push(`/catalog/${id}/${extension}`), 100)}>
             <div className='image'>
                 <Image src={image} alt="" />
             </div>
