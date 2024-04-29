@@ -1,0 +1,54 @@
+@use 'sass:color' as *;
+@use '../theme' as *;
+
+.variations {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    & .links {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+    
+        & .variation {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            clip-path: inset(0 0 0 0 round 20px);
+        
+            @include themed() {
+                background-color: t('surface');
+            }
+        
+            &.active {
+                @include themed() {
+                    background-color: t('secondary');
+                    color: t('on-secondary');
+                    border: 1pt solid adjust(t('on-secondary'), $alpha: -0.5);
+                }
+        
+                & .ripple {
+                    @include themed() {
+                        background-color: t('on-secondary');
+                    }
+                }
+            }
+        
+            & .id {
+                font-size: 0.8rem;
+            }
+        
+            & .ripple {
+                @include themed() {
+                    background-color: t('body');
+                }
+            }
+        }
+    }
+}
+
