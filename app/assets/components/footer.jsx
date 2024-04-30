@@ -1,4 +1,5 @@
 "use client"
+import {usePathname} from 'next/navigation';
 import Link from 'next/link';
 import {useState} from 'react';
 import {Heading, Subheading} from './typography';
@@ -12,6 +13,7 @@ import '../styles/components/footer.scss';
  */
 export default function Footer() {
     const [open, setOpen] = useState(false); // This keeps track of if the popup is open or not
+    const pathname = usePathname();
     return (
         <section className='footer'>
             <div className='info'>
@@ -65,10 +67,10 @@ export default function Footer() {
                 <div className='links'>
                     <div className='navigation'>
                         <Heading>Navigation</Heading>
-                        <Link href="/">Home</Link>
-                        <Link href="/catalog">Catalog</Link>
-                        <Link href="/salvage">Salvage</Link>
-                        <Link href="/gallery">Gallery</Link>
+                        <Link className={pathname === '/'? "active" : ""} href="/">Home</Link>
+                        <Link className={pathname === '/catalog'? "active" : ""} href="/catalog">Catalog</Link>
+                        <Link className={pathname === '/salvage'? "active" : ""} href="/salvage">Salvage</Link>
+                        <Link className={pathname === '/gallery'? "active" : ""} href="/gallery">Gallery</Link>
                     </div>
                     <div className='socials'>
                         <Heading>Socials</Heading>

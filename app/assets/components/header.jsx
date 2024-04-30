@@ -64,9 +64,9 @@ export default function Header() {
                         <IconButton icon="close" onPress={() => setOpen(false)} />
                     </div>
                     <div className='links'>
-                        <Link href="/catalog">Catalog</Link>
-                        <Link href="/salvage">Salvage</Link>
-                        <Link href="/gallery">Gallery</Link>
+                        <Link className={pathname === '/catalog'? "active" : ""} href="/catalog">Catalog</Link>
+                        <Link className={pathname === '/salvage'? "active" : ""} href="/salvage">Salvage</Link>
+                        <Link className={pathname === '/gallery'? "active" : ""} href="/gallery">Gallery</Link>
                     </div>
                 </div>
             </div>
