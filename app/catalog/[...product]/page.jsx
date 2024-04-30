@@ -4,8 +4,9 @@ import Spotlight from '../../assets/components/spotlight';
 import Metadata from '@/app/assets/components/metadata';
 import Variations, {Variation} from '@/app/assets/components/variations';
 import Related from '../../assets/components/related';
+import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
-import {GET_PRODUCTS} from '../../api';
+import {GET_PRODUCTS, GET_RELATED_PRODUCTS} from '../../api';
 
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}, parent) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
@@ -15,11 +16,11 @@ export async function generateMetadata({params: {product: [id, extension, ...res
     return {
         title: `${parentTitle} | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
         description: product.description,
-        openGraph: {
-            title: `${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
-            description: product.description,
-            siteName: "Urban Archaeology"
-        }
+        // openGraph: {
+        //     title: `${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
+        //     description: product.description,
+        //     siteName: "Urban Archaeology"
+        // }
     };
 }
 
@@ -44,6 +45,8 @@ export default async function Product({params: {product: [id, extension, ...rest
     }
 
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
+    const related = await fetch(`${GET_RELATED_PRODUCTS}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.json());
+    // const customs = await fetch(`${GET_CUSTOM_PRODUCTS}?id=${id}&${extension}`).then(response => response.json());
     return (
         <main className='product'>
             <section className='info'>
@@ -65,37 +68,38 @@ export default async function Product({params: {product: [id, extension, ...rest
                                 subname={variation.subname}
                                 price={variation.price}
                             />
-                        ))}    
+                        ))}
                     </Variations>
                 </div>
             </section>
-            <Related id={id} extension={extension} />
+            <Related>
+                {related.map(product => (
+                    <Card 
+                        key={product.id}
+                        type="small"
+                        from='products'
+                        id={product.id}
+                        extension={product.extension}
+                        name={product.name}
+                        subname={product.subname}
+                        category={product.category}
+                    />
+                ))}
+            </Related>
+            {/* <Customs>
+                {customs.map(product => (
+                    <Card 
+                        key={product.id}
+                        type="small"
+                        from='products'
+                        id={product.id}
+                        extension={product.extension}
+                        name={product.name}
+                        subname={product.subname}
+                        category={product.category}
+                    />
+                ))}
+            </Customs> */}
         </main>
     );
 }
-
-/* 
-<section>
-    <Slideshow>
-        {images.map(image => (
-            <Image />
-        ))}
-    </Slideshow>
-    <div>
-        <Title>{}</Title>
-        <span>{}</span>
-        <Heading>{}</Heading>
-        <p>{}</p>
-        <Button>Product Details</Button>
-        <div>
-            {options.map(option => (
-                <DropdownMenu key={option.name} name={option.name}>
-                    {option.choices.map(choice => <Option></Option>)}
-                </DropdownMenu>
-            ))}
-        </div>
-    </div>
-</section>
-<RelatedProducts id={id} extension={extension} />
-<CustomGallery id={id} extension={extension} /> 
-*/
