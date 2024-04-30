@@ -21,7 +21,7 @@ export function CardSkeleton({type = "normal"}) {
     );
 }
 
-export default function Card({type = "normal", from, name, category, price, id, extension}) {
+export default function Card({type = "normal", from, id, extension, name, subname, category, price}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
     const [loading, setLoading] = useState(true);
     const [image, setImage] = useState("");
@@ -29,7 +29,7 @@ export default function Card({type = "normal", from, name, category, price, id, 
     useEffect(() => {
         (async () => {
             setLoading(true);
-            setImage(await import(`../images/${from}/${id}.jpg`));
+            setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
             setLoading(false);
         })();
     }, [])
@@ -38,17 +38,21 @@ export default function Card({type = "normal", from, name, category, price, id, 
     return (loading?
         <CardSkeleton type={type} />
         :
-        <div className={['card', type].join(" ")} onMouseDown={rippleExpand} onMouseUp={rippleFade} onClick={() => setTimeout(() => router.push(`/catalog/${id}/${extension}`), 100)}>
+        <div 
+            className={['card', type].join(" ")} 
+            onMouseDown={rippleExpand} onMouseUp={rippleFade}
+            onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${extension}`), 100)}
+        >
             <div className='image'>
                 <Image src={image} alt="" />
             </div>
             <div className='content'>
                 <div className='metadata'>
-                    <span className='name'>{name}</span>
+                    <span className='name'>{name}{subname !== 'DEFAULT'? ` [${subname}]` : ''}</span>
                     <span className='category'>{category}</span>
                     <span className='price'>${price}</span>
                 </div>
-                <span className='uaid'>{id}</span>
+                <span className='uaid'>{id}{extension !== 'DEFAULT'? `-${extension}` : ''}</span>
             </div>
         </div>
     );
