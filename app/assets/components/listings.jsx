@@ -39,7 +39,19 @@ export default function Listings({from}) {
         <ListingsPreloader />
         :
         <Carousel>
-            {listings.map(product => <Card key={product.id} type="list" from={from} id={product.id} name={product.name} category={product.category} price={product.price} />)}
+            {listings.map(product => (
+                <Card
+                    key={product.id}
+                    type="list"
+                    from={from}
+                    id={product.id}
+                    extension={product.extension}
+                    name={product.name}
+                    subname={product.subname}
+                    category={product.category}
+                    price={product.price}
+                />
+            ))}
         </Carousel>
     );
 }
