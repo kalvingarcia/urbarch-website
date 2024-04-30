@@ -48,7 +48,16 @@ export default function Featured() {
             <div className="divider" />
             <div className="cards">
                 {featured.map(data => (
-                    <Card key={data.id} from="products" type={view} id={data.id} name={data.name} category={data.category} price={data.price} />
+                    <Card key={data.id}
+                        from="products"
+                        type={view}
+                        id={data.id}
+                        extension={data.extension}
+                        name={data.name}
+                        subname={data.subname}
+                        category={data.category}
+                        price={data.price}
+                    />
                 ))}
             </div>
         </section>

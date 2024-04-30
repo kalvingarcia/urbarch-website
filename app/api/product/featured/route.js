@@ -4,7 +4,7 @@ export async function GET(request) {
     const result = await Database`
         WITH variations AS (
                 /* Create a table with the price and listing id for the variation */
-                SELECT listing_id, price FROM product_variations WHERE featured = TRUE
+                SELECT listing_id, extension, subname, price FROM product_variations WHERE featured = TRUE
             ), categories AS (
                 /* Create a table with the tag name and listing id */
                 SELECT listing_id, tag.name AS category
@@ -16,7 +16,7 @@ export async function GET(request) {
                 SELECT id AS listing_id, name FROM product_listing WHERE id IN (SELECT listing_id FROM variations)
             )
         /* Finally we select from these combined tables to get the information to display on the card */
-        SELECT DISTINCT listing_id AS id, name, category, price
+        SELECT DISTINCT listing_id AS id, extension, name, subname, category, price
         FROM variations INNER JOIN categories USING(listing_id) INNER JOIN product USING(listing_id);
     `
 
