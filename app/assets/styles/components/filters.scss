@@ -181,6 +181,27 @@
                         color: adjust(t('on-primary'), $alpha: -0.5);
                     }
 
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        transition: opacity 300ms ease-in-out;
+
+                        @include themed() {
+                            background-color: t('on-primary');
+                        }
+                    }
+
+                    &:hover {
+                        &::after {
+                            opacity: 0.2;
+                        }
+                    }
+
                     & .icon {
                         font-size: 30px;
                     }
@@ -200,6 +221,12 @@
                         @include themed() {
                             background-color: t('on-primary');
                             color: t('primary');
+                        }
+
+                        &::after {
+                            @include themed() {
+                                background-color: t('primary');
+                            }
                         }
 
                         & .ripple {
