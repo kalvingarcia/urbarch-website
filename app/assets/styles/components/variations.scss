@@ -12,6 +12,13 @@
         display: flex;
         gap: 10px;
         overflow-x: auto;
+
+        @media (max-width: 1000px) {
+            width: 100vw;
+            align-self: center;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
     
         & .variation {
             flex: 0 0 auto;
