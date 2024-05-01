@@ -4,9 +4,10 @@ import Spotlight from '../../assets/components/spotlight';
 import Metadata from '@/app/assets/components/metadata';
 import Variations, {Variation} from '@/app/assets/components/variations';
 import Related from '../../assets/components/related';
+import Customs from '@/app/assets/components/customs';
 import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
-import {GET_PRODUCTS, GET_RELATED_PRODUCTS} from '../../api';
+import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
 
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}, parent) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
@@ -46,7 +47,7 @@ export default async function Product({params: {product: [id, extension, ...rest
 
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
     const related = await fetch(`${GET_RELATED_PRODUCTS}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.json());
-    // const customs = await fetch(`${GET_CUSTOM_PRODUCTS}?id=${id}&${extension}`).then(response => response.json());
+    const customs = await fetch(`${GET_RELATED_CUSTOMS}?id=${id}&${extension}`).then(response => response.json());
     return (
         <main className='product'>
             <section className='info'>
@@ -86,20 +87,19 @@ export default async function Product({params: {product: [id, extension, ...rest
                     />
                 ))}
             </Related>
-            {/* <Customs>
-                {customs.map(product => (
-                    <Card 
-                        key={product.id}
-                        type="small"
-                        from='products'
-                        id={product.id}
-                        extension={product.extension}
-                        name={product.name}
-                        subname={product.subname}
+            <Customs>
+                {customs.map(item => (
+                    <Custom
+                        key={item.id}
+                        id={item.id}
+                        productID={item.product_id}
+                        extension={item.variation_extension}
+                        name={item.name}
+                        customer={item.subname}
                         category={product.category}
                     />
                 ))}
-            </Customs> */}
+            </Customs>
         </main>
     );
 }
