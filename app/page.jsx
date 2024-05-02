@@ -3,8 +3,10 @@ import {Display} from './assets/components/typography';
 import Button from './assets/components/button';
 import Featured from './assets/components/featured';
 import Banner from './assets/components/banner';
+import {GET_FEATURED_PRODUCTS} from './api';
 
-export default function Home() {
+export default async function Home() {
+    const featured = await fetch(GET_FEATURED_PRODUCTS, {cache: 'no-store'}).then(response => response.json());
     return (
         <main>
             <Hero src="home.jpg">
@@ -14,7 +16,7 @@ export default function Home() {
                 <Display size="small">@ 7:00 AM - 4:00 PM</Display>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdL1pVylvGkvPjGTv31c1-C0y_04Xfp3KzbrWaPNWAe2u-SJg/viewform"><Button role="secondary" style="outlined">RSVP Here!</Button></a>
             </Hero>
-            <Featured />
+            <Featured featured={featured} changeWidth={1000} home />
             <Banner src="custom.png">
                 <Display size="small">Making dreams come true!</Display>
                 <span>If you do not see what you are looking for on this website, we are able to customize new pieces to meet your specifications.</span>
