@@ -1,11 +1,15 @@
 @use "../theme" as *;
 
 .featured {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding: 40px;
+
+    &.home {
+        padding: 40px;
+    }
 
     & .divider {
         height: 1pt;
@@ -23,7 +27,7 @@
         justify-content: center;
         gap: 20px;
 
-        @media (max-width: 1000px) {
+        &.column {
             flex-direction: column;
         }
     }

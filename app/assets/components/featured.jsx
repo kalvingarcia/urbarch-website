@@ -1,52 +1,25 @@
 "use client"
 import {useEffect, useState} from 'react';
 import {Title} from "./typography";
-import Card, {CardSkeleton} from './card';
+import Card from './card';
 import useWindowSize from '../hooks/window';
-import {GET_FEATURED_PRODUCTS} from '../../api';
 import "../styles/components/featured.scss";
 
-export function FeaturedSkeleton({view}) {
-    return (
-        <section className="featured">
-            <Title className="title">Featured Products</Title>
-            <div className="divider" />
-            <div className="cards">
-                <CardSkeleton type={view} />
-                <CardSkeleton type={view} />
-                <CardSkeleton type={view} />
-            </div>
-        </section>
-    );
-}
-
-export default function Featured() {
-    const [loading, setLoading] = useState(true);
-    const [featured, setFeatured] = useState();
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            setFeatured(await fetch(GET_FEATURED_PRODUCTS).then(response => response.json()));
-            setLoading(false);
-        })();
-    }, []);
-
-    const [view, setView] = useState("normal");
+export default function Featured({featured, changeWidth, home = false}) {
     const {width} = useWindowSize();
+    const [view, setView] = useState(width <= changeWidth? "list" : "normal");
     useEffect(() => {
-        if(width <= 1000 && view === "normal")
+        if(width <= changeWidth && view === "normal")
             setView("list");
-        else if(width > 1000 && view === "list")
+        else if(width > changeWidth && view === "list")
             setView("normal");
     }, [width]);
 
-    return (loading?
-        <FeaturedSkeleton view={view} />
-        :
-        <section className="featured">
+    return (
+        <section className={["featured", home? "home" : ""].join(" ")}>
             <Title className="title">Featured Products</Title>
             <div className="divider" />
-            <div className="cards">
+            <div className={["cards", width <= changeWidth? "column" : ""].join(" ")}>
                 {featured.map(data => (
                     <Card key={data.id}
                         from="products"
