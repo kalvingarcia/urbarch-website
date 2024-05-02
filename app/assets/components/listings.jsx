@@ -6,6 +6,7 @@ import Card from "./card";
 import ProgressBar from "./progress-bar";
 import {GET_PRODUCTS} from "../../api";
 import '../styles/components/listings.scss';
+import { Title } from "./typography";
 
 function ListingsPreloader() {
     return (
@@ -38,20 +39,24 @@ export default function Listings({from}) {
     return (loading?
         <ListingsPreloader />
         :
-        <Carousel>
-            {listings.map(product => (
-                <Card
-                    key={product.id}
-                    type="list"
-                    from={from}
-                    id={product.id}
-                    extension={product.extension}
-                    name={product.name}
-                    subname={product.subname}
-                    category={product.category}
-                    price={product.price}
-                />
-            ))}
-        </Carousel>
+        <div className="results">
+            <Title>Results</Title>
+            <div className="divider" />
+            <Carousel>
+                {listings.map(product => (
+                    <Card
+                        key={product.id}
+                        type="list"
+                        from={from}
+                        id={product.id}
+                        extension={product.extension}
+                        name={product.name}
+                        subname={product.subname}
+                        category={product.category}
+                        price={product.price}
+                    />
+                ))}
+            </Carousel>
+        </div>
     );
 }
