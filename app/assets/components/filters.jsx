@@ -1,12 +1,10 @@
 "use client"
-import {useSearchParams} from "next/navigation";
 import {useState, useContext, useEffect} from "react";
 import {QueryContext} from "./query-handler";
 import {Title, Heading} from './typography';
 import Button from './button';
 import IconButton from "./icon-button";
 import useRippleEffect from "../hooks/ripple";
-import {GET_TAGS} from '../../api';
 import "../styles/components/filters.scss";
 
 export function FilterListSkeleton() {
@@ -125,28 +123,10 @@ function FilterGroup({name, children}) {
     );
 }
 
-function FilterList() {
-    const searchParams = useSearchParams();
-    const [loading, setLoading] = useState(true);
-    const [filterList, setFilterList] = useState([]);
-    useEffect(() => {
-        const queryStringList = []
-        for(const [parameter, value] of searchParams.entries())
-            queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
-        const queryString = queryStringList.join("&");
-
-        (async () => {
-            setLoading(true);
-            setFilterList(await fetch(`${GET_TAGS}?${queryString}`).then(response => response.json()));
-            setLoading(false);
-        })();
-    }, [searchParams.toString()]);
-
-    return (loading?
-        <FilterListSkeleton />
-        :
+function FilterList({filters}) {
+    return (
         <div className="filter-list">
-            {filterList.map(category => (
+            {filters.map(category => (
                 category.tags?
                     category.name === "Class"?
                     <ChipGroup key={category.id}>
@@ -163,7 +143,7 @@ function FilterList() {
     );
 }
 
-export default function Filters() {
+export default function Filters({filters}) {
     const {applyRoute} = useContext(QueryContext);
     const [open, setOpen] = useState(false);
 
@@ -175,7 +155,7 @@ export default function Filters() {
                     <Title>Filters</Title>
                     <IconButton className="close" role="primary" style="filled" icon="close" onPress={() => setOpen(false)}/>
                 </div>
-                <FilterList />
+                <FilterList filters={filters} />
                 <div className="buttons">
                     <Button role="secondary" style="tonal">Clear</Button>
                     <Button role="primary" style="filled" onPress={() => applyRoute() || setOpen(false)}>Filter</Button>
