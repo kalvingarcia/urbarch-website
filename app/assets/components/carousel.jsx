@@ -1,5 +1,5 @@
 "use client"
-import {useState, useCallback, Children} from 'react';
+import {useState, useCallback, Children, useEffect} from 'react';
 import Button from './button';
 import IconButton from './icon-button';
 import useWindowSize from '../hooks/window';
@@ -75,7 +75,7 @@ function Pagination({count, activeSlide, changeSlide}) {
 }
 
 export default function Carousel({children}) {
-    const [slides] = useState(() => {
+    const [slides, setSlides] = useState(() => {
         let count = 0;
         const cardList = Children.toArray(children);
         const slides = [];
@@ -103,6 +103,19 @@ export default function Carousel({children}) {
         console.log(activeSlide, nextSlide);
         setActiveSlide(nextSlide);
     }, [activeSlide, direction]);
+
+    useEffect(() => {
+        let count = 0;
+        const cardList = Children.toArray(children);
+        const slides = [];
+        for(let i = 0; i < cardList.length; i += DEFAULT_PER_PAGE) {
+            const cards = cardList.slice(i, i + DEFAULT_PER_PAGE);
+            slides.push(<Slide key={count}>{cards}</Slide>);
+            count++;
+        }
+        setSlides(slides);
+        setActiveSlide(0);
+    }, [children]);
 
     return (
         <div className='carousel'>
