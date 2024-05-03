@@ -1,12 +1,14 @@
-import Database from "../database";
-import {bton} from "../../assets/auxillary/helpers";
+import Database from "../../database";
+import {bton} from "../../../assets/auxillary/helpers";
 
 export async function GET(request) {
     const searchParameters = request.nextUrl.searchParams;
-    var {search, filters} = {search: "", filters: {}};
+    var {search, from, filters} = {search: "", from: "", filters: {}};
     for(const [parameter, value] of searchParameters.entries())
         if(parameter === "search")
             search = value;
+        else if(parameter === "from")
+            from = value;
         else for(const id of value.split("|")) {
             if(!filters.hasOwnProperty(parameter))
                 filters[parameter] = [];
