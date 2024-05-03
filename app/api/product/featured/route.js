@@ -51,14 +51,7 @@ export async function GET(request) {
             INNER JOIN categories USING(id)
             ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
             ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-        WHERE /* (extension, price) IN (
-            SELECT MIN(extension) AS extension, MIN(price) AS price
-            FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
-                INNER JOIN categories USING(id)
-                ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-            WHERE listing_id = id GROUP BY listing_id
-        ) AND */ featured = TRUE LIMIT 3;
+        WHERE display = TRUE AND featured = TRUE LIMIT 3;
     `
 
     return new Response(JSON.stringify(result), {

@@ -45,27 +45,17 @@ export async function GET(request) {
             FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id  /* First we combine the tag and tag category information */
                 INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
             WHERE tag_categories.name = 'Class'
+        ), results AS (
+            SELECT id, extension, name, subname, category, price, featured
+            FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
+                INNER JOIN categories USING(id)
+                ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
+                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
+            WHERE display = TRUE
         )
         SELECT DISTINCT id, extension, name, subname, category, price
-        FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
-            INNER JOIN categories USING(id)
-            ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
-            ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-        WHERE /* (extension, price) IN (
-            SELECT MIN(extension), MIN(price) AS price
-            FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
-                INNER JOIN categories USING(id)
-                ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-            WHERE listing_id = id GROUP BY listing_id
-        ) AND */ display = TRUE AND listing_id NOT IN (
-            SELECT id
-            FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
-                INNER JOIN categories USING(id)
-                ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-            WHERE featured = TRUE LIMIT 3
-        );
+        FROM results
+        WHERE (id, extension) NOT IN (SELECT id, extension FROM results WHERE featured = TRUE LIMIT 3);
     `
 
     return new Response(JSON.stringify(result), {
