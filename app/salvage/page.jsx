@@ -7,7 +7,7 @@ import Featured from "../assets/components/featured";
 import Listings from "../assets/components/listings";
 import Card from "../assets/components/card";
 import "../assets/styles/pages/catalog.scss";
-import {GET_SALVAGE, GET_TAGS} from '../api';
+import {GET_SALVAGE, GET_SALVAGE_TAGS} from '../api';
 
 export default async function Salvage({searchParams}) {
     const queryStringList = []
@@ -15,7 +15,7 @@ export default async function Salvage({searchParams}) {
         queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
     const queryString = queryStringList.join("&");
 
-    const filters = await fetch(`${GET_TAGS}?from=salvage&${queryString}`, {cache: 'no-store'}).then(response => response.json());
+    const filters = await fetch(`${GET_SALVAGE_TAGS}?from=salvage&${queryString}`, {cache: 'no-store'}).then(response => response.json());
     const listings = await fetch(`${GET_SALVAGE}?${queryString}`, {cache: "no-store"}).then(response => response.json());
     return (
         <main>

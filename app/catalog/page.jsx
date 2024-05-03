@@ -7,7 +7,7 @@ import Featured from "../assets/components/featured";
 import Listings from "../assets/components/listings";
 import Card from "../assets/components/card";
 import "../assets/styles/pages/catalog.scss";
-import {GET_FEATURED_PRODUCTS, GET_PRODUCTS, GET_TAGS} from '../api';
+import {GET_FEATURED_PRODUCTS, GET_PRODUCTS, GET_PRODUCT_TAGS} from '../api';
 
 export default async function Catalog({searchParams}) {
     const queryStringList = []
@@ -15,7 +15,7 @@ export default async function Catalog({searchParams}) {
         queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
     const queryString = queryStringList.join("&");
 
-    const filters = await fetch(`${GET_TAGS}?from=products&${queryString}`, {cache: 'no-store'}).then(response => response.json());
+    const filters = await fetch(`${GET_PRODUCT_TAGS}?from=products&${queryString}`, {cache: 'no-store'}).then(response => response.json());
     const featured = await fetch(`${GET_FEATURED_PRODUCTS}?${queryString}`, {cache: 'no-store'}).then(response => response.json());
     const listings = await fetch(`${GET_PRODUCTS}?${queryString}`, {cache: "no-store"}).then(response => response.json());
     return (
