@@ -99,9 +99,13 @@
         height: 300px;
         overflow: hidden;
         clip-path: inset(0 0 0 0);
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         & img {
-            width: 100%;
+            width: auto;
             height: 100%;
             object-fit: cover;
             object-position: center;
@@ -109,11 +113,10 @@
     }
 
     & .content {
+        width: 100%;
         position: relative;
         padding: 20px;
-        flex-grow: 1;
         white-space: nowrap;
-        text-overflow: ellipsis;
 
         & .metadata {
             display: flex;
@@ -123,6 +126,8 @@
             & .name {
                 font-size: 1.25rem;
                 font-weight: bold;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             & .category {
@@ -167,9 +172,17 @@
                     font-size: 1rem;
                 }
 
+                & .category {
+                    padding: 5px 10px;
+                }
+
                 & .price {
                     display: none;
                 }
+            }
+
+            & .uaid {
+                bottom: 0px;
             }
         }
     }
@@ -182,7 +195,32 @@
 
         & .image {
             height: 100%;
+            min-width: 200px;
             width: 200px;
+        }
+
+        @media (max-width: 600px) {
+            & .image {
+                min-width: 100px;
+                width: 100px;
+
+                & img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            & .content {
+                & .metadata {
+                    & .name {
+                        max-width: 200px;
+                    }
+
+                    & .category {
+                        padding: 5px 10px;
+                    }
+                }
+            }
         }
     }
 

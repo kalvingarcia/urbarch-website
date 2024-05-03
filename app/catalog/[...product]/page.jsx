@@ -12,16 +12,10 @@ import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}, parent) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
     const variation = product.variations.find(variation => variation.extension === extension);
-    const parentTitle = (await parent).title.absolute || "";
 
     return {
-        title: `${parentTitle} | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
-        description: product.description,
-        // openGraph: {
-        //     title: `${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""}`,
-        //     description: product.description,
-        //     siteName: "Urban Archaeology"
-        // }
+        title: `Urban Archaeology | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""} Product Page`,
+        description: product.description
     };
 }
 
