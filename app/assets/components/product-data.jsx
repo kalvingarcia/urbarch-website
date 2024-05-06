@@ -2,11 +2,11 @@
 import {Heading, Subtitle, Title} from './typography';
 import Button from './button';
 import DropdownMenu from './dropdown-menu';
-import FinishesMenu from '../../assets/components/finishes-menu';
+import FinishesMenu from './finishes-menu';
 import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
 
-export default function Metadata({product, extension}) {
+export default function ProductData({product, extension}) {
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, onPriceChange] = usePriceChange(variation.price);
 
