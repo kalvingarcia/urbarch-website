@@ -28,17 +28,15 @@ export default async function Salvage({searchParams}) {
                     <div className="listings">
                         <Search />
                         <Listings>
-                            {listings.map(product => (
+                            {listings.map(salvage => (
                                 <Card
-                                    key={`${product.id}${product.extension !== 'DEFAULT'? `-${product.extension}` : ""}`}
+                                    key={salvage.id}
                                     type="list"
                                     from="salvage"
-                                    id={product.id}
-                                    extension={product.extension}
-                                    name={product.name}
-                                    subname={product.subname}
-                                    category={product.category}
-                                    price={product.price}
+                                    id={salvage.id}
+                                    name={salvage.name}
+                                    category={salvage.category}
+                                    price={salvage.price}
                                 />
                             ))}
                         </Listings>

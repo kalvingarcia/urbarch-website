@@ -1,7 +1,7 @@
 import {redirect} from 'next/navigation';
 import Image from 'next/image';
 import Spotlight from '../../assets/components/spotlight';
-import Metadata from '@/app/assets/components/metadata';
+import ProductData from '@/app/assets/components/product-data';
 import Variations, {Variation} from '@/app/assets/components/variations';
 import Related from '../../assets/components/related';
 import Customs from '@/app/assets/components/customs';
@@ -9,7 +9,7 @@ import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
 import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
 
-export async function generateMetadata({params: {product: [id, extension, ...rest]}}, parent) {
+export async function generateMetadata({params: {product: [id, extension, ...rest]}}) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
     const variation = product.variations.find(variation => variation.extension === extension);
 
@@ -51,7 +51,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     ))}
                 </Spotlight>
                 <div className='data'>
-                    <Metadata product={product} extension={extension} />
+                    <ProductData product={product} extension={extension} />
                     <Variations>
                         {product.variations.map(variation => (
                             <Variation
