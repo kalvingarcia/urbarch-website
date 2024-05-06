@@ -54,6 +54,7 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                         {salvage.items.map(item => (
                             <Variation
                                 key={item.serial}
+                                from="salvage"
                                 active={serial === item.serial.toString()}
                                 id={salvage.id}
                                 extension={item.serial}

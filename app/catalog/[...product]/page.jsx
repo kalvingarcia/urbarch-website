@@ -56,6 +56,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                         {product.variations.map(variation => (
                             <Variation
                                 key={variation.extension}
+                                from="products"
                                 active={extension === variation.extension}
                                 id={product.id}
                                 extension={variation.extension}
