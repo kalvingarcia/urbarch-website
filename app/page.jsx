@@ -20,7 +20,9 @@ export default async function Home() {
             <Banner src="custom.png">
                 <Display size="small">Making dreams come true!</Display>
                 <span>If you do not see what you are looking for on this website, we are able to customize new pieces to meet your specifications.</span>
-                <Button role="secondary" style="outlined">Contact Us</Button>
+                <a href="mailto:ny@urbanarchaeology.com?cc=gil@urbanarchaeology.com&subject=Inquiry About Custom Product&body=Let us know what you're looking for!">
+                    <Button role="secondary" style="outlined">Contact Us</Button>
+                </a>
             </Banner>
         </main>
     );
