@@ -39,7 +39,7 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
     }
 
     const salvage = (await fetch(`${GET_SALVAGE}/${id}`).then(response => response.json()))[0];
-    //const related = await fetch(`${GET_RELATED_SALVAGE}?id=${id}&serial=${serial}`, {cache: 'no-store'}).then(response => response.json());
+    const related = await fetch(`${GET_RELATED_SALVAGE}?id=${id}&serial=${serial}`, {cache: 'no-store'}).then(response => response.json());
     return (
         <main className='product'>
             <section className='info'>
@@ -66,7 +66,7 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                     </Variations>
                 </div>
             </section>
-            {/* <Related>
+            <Related>
                 {related.map(salvage => (
                     <Card 
                         key={salvage.id}
@@ -77,7 +77,7 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                         category={salvage.category}
                     />
                 ))}
-            </Related> */}
+            </Related>
         </main>
     );
 }
