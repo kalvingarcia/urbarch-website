@@ -42,8 +42,9 @@ export async function GET(request) {
                 INNER JOIN salvage_listing__tag ON salvage_listing__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
             WHERE tag_categories.name = 'Category'
         )
-        SELECT id, name, category
-        FROM salvage_listing INNER JOIN categories USING(id)
+        SELECT salvage_listing.id AS id, name, MIN(price) AS price, category
+        FROM salvage_listing INNER JOIN salvage_items ON salvage_listing.id = salvage_items.listing_id
+            INNER JOIN categories USING(id)
             ${search !== ""? Database`INNER JOIN search_filtered USING(id)` : Database``}
             ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id)` : Database``}
         GROUP BY id, name, category
