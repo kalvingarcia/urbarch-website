@@ -27,7 +27,7 @@ export async function GET(request) {
         WHERE id != ${id} OR extension != ${extension}
         GROUP BY id, name, subname, category
         HAVING COUNT(tag_id) > 5
-        ORDER BY COUNT(tag_id) DESC LIMIT 20;
+        ORDER BY COUNT(tag_id) DESC LIMIT 10;
     `
 
     return new Response(JSON.stringify(result), {
