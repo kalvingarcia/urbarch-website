@@ -28,7 +28,7 @@ export default function Header() {
     const pathname = usePathname();
     const [show, setShow] = useState(false);
     useEffect(() => {
-        if(pathname.match(/\/catalog(\/[A-Za-z0-9]+)+/g) !== null)
+        if(pathname.match(/\/catalog(\/[A-Za-z0-9]+)+/g) !== null || pathname.match(/\/salvage(\/[A-Za-z0-9]+)+/g) !== null)
             setShow(true);
         else
             setShow(false);
