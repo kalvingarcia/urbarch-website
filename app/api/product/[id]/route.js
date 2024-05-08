@@ -11,8 +11,20 @@ export async function GET(request, {params: {id}}) {
                     'listing_id', product_variation__tag.listing_id
                 )) FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id
                     INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id
-                WHERE product_variation__tag.listing_id = ${id} AND product_variation__tag.variation_extension = extension
-            ) AS tags 
+                WHERE product_variation__tag.listing_id = '0' AND product_variation__tag.variation_extension = extension
+            ) AS tags, (
+                SELECT json_agg(json_build_object(
+                    'id', product_listing.id,
+                    'extension', product_variations.extension,
+                    'name', product_listing.name,
+                    'subname', product_variations.subname,
+                    'price', product_variations.price
+                )) FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
+                WHERE (product_listing.id, product_variations.extension) IN (
+                    SELECT id, extension
+                    FROM json_populate_recordset('{"id": TEXT, "extension": TEXT}', overview->'replacement_ids')
+                )
+            ) AS replacements
             FROM product_variations WHERE listing_id = ${id} AND display = TRUE
         )
         SELECT id, name, description, (
