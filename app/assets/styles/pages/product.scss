@@ -34,3 +34,21 @@
         }
     }
 }
+
+@media print {
+    .product {
+        margin: 1in;
+
+        & .variations {
+            display: none;
+        }
+
+        & .related {
+            display: none;
+        }
+
+        & .customs {
+            display: none;
+        }
+    }
+}
