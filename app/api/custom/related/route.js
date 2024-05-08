@@ -21,8 +21,6 @@ export async function GET(request) {
         FROM custom_items INNER JOIN product_custom_match USING(id) INNER JOIN categories USING(id);
     `
 
-    console.log(result);
-
     return new Response(JSON.stringify(result), {
         "status": 200
     });
