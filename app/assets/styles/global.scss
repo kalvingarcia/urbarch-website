@@ -37,6 +37,10 @@ html, body {
     font-family: var(--univers);
     font-weight: 400;
     font-style: normal;
+
+    @media print {
+        font-size: 0.85rem;
+    }
 }
 
 .root {

@@ -33,6 +33,10 @@
     }
     font-size: 2rem;
     font-weight: bold;
+
+    @media print {
+        font-size: 1.4rem;
+    }
 }
 
 .subtitle {
@@ -41,6 +45,10 @@
     }
     font-size: 1.75rem;
     font-weight: bold;
+
+    @media print {
+        font-size: 1.3rem;
+    }
 }
 
 .heading {
@@ -49,6 +57,10 @@
     }
     font-size: 1.5rem;
     font-weight: bold;
+
+    @media print {
+        font-size: 1rem;
+    }
 }
 
 .subheading {
@@ -57,4 +69,8 @@
     }
     font-size: 1.2rem;
     font-weight: bold;
+
+    @media print {
+        font-size: 0.9rem;
+    }
 }
