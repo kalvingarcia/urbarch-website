@@ -1,31 +1,39 @@
 @use 'sass:color' as *;
 @use '../theme' as *;
 
-.related {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    @include themed() {
-        background-color: adjust(t('surface'), $alpha: -0.5);
-    }
-
-    &.alone {
-        background-color: transparent;
-    }
-
-    & .cards {
-        width: 100vw;
-        align-self: center;
+@media screen {
+    .related {
+        padding: 40px;
         display: flex;
-        overflow-x: auto;
-        padding-left: 40px;
-        padding-right: 40px;
-        gap: 10px;
-
-        & * {
-            flex: 0 0 auto;
+        flex-direction: column;
+        gap: 20px;
+    
+        @include themed() {
+            background-color: adjust(t('surface'), $alpha: -0.5);
         }
+    
+        &.alone {
+            background-color: transparent;
+        }
+    
+        & .cards {
+            width: 100vw;
+            align-self: center;
+            display: flex;
+            overflow-x: auto;
+            padding-left: 40px;
+            padding-right: 40px;
+            gap: 10px;
+    
+            & * {
+                flex: 0 0 auto;
+            }
+        }
+    }
+}
+
+@media print {
+    .related {
+        display: none;
     }
 }
