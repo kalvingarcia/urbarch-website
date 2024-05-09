@@ -1,105 +1,113 @@
 @use '../theme' as *;
 
-.customs {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    & .cards {
-        width: 100vw;
-        align-self: center;
+@media screen {
+    .customs {
+        padding: 40px;
         display: flex;
-        overflow-x: auto;
-        padding-left: 40px;
-        padding-right: 40px;
-        gap: 10px;
-
-        & * {
-            flex: 0 0 auto;
-        }
-
-        & .gallery-link {
-            overflow: hidden;
-            clip-path: inset(0 0 0 0 round 20px);
-            position: relative;
-            border-radius: 20px;
-            width: 200px;
-            height: 300px;
-
-            &::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
-                transition: opacity 300ms ease-in-out;
-
-                opacity: 0;
-                @include themed() {
-                    background-color: t('light-font');
-                }
+        flex-direction: column;
+        gap: 20px;
+    
+        & .cards {
+            width: 100vw;
+            align-self: center;
+            display: flex;
+            overflow-x: auto;
+            padding-left: 40px;
+            padding-right: 40px;
+            gap: 10px;
+    
+            & * {
+                flex: 0 0 auto;
             }
-
-            &:hover {
+    
+            & .gallery-link {
+                overflow: hidden;
+                clip-path: inset(0 0 0 0 round 20px);
+                position: relative;
+                border-radius: 20px;
+                width: 200px;
+                height: 300px;
+    
                 &::after {
-                    opacity: 0.1;
-                }
-            }
-
-            & img {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                min-width: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
-
-            & .overlay {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
-
-                opacity: 0.5;
-                @include themed() {
-                    background-color: t('dark-font');
-                }
-            }
-
-            & .content {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 20px;
-
-                & span {
-                    font-weight: bold;
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    transition: opacity 300ms ease-in-out;
+    
+                    opacity: 0;
                     @include themed() {
-                        color: t('light-font');
+                        background-color: t('light-font');
                     }
                 }
     
-                & .go {
-                    align-self: flex-end;
-                    z-index: 100;
+                &:hover {
+                    &::after {
+                        opacity: 0.1;
+                    }
                 }
-            }
-
-            & .ripple {
-                @include themed() {
-                    background-color: t('light-font');
+    
+                & img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    min-width: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                }
+    
+                & .overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+    
+                    opacity: 0.5;
+                    @include themed() {
+                        background-color: t('dark-font');
+                    }
+                }
+    
+                & .content {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 20px;
+    
+                    & span {
+                        font-weight: bold;
+                        @include themed() {
+                            color: t('light-font');
+                        }
+                    }
+        
+                    & .go {
+                        align-self: flex-end;
+                        z-index: 100;
+                    }
+                }
+    
+                & .ripple {
+                    @include themed() {
+                        background-color: t('light-font');
+                    }
                 }
             }
         }
+    }
+}
+
+@media print {
+    .customs {
+        display: none;
     }
 }
