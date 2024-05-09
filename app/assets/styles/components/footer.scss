@@ -1,189 +1,223 @@
 @use '../theme' as *;
 
-.footer {
-    width: 100%;
-
-    @include themed() {
-        background-color: t('surface');
-        color: t('body');
-    }
-    
-
-    & .info {
-        display: flex;
-        gap: 40px;
-        padding: 20px;
-
-        & .locations {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 33%;
-            @media (max-width: 800px) { // On mobile the location are put into a popup
-                display: none;
-            }
-
-            & .location {
-                display: flex;
-                flex-direction: column;
-            }
-            & .divider {
-                height: 1pt;
-                width: 66%;
-                align-self: center;
-                @include themed() {
-                    background-color: t('body');
-                }
-                opacity: 0.5;
-            }
-        }
-
-        & .links {
-            width: 34%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            @media (max-width: 800px) { // Links are the only objects shown in the footer on mobile
-                width: 100%;
-                flex-direction: row;
-            }
-
-            & a { // Resetting the links
-                text-decoration: none;
-                @include themed() {
-                    color: t('body');
-                }
-            }
-
-            & .navigation {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                @media (max-width: 800px) { // When on mobile the navigation is 50% of the footer
-                    width: 50%;
-                }
-
-                & .active {
-                    font-weight: bold;
-                }
-            }
-
-            & .socials {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                @media (max-width: 800px) { // When on mobile the socials are 50% of the footer
-                    width: 50%;
-                }
-
-                & .icons {
-                    display: flex;
-                    gap: 10px;
-                    & .urban-icons {
-                        font-size: 32px;
-                    }
-                }
-
-                // This contact button only appears on mobile under the socials
-                & .contact {
-                    display: none;
-                    @media (max-width: 800px) {
-                        display: block;
-                        align-self: center;
-                        margin-top: 30px;
-                    }
-                }
-            }
-        }
-    }
-
-    & .credits {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        text-align: center;
+@media screen {
+    .footer {
+        width: 100%;
 
         @include themed() {
-            background-color: t('primary');
-            color: t('on-primary');
+            background-color: t('surface');
+            color: t('body');
+        }
+        
+
+        & .info {
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+
+            & .locations {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                width: 33%;
+                @media (max-width: 800px) { // On mobile the location are put into a popup
+                    display: none;
+                }
+
+                & .location {
+                    display: flex;
+                    flex-direction: column;
+                }
+                & .divider {
+                    height: 1pt;
+                    width: 66%;
+                    align-self: center;
+                    @include themed() {
+                        background-color: t('body');
+                    }
+                    opacity: 0.5;
+                }
+            }
+
+            & .links {
+                width: 34%;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                @media (max-width: 800px) { // Links are the only objects shown in the footer on mobile
+                    width: 100%;
+                    flex-direction: row;
+                }
+
+                & a { // Resetting the links
+                    text-decoration: none;
+                    @include themed() {
+                        color: t('body');
+                    }
+                }
+
+                & .navigation {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    @media (max-width: 800px) { // When on mobile the navigation is 50% of the footer
+                        width: 50%;
+                    }
+
+                    & .active {
+                        font-weight: bold;
+                    }
+                }
+
+                & .socials {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    @media (max-width: 800px) { // When on mobile the socials are 50% of the footer
+                        width: 50%;
+                    }
+
+                    & .icons {
+                        display: flex;
+                        gap: 10px;
+                        & .urban-icons {
+                            font-size: 32px;
+                        }
+                    }
+
+                    // This contact button only appears on mobile under the socials
+                    & .contact {
+                        display: none;
+                        @media (max-width: 800px) {
+                            display: block;
+                            align-self: center;
+                            margin-top: 30px;
+                        }
+                    }
+                }
+            }
         }
 
-        & a {
-            text-decoration: none;
+        & .credits {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+
             @include themed() {
-                color: t('on-secondary');
-            }   
+                background-color: t('primary');
+                color: t('on-primary');
+            }
+
+            & a {
+                text-decoration: none;
+                @include themed() {
+                    color: t('on-secondary');
+                }   
+            }
+
+            & .accredation {
+                font-size: 0.75rem;
+                padding: 10px;
+            }
         }
 
-        & .accredation {
-            font-size: 0.75rem;
-            padding: 10px;
-        }
-    }
-
-    // Here we style the modal popup for mobile viewing
-    & .modal {
-        height: 0;
-        width: 100vw;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-
-        & .scrim { // This is the slightly transparent background that hides the content behind the modal
-            height: 100vh;
+        // Here we style the modal popup for mobile viewing
+        & .modal {
+            height: 0;
             width: 100vw;
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
+            z-index: 1000;
 
-            @include themed() {
-                background-color: t('dark-font');
-            }
-            opacity: 0.75;
-        }
+            & .scrim { // This is the slightly transparent background that hides the content behind the modal
+                height: 100vh;
+                width: 100vw;
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
 
-        & .popup {
-            height: 80%;
-            width: 80%;
-            top: 10%;
-            left: 10%;
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-            overflow: auto;
-            position: fixed;
-            padding: 30px;
-
-            @include themed() {
-                background-color: t('surface');
-            }
-            border-radius: 20px;
-
-            & .location {
-                display: flex;
-                flex-direction: column;
-            }
-
-            & .divider {
-                height: 1pt;
-                width: 66%;
-                align-self: center;
                 @include themed() {
-                    background-color: t('body')
+                    background-color: t('dark-font');
                 }
-                opacity: 0.5;
+                opacity: 0.75;
+            }
+
+            & .popup {
+                height: 80%;
+                width: 80%;
+                top: 10%;
+                left: 10%;
+                display: none;
+                flex-direction: column;
+                gap: 20px;
+                overflow: auto;
+                position: fixed;
+                padding: 30px;
+
+                @include themed() {
+                    background-color: t('surface');
+                }
+                border-radius: 20px;
+
+                & .location {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                & .divider {
+                    height: 1pt;
+                    width: 66%;
+                    align-self: center;
+                    @include themed() {
+                        background-color: t('body')
+                    }
+                    opacity: 0.5;
+                }
+            }
+
+            &.open {
+                & .scrim {
+                    display: block;
+                }
+                & .popup {
+                    display: flex;
+                }
             }
         }
+    }
+}
 
-        &.open {
-            & .scrim {
-                display: block;
+@media print {
+    .footer {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+
+        & a {
+            text-decoration: none;
+        }
+
+        & > * {
+            display: none;
+        }
+
+        & .credits {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+
+            & > * {
+                display: none;
             }
-            & .popup {
-                display: flex;
+
+            & .copyright {
+                display: block;
             }
         }
     }
