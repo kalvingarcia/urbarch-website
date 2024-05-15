@@ -37,6 +37,25 @@ export default function ProductData({product, extension, drawing}) {
                 <div className='overview'>
                     <Image src={drawing} alt="" />
                     <Heading>Product Overview</Heading>
+                    {variation.overview.specifications?
+                        <div className='specifications'>
+                            <Subheading>Specifications</Subheading>
+                            <span>Height: {variation.overview.specifications.height}</span>
+                            <span>Width: {variation.overview.specifications.width}</span>
+                            <span>Depth: {variation.overview.specifications.depth}</span>
+                            <span>Weight: {variation.overview.specifications.weight}</span>
+                        </div>
+                        :
+                        ""
+                    }
+                    {variation.overview.ul_info.length > 0?
+                        <div className='ul-info'>
+                            <Subheading>UL Listing</Subheading>
+                            <span>This product is listed for use in {variation.overview.ul_info[0].toUpperCase()} environments.</span>
+                        </div>
+                        :
+                        ""
+                    }
                     {variation.replacements?
                         <div className='replacements'>
                             <Subheading>Replacements</Subheading>
@@ -53,9 +72,14 @@ export default function ProductData({product, extension, drawing}) {
                         :
                         ""
                     }
-                    <div className='notes'>
-                        <Subheading>Notes</Subheading>
-                    </div> 
+                    {variation.overview.notes !== ''?
+                        <div className='notes'>
+                            <Subheading>Notes</Subheading>
+                            <span>{variation.overview.notes}</span>
+                        </div> 
+                        :
+                        ""
+                    }
                 </div>
             </div>
         </div>
