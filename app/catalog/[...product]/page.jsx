@@ -38,6 +38,7 @@ export default async function Product({params: {product: [id, extension, ...rest
         images.push(image);
         count++;
     }
+    const drawing = (await import(`../../assets/images/products/${id}/${extension}/drawing.jpg`).catch(() => undefined))?.default
 
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
     const related = await fetch(`${GET_RELATED_PRODUCTS}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.json());
@@ -51,7 +52,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     ))}
                 </Spotlight>
                 <div className='data'>
-                    <ProductData product={product} extension={extension} />
+                    <ProductData product={product} extension={extension} drawing={drawing} />
                     <Variations>
                         {product.variations.map(variation => (
                             <Variation
