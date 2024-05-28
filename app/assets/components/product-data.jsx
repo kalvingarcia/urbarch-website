@@ -52,10 +52,21 @@ export default function ProductData({product, extension, drawing}) {
                             :
                             ""
                         }
-                        {variation.overview.ul_info.length > 0?
+                        {variation.overview.ul.length > 0?
                             <div className='ul-info'>
                                 <Subheading>UL Listing</Subheading>
-                                <span>This product is listed for use in {variation.overview.ul_info[0].toUpperCase()} environments.</span>
+                                <span>This product is listed for use in {variation.overview.ul[0].toUpperCase()} environments.</span>
+                            </div>
+                            :
+                            ""
+                        }
+                        {variation.overview.bulb.quantity > 0?
+                            <div>
+                                <Subheading>Bulb Information</Subheading>
+                                <span>{variation.overview.bulb.shape.name} Bulb ({variation.overview.bulb.shape.code})</span>
+                                <span>{variation.overview.bulb.socket.name} Base ({variation.overview.bulb.socket.code})</span> 
+                                <span>{variation.overview.bulb.specifications} LED recommended</span>
+                                <span>{variation.overview.bulb.quantity} count</span>
                             </div>
                             :
                             ""
