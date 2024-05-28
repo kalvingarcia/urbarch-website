@@ -44,10 +44,10 @@ export default function ProductData({product, extension, drawing}) {
                         {variation.overview.specifications?
                             <div className='specifications'>
                                 <Subheading>Specifications</Subheading>
-                                <span>Height: {variation.overview.specifications.height}</span>
-                                <span>Width: {variation.overview.specifications.width}</span>
-                                <span>Depth: {variation.overview.specifications.depth}</span>
-                                <span>Weight: {variation.overview.specifications.weight}</span>
+                                <span>Height: {variation.overview.specifications.height.measurement} {variation.overview.specifications.height.unit}.</span>
+                                <span>Width: {variation.overview.specifications.width.measurement} {variation.overview.specifications.width.unit}.</span>
+                                <span>Depth: {variation.overview.specifications.depth.measurement} {variation.overview.specifications.depth.unit}.</span>
+                                <span>Weight: {variation.overview.specifications.weight.measurement} {variation.overview.specifications.weight.unit}.</span>
                             </div>
                             :
                             ""
