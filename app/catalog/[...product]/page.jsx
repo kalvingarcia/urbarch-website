@@ -11,6 +11,8 @@ import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api
 
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
+    if(!extension)
+        extension = "DEFAULT";
     const variation = product.variations.find(variation => variation.extension === extension);
 
     return {
