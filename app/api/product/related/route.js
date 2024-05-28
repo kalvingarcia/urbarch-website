@@ -17,12 +17,12 @@ export async function GET(request) {
         ), categories AS (
             /* Create a table with the tag name and listing id */
             SELECT DISTINCT listing_id AS id, tag.name AS category
-            FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id  /* First we combine the tag and tag category information */
+            FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
                 INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_categories.name = 'Class' AND listing_id IN (SELECT id AS listing_id FROM product_tag_match)
+            WHERE tag_category.name = 'Class' AND listing_id IN (SELECT id AS listing_id FROM product_tag_match)
         )
         SELECT DISTINCT id, MIN(extension) AS extension, name, subname, category, COUNT(tag_id)
-        FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id 
+        FROM product_listing INNER JOIN product_variation ON product_listing.id = product_variation.listing_id 
             INNER JOIN product_tag_match USING(id, extension) INNER JOIN categories USING(id)
         WHERE id != ${id} OR extension != ${extension}
         GROUP BY id, name, subname, category
