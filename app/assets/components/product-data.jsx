@@ -80,7 +80,7 @@ export default function ProductData({product, extension, drawing}) {
                                 <Subheading>Replacements</Subheading>
                                 <div className='list'>
                                     {variation.replacements.map(replacement =>(
-                                        <a className="replacement">
+                                        <a key={`${replacement.id}-${replacement.extension}`} className="replacement">
                                             <span>{replacement.name}{replacement.subname === "DEFAULT"? "" : ` [${replacement.subname}]`}</span>
                                             <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : ` -${replacement.extension}`}</span>
                                             <span>${replacement.price}</span>
