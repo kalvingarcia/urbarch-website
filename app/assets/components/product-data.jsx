@@ -21,13 +21,17 @@ export default function ProductData({product, extension, drawing}) {
                     {extension !== "DEFAULT"? <Subtitle>{variation.subname}</Subtitle> : ""}
                 </div>
                 <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
-                <span className='price'>${price}.00</span>
+                <span className='price'>{price === 0? "Call for pricing" : `$${price}.00`}</span>
                 <p className='description'>{product.description}</p>
                 <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
             </div>
             <div className='options'>
                 <Heading>Options</Heading>
-                <FinishesMenu choices={variation.overview.finishes} onChange={onPriceChange} />
+                {variation.overview.finishes.length !== 0?
+                    <FinishesMenu choices={variation.overview.finishes} onChange={onPriceChange} />
+                    :
+                    ""
+                }
                 {Object.entries(variation.overview.options).map(([name, choices]) => (
                     <DropdownMenu key={name} name={name} choices={choices} onChange={onPriceChange} />
                 ))}
