@@ -7,13 +7,13 @@ export async function GET(request, {params: {id}}) {
                 SELECT json_agg(json_build_object(
                     'id', tag.id,
                     'name', tag.name,
-                    'category_id', tag_categories.name,
-                    'listing_id', salvage_listing__tag.listing_id
-                )) FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id
-                    INNER JOIN salvage_listing__tag ON salvage_listing__tag.tag_id = tag.id
-                WHERE salvage_listing__tag.listing_id = ${id} AND salvage_listing__tag.item_serial = serial
+                    'category_id', tag_category.name,
+                    'listing_id', salvage_item__tag.listing_id
+                )) FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id
+                    INNER JOIN salvage_item__tag ON salvage_item__tag.tag_id = tag.id
+                WHERE salvage_item__tag.listing_id = ${id} AND salvage_item__tag.item_serial = serial
             ) AS tags 
-            FROM salvage_items WHERE listing_id = ${id} AND display = TRUE
+            FROM salvage_item WHERE listing_id = ${id} AND display = TRUE
         )
         SELECT id, name, description, (
             SELECT json_agg(json_build_object(

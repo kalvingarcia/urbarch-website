@@ -18,9 +18,9 @@ export async function GET(request) {
         ${search !== ""?
             Database`
                 WITH search_filtered AS (
-                    SELECT DISTINCT product_variations.listing_id AS id, product_variations.extension AS extension
-                    FROM product_listing INNER JOIN product_variations ON product_variations.listing_id = product_listing.id
-                    WHERE (product_listing.index @@ to_tsquery(${search + ':*'}) OR product_variations.index @@ to_tsquery(${search + ':*'}))
+                    SELECT DISTINCT product_variation.listing_id AS id, product_variation.extension AS extension
+                    FROM product_listing INNER JOIN product_variation ON product_variation.listing_id = product_listing.id
+                    WHERE (product_listing.index @@ to_tsquery(${search + ':*'}) OR product_variation.index @@ to_tsquery(${search + ':*'}))
                 ),
             `
             :
@@ -42,12 +42,12 @@ export async function GET(request) {
         ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} categories AS (
             /* Create a table with the tag name and listing id */
             SELECT DISTINCT listing_id AS id, tag.name AS category
-            FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id  /* First we combine the tag and tag category information */
+            FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
                 INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_categories.name = 'Class'
+            WHERE tag_category.name = 'Class'
         )
         SELECT DISTINCT id, extension, name, subname, category, price
-        FROM product_listing INNER JOIN product_variations ON product_listing.id = product_variations.listing_id
+        FROM product_listing INNER JOIN product_variation ON product_listing.id = product_variation.listing_id
             INNER JOIN categories USING(id)
             ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
             ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}

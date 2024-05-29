@@ -29,7 +29,7 @@ export async function GET(request) {
             Database`
                 ${search === ""? Database`WITH` : Database``} tag_filtered AS (
                     ${Database.unsafe(Object.entries(filters).map(([_, value]) => (`
-                        SELECT DISTINCT id FROM salvage_listing__tag WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
+                        SELECT DISTINCT id FROM salvage_item__tag WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
                     `)).join(" INTERSECT "))}
                 ),
             `
@@ -38,7 +38,7 @@ export async function GET(request) {
         }
         ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} listings AS (
             SELECT DISTINCT listing_id AS id
-            FROM salvage_listing__tag
+            FROM salvage_item__tag
                 ${search !== ""? Database`INNER JOIN search_filtered USING(id)` : Database``}
                 ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id)` : Database``}
         )
@@ -46,15 +46,15 @@ export async function GET(request) {
             SELECT json_agg(json_build_object(
                 'id', CAST(tag.id AS TEXT),
                 'name', tag.name,
-                'category', tag_categories.name
+                'category', tag_category.name
             )) FROM tag
-            WHERE tag.category_id = tag_categories.id AND (tag.id IN (
+            WHERE tag.category_id = tag_category.id AND (tag.id IN (
                 SELECT DISTINCT tag_id 
-                FROM salvage_listing__tag
+                FROM salvage_item__tag
                 WHERE listing_id IN (SELECT id FROM listings)
-            ) OR tag_categories.name = 'Class')
+            ) OR tag_category.name = 'Class')
         ) AS tags
-        FROM tag_categories;
+        FROM tag_category;
     `
 
     return new Response(JSON.stringify(result), {

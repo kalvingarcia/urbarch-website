@@ -19,9 +19,9 @@ export async function GET(request) {
         ${search !== ""? 
             Database`
                 WITH search_filtered AS (
-                    SELECT DISTINCT product_variations.listing_id AS listing_id, product_variations.extension as variation_extension
-                    FROM product_listing INNER JOIN product_variations ON product_variations.listing_id = product_listing.id
-                    WHERE product_listing.index @@ to_tsquery(${search + ':*'}) OR product_variations.index @@ to_tsquery(${search + ':*'})
+                    SELECT DISTINCT product_variation.listing_id AS listing_id, product_variation.extension as variation_extension
+                    FROM product_listing INNER JOIN product_variation ON product_variation.listing_id = product_listing.id
+                    WHERE product_listing.index @@ to_tsquery(${search + ':*'}) OR product_variation.index @@ to_tsquery(${search + ':*'})
                 ),
             `
             :
@@ -50,15 +50,15 @@ export async function GET(request) {
             SELECT json_agg(json_build_object(
                 'id', CAST(tag.id AS TEXT),
                 'name', tag.name,
-                'category', tag_categories.name
+                'category', tag_category.name
             )) FROM tag
-            WHERE tag.category_id = tag_categories.id AND (tag.id IN (
+            WHERE tag.category_id = tag_category.id AND (tag.id IN (
                 SELECT DISTINCT tag_id 
                 FROM product_variation__tag
                 WHERE (listing_id, variation_extension) IN (SELECT listing_id, variation_extension FROM variations)
-            ) OR tag_categories.name = 'Class')
+            ) OR tag_category.name = 'Class')
         ) AS tags
-        FROM tag_categories;
+        FROM tag_category;
     `
 
     return new Response(JSON.stringify(result), {
