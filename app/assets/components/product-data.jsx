@@ -44,10 +44,10 @@ export default function ProductData({product, extension, drawing}) {
                         {variation.overview.specifications?
                             <div className='specifications'>
                                 <Subheading>Specifications</Subheading>
-                                <span>Height: {variation.overview.specifications.height.measurement} {variation.overview.specifications.height.unit}.</span>
-                                <span>Width: {variation.overview.specifications.width.measurement} {variation.overview.specifications.width.unit}.</span>
-                                <span>Depth: {variation.overview.specifications.depth.measurement} {variation.overview.specifications.depth.unit}.</span>
-                                <span>Weight: {variation.overview.specifications.weight.measurement} {variation.overview.specifications.weight.unit}.</span>
+                                <span>Height: {variation.overview.specifications.height.measurement} {variation.overview.specifications.height.unit}</span>
+                                <span>Width: {variation.overview.specifications.width.measurement} {variation.overview.specifications.width.unit}</span>
+                                <span>Depth: {variation.overview.specifications.depth.measurement} {variation.overview.specifications.depth.unit}</span>
+                                <span>Weight: {variation.overview.specifications.weight.measurement} {variation.overview.specifications.weight.unit}</span>
                             </div>
                             :
                             ""
@@ -77,8 +77,8 @@ export default function ProductData({product, extension, drawing}) {
                                 <div className='list'>
                                     {variation.replacements.map(replacement =>(
                                         <a className="replacement">
-                                            <span>{replacement.name}</span>
-                                            <span>{replacement.id}</span>
+                                            <span>{replacement.name}{replacement.subname === "DEFAULT"? "" : ` [${replacement.subname}]`}</span>
+                                            <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : ` -${replacement.extension}`}</span>
                                             <span>${replacement.price}</span>
                                         </a>
                                     ))}
