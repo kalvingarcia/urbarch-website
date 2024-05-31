@@ -56,6 +56,7 @@ export async function GET(request) {
                 SELECT DISTINCT tag_id 
                 FROM product_variation__tag
                 WHERE (listing_id, variation_extension) IN (SELECT listing_id, variation_extension FROM variations)
+                    AND tag.name != 'Replacement'
             ) OR tag_category.name = 'Class')
         ) AS tags
         FROM tag_category;
