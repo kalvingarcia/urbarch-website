@@ -13,7 +13,7 @@ export async function GET(request, {params: {id}}) {
                     INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id
                 WHERE product_variation__tag.listing_id = ${id} AND product_variation__tag.variation_extension = extension
             ) AS tags, (
-                SELECT COALESCE(json_agg(json_build_object(
+                SELECT DISTINCT COALESCE(json_agg(json_build_object(
                     'id', product_listing.id,
                     'extension', product_variation.extension,
                     'name', product_listing.name,
@@ -21,7 +21,7 @@ export async function GET(request, {params: {id}}) {
                     'price', product_variation.price
                 )), '[]') FROM json_to_recordset(overview->'replacements') AS replacements(id VARCHAR(10), extension VARCHAR(10))
                     INNER JOIN product_listing USING(id) 
-                    INNER JOIN product_variation ON product_listing.id = product_variation.listing_id
+                    INNER JOIN product_variation ON replacements.id = product_variation.listing_id AND product_variation.extension = replacements.extension
             ) AS replacements
             FROM product_variation WHERE listing_id = ${id} AND display = TRUE
         )
