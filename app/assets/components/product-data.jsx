@@ -75,7 +75,7 @@ export default function ProductData({product, extension, drawing}) {
                             :
                             ""
                         }
-                        {variation.replacements?
+                        {variation.replacements.length > 0?
                             <div className='replacements'>
                                 <Subheading>Replacements</Subheading>
                                 <div className='list'>
