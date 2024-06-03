@@ -15,6 +15,7 @@ export default function FinishesMenu({choices, onChange}) {
         "BN": "Black Nickel"
     };
     choices = choices.map((choice) => ({
+        value: choice.finish,
         display: finishes[choice.finish],
         difference: choice.difference,
         default: choice.default

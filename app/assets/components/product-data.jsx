@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image';
-import {useState} from 'react';
+import {createContext, useCallback, useState} from 'react';
 import {Heading, Subheading, Subtitle, Title} from './typography';
 import Button from './button';
 import DropdownMenu from './dropdown-menu';
@@ -8,9 +8,20 @@ import FinishesMenu from './finishes-menu';
 import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
 
+export const OptionsContext = createContext();
+
 export default function ProductData({product, extension, drawing}) {
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, onPriceChange] = usePriceChange(variation.price);
+
+    const [choiceValues, setChoiceValues] = useState({});
+    const updateChoiceValues = useCallback((optionName, choiceValue) => {
+        choiceValues[optionName] = choiceValue;
+        setChoiceValues(choiceValues);
+    }, [choiceValues]);
+    const getChoiceValue = useCallback(linkName => {
+        return choiceValues[linkName];
+    }, [choiceValues])
 
     const [open, setOpen] = useState(false);
     return (
@@ -27,14 +38,16 @@ export default function ProductData({product, extension, drawing}) {
             </div>
             <div className='options'>
                 <Heading>Options</Heading>
-                {variation.overview.finishes.length !== 0?
-                    <FinishesMenu choices={variation.overview.finishes} onChange={onPriceChange} />
-                    :
-                    ""
-                }
-                {Object.entries(variation.overview.options).map(([name, choices]) => (
-                    <DropdownMenu key={name} name={name} choices={choices} onChange={onPriceChange} />
-                ))}
+                <OptionsContext.Provider value={{"onChange": onPriceChange, updateChoiceValues, getChoiceValue}}>
+                    {variation.overview.finishes.length !== 0?
+                        <FinishesMenu choices={variation.overview.finishes} onChange={onPriceChange} />
+                        :
+                        ""
+                    }
+                    {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
+                        <DropdownMenu key={name} name={name} choices={content} linkName={link_name} />
+                    ))}
+                </OptionsContext.Provider>
             </div>
             <div className={['modal', open? 'open' : ''].join(" ")}>
                 <div className='scrim' onClick={() => setOpen(false)} />
