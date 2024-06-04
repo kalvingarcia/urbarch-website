@@ -41,10 +41,26 @@ export async function GET(request) {
             Database``
         }
         ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} variations AS (
-            SELECT DISTINCT listing_id, variation_extension
-            FROM product_variation__tag
-                ${search !== ""? Database`INNER JOIN search_filtered USING(listing_id, variation_extension)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(listing_id, variation_extension)` : Database``}
+            SELECT DISTINCT product_variation__tag.listing_id, product_variation__tag.variation_extension
+            FROM product_variation__tag INNER JOIN product_variation 
+                ON product_variation__tag.listing_id = product_variation.listing_id AND product_variation__tag.variation_extension = product_variation.extension
+                ${search !== ""? 
+                    Database`
+                        INNER JOIN search_filtered
+                            ON product_variation__tag.listing_id = search_filtered.listing_id AND  product_variation__tag.variation_extension = search_filtered.variation_extension
+                    ` 
+                    : 
+                    Database``
+                }
+                ${Object.entries(filters).length !== 0?
+                    Database`
+                        INNER JOIN tag_filtered
+                            ON product_variation__tag.listing_id = tag_filtered.listing_id AND  product_variation__tag.variation_extension = tag_filtered.variation_extension
+                    `
+                    :
+                    Database``
+                }
+            WHERE display = TRUE
         )
         SELECT id, name, (
             SELECT json_agg(json_build_object(
@@ -56,7 +72,6 @@ export async function GET(request) {
                 SELECT DISTINCT tag_id 
                 FROM product_variation__tag
                 WHERE (listing_id, variation_extension) IN (SELECT listing_id, variation_extension FROM variations)
-                    AND tag.name != 'Replacement'
             ) OR tag_category.name = 'Class')
         ) AS tags
         FROM tag_category;
