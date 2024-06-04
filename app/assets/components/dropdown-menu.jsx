@@ -6,21 +6,20 @@ import {OptionsContext} from "./product-data";
 import '../styles/components/dropdown-menu.scss';
 import useRippleEffect from "../hooks/ripple";
 
-export default function DropdownMenu({name, choices, linkName = undefined}) {
+export default function DropdownMenu({name, choices, linkValue, updateChoiceValues, onChange}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
-    const {onChange, updateChoiceValues, getChoiceValue} = useContext(OptionsContext);
 
     const [currentChoice, setCurrentChoice] = useState(() => (
         choices.findIndex(choice => choice.default)
     ));
     choices = choices.map((choice, index, choices) => {
-        let links = choice.display.match(/\${([A-z\-\[\] ]+,?)+}/g);
-        // choice.display = choice.display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "");
+        const links = choice.display.match(/\${([A-z\-\[\] ]+,?)+}/g);
+        const display = choice.display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "");
 
         return {
-            value: choice.value? choice.value : choice.display,
+            value: choice.value? choice.value : display,
             links: links? links[0].replace(/\${|}/g, "").split(",") : [],
-            display: choice.display,
+            display: display,
             differenceToCurrent: choice.difference - choices[currentChoice].difference,
             differenceToBase: choice.difference,
             onClick: () => setCurrentChoice(index)
@@ -30,7 +29,7 @@ export default function DropdownMenu({name, choices, linkName = undefined}) {
     const [options, setOptions] = useState(() => {
         let options = [];
         for(let choice of choices) {
-            if(linkName && (!getChoiceValue(linkName) || !choice.links.includes(getChoiceValue(linkName))))
+            if(choice.links.length !== 0 && linkValue && !choice.links.includes(linkValue))
                 continue;
             options.push(choice);
         }
@@ -38,10 +37,11 @@ export default function DropdownMenu({name, choices, linkName = undefined}) {
     });
     useEffect(() => {
         onChange(choices[currentChoice].differenceToCurrent);
+        updateChoiceValues(name, choices[currentChoice].value);
 
         let options = [];
         for(let choice of choices) {
-            if(linkName && !choice.links.includes(getChoiceValue(linkName)))
+            if(choice.links.length !== 0 && linkValue && !choice.links.includes(linkValue))
                 continue;
             options.push({
                 ...choice,
@@ -49,11 +49,16 @@ export default function DropdownMenu({name, choices, linkName = undefined}) {
             });
         }
         setOptions(options);
-
-        updateChoiceValues(name, choices[currentChoice].value);
-
-        console.log(getChoiceValue(linkName))
-    }, [currentChoice, getChoiceValue(linkName)]);
+    }, [currentChoice]);
+    useEffect(() => {
+        let options = [];
+        for(let choice of choices) {
+            if(choice.links.length !== 0 && linkValue && !choice.links.includes(linkValue))
+                continue;
+            options.push(choice);
+        }
+        setOptions(options);
+    }, [linkValue])
 
 
     const [open, setOpen] = useState(false);
@@ -67,7 +72,7 @@ export default function DropdownMenu({name, choices, linkName = undefined}) {
                 <div className="scrim" onMouseDown={() => setOpen(false)} />
                 <div className="menu">
                     {options.map(option => (
-                        <span className="option" key={option.display} onClick={() => option.onClick() || setOpen(false)}>
+                        <span className="option" key={option.display + option.differenceToBase} onClick={() => option.onClick() || setOpen(false)}>
                             {option.display} ({Math.sign(option.differenceToCurrent) === -1? "-" : "+"}${Math.abs(option.differenceToCurrent)})
                         </span>
                     ))}
