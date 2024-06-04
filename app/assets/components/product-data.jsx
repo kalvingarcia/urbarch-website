@@ -16,12 +16,11 @@ export default function ProductData({product, extension, drawing}) {
 
     const [choiceValues, setChoiceValues] = useState({});
     const updateChoiceValues = useCallback((optionName, choiceValue) => {
-        choiceValues[optionName] = choiceValue;
-        setChoiceValues(choiceValues);
+        choiceValues[optionName.toLowerCase()] = choiceValue;
+        setChoiceValues({
+            ...choiceValues
+        });
     }, [choiceValues]);
-    const getChoiceValue = useCallback(linkName => {
-        return choiceValues[linkName];
-    }, [choiceValues])
 
     const [open, setOpen] = useState(false);
     return (
@@ -38,14 +37,14 @@ export default function ProductData({product, extension, drawing}) {
             </div>
             <div className='options'>
                 <Heading>Options</Heading>
-                <OptionsContext.Provider value={{"onChange": onPriceChange, updateChoiceValues, getChoiceValue}}>
+                <OptionsContext.Provider value={{updateChoiceValues}}>
                     {variation.overview.finishes.length !== 0?
-                        <FinishesMenu choices={variation.overview.finishes} onChange={onPriceChange} />
+                        <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} onChange={onPriceChange} />
                         :
                         ""
                     }
                     {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
-                        <DropdownMenu key={name} name={name} choices={content} linkName={link_name} />
+                        <DropdownMenu key={name} name={name} choices={content} linkValue={choiceValues[link_name.toLowerCase()]} updateChoiceValues={updateChoiceValues} onChange={onPriceChange} />
                     ))}
                 </OptionsContext.Provider>
             </div>
