@@ -1,6 +1,6 @@
 import DropdownMenu from "./dropdown-menu";
 
-export default function FinishesMenu({choices, onChange}) {
+export default function FinishesMenu({choices, ...props}) {
     const finishes = {
         "PB": "Polished Brass",
         "GP": "Green Patina",
@@ -21,5 +21,5 @@ export default function FinishesMenu({choices, onChange}) {
         default: choice.default
     }));
 
-    return <DropdownMenu name="Finishes" choices={choices} onChange={onChange} />
+    return <DropdownMenu name="Finishes" choices={choices} {...props} />
 }
