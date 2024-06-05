@@ -6,7 +6,7 @@ import {OptionsContext} from "./product-data";
 import '../styles/components/dropdown-menu.scss';
 import useRippleEffect from "../hooks/ripple";
 
-export default function DropdownMenu({name, choices, linkValue, updateChoiceValues, onChange}) {
+export default function DropdownMenu({name, choices, linkName, linkValue, updateChoiceValues, onChange}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
 
     const [currentChoice, setCurrentChoice] = useState(() => (
@@ -58,12 +58,20 @@ export default function DropdownMenu({name, choices, linkValue, updateChoiceValu
             options.push(choice);
         }
         setOptions(options);
-    }, [linkValue])
+    }, [linkValue]);
 
+    const after = useCallback(() => {
+        if(linkName !== "") {
+            const pseudoParent = document.getElementById(linkName);
+            const self = document.getElementById(name);
+            if(pseudoParent)
+                pseudoParent.after(self);
+        }
+    }, []);
 
     const [open, setOpen] = useState(false);
     return (options.length !== 0?
-        <div className="dropdown-menu">
+        <div id={name} ref={after} className="dropdown-menu">
             <Subheading>{name}</Subheading>
             <span className="display" onClick={() => setOpen(!open)} onMouseDown={rippleExpand} onMouseUp={rippleFade}>
                 {choices[currentChoice].display} ({Math.sign(choices[currentChoice].differenceToCurrent) === -1? "-" : "+"}${Math.abs(choices[currentChoice].differenceToCurrent)})
