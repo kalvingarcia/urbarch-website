@@ -11,7 +11,7 @@ export function Variation({from, active, id, extension, name, subname, price}) {
         <div 
             className={['variation', active? "active" : ""].join(" ")} 
             onMouseDown={rippleExpand} onMouseUp={rippleFade} 
-            onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${from === 'products'? extension : 1}`), 100)}
+            onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${extension}`), 100)}
         >
             <span className='name'>{name}{subname !== "DEFAULT"? ` [${subname}]` : ""}</span>
             <span className='id'>{id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
