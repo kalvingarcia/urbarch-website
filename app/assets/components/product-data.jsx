@@ -51,11 +51,11 @@ export default function ProductData({product, extension, drawing}) {
             <div className={['modal', open? 'open' : ''].join(" ")}>
                 <div className='scrim' onClick={() => setOpen(false)} />
                 <div className='overview'>
-                    <div>
+                    <div className='drawing'>
                         <Heading>Drawing</Heading>
                         <Image src={drawing} alt="" />
                     </div>
-                        <div>
+                    <div className='miscellaneous'>
                         <Heading>Overview</Heading>
                         {variation.overview.specifications?
                             <div className='specifications'>
@@ -68,7 +68,7 @@ export default function ProductData({product, extension, drawing}) {
                             :
                             ""
                         }
-                        {variation.overview.ul.length > 0?
+                        {variation.overview.ul.length > 0 || variation.overview.ul[0] === "None"?
                             <div className='ul-info'>
                                 <Subheading>UL Listing</Subheading>
                                 <span>This product is listed for use in {variation.overview.ul[0].toUpperCase()} environments.</span>
@@ -77,12 +77,11 @@ export default function ProductData({product, extension, drawing}) {
                             ""
                         }
                         {variation.overview.bulb.quantity > 0?
-                            <div>
+                            <div className='bulb-info'>
                                 <Subheading>Bulb Information</Subheading>
-                                <span>{variation.overview.bulb.shape.name} Bulb ({variation.overview.bulb.shape.code})</span>
-                                <span>{variation.overview.bulb.socket.name} Base ({variation.overview.bulb.socket.code})</span> 
-                                <span>{variation.overview.bulb.specifications} LED recommended</span>
-                                <span>{variation.overview.bulb.quantity} count</span>
+                                <span>{variation.overview.bulb.shape.name} Bulb ({variation.overview.bulb.shape.code}) {variation.overview.bulb.socket.name} Base ({variation.overview.bulb.socket.code})</span> 
+                                <span>{variation.overview.bulb.specifications} recommended</span>
+                                <span>({variation.overview.bulb.quantity} count)</span>
                             </div>
                             :
                             ""
@@ -92,11 +91,11 @@ export default function ProductData({product, extension, drawing}) {
                                 <Subheading>Replacements</Subheading>
                                 <div className='list'>
                                     {variation.replacements.map(replacement =>(
-                                        <a key={`${replacement.id}-${replacement.extension}`} className="replacement">
+                                        <div key={`${replacement.id}-${replacement.extension}`} className="replacement">
                                             <span>{replacement.name}{replacement.subname === "DEFAULT"? "" : ` [${replacement.subname}]`}</span>
-                                            <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : ` -${replacement.extension}`}</span>
+                                            <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : `-${replacement.extension}`}</span>
                                             <span>${replacement.price}</span>
-                                        </a>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
