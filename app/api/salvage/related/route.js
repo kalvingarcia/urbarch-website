@@ -17,9 +17,9 @@ export async function GET(request) {
         ), categories AS (
             /* Create a table with the tag name and listing id */
             SELECT DISTINCT listing_id AS id, tag.name AS category
-            FROM tag INNER JOIN tag_categories ON tag.category_id = tag_categories.id  /* First we combine the tag and tag category information */
+            FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
                 INNER JOIN salvage_item__tag ON salvage_item__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_categories.name = 'Category' AND listing_id IN (SELECT id AS listing_id FROM product_tag_match)
+            WHERE tag_category.name = 'Category' AND listing_id IN (SELECT id AS listing_id FROM product_tag_match)
         )
         SELECT DISTINCT id, name, category, COUNT(tag_id)
         FROM salvage_listing INNER JOIN product_tag_match USING(id) INNER JOIN categories USING(id)
