@@ -55,36 +55,44 @@ export default async function Product({params: {product: [id, extension, ...rest
                 </Spotlight>
                 <div className='data'>
                     <ProductData product={product} extension={extension} drawing={drawing} />
-                    <Variations>
-                        {product.variations.map(variation => (
-                            <Variation
-                                key={variation.extension}
-                                from="products"
-                                active={extension === variation.extension}
-                                id={product.id}
-                                extension={variation.extension}
-                                name={product.name}
-                                subname={variation.subname}
-                                price={variation.price}
-                            />
-                        ))}
-                    </Variations>
+                    {product.variations.length !== 1?
+                        <Variations>
+                            {product.variations.map(variation => (
+                                <Variation
+                                    key={variation.extension}
+                                    from="products"
+                                    active={extension === variation.extension}
+                                    id={product.id}
+                                    extension={variation.extension}
+                                    name={product.name}
+                                    subname={variation.subname}
+                                    price={variation.price}
+                                />
+                            ))}
+                        </Variations>
+                        :
+                        ""
+                    }
                 </div>
             </section>
-            <Related>
-                {related.map(product => (
-                    <Card 
-                        key={product.id}
-                        type="small"
-                        from='products'
-                        id={product.id}
-                        extension={product.extension}
-                        name={product.name}
-                        subname={product.subname}
-                        category={product.category}
-                    />
-                ))}
-            </Related>
+            {related.length !== 0?
+                <Related>
+                    {related.map(product => (
+                        <Card 
+                            key={product.id}
+                            type="small"
+                            from='products'
+                            id={product.id}
+                            extension={product.extension}
+                            name={product.name}
+                            subname={product.subname}
+                            category={product.category}
+                        />
+                    ))}
+                </Related>
+                :
+                ""
+            }
             <Customs>
                 {customs.map(item => (
                     <Custom
