@@ -79,7 +79,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                 <Related>
                     {related.map(product => (
                         <Card 
-                            key={product.id}
+                            key={`${product.id}${product.extension !== 'DEFAULT'? `-${product.extension}` : ""}}`}
                             type="small"
                             from='products'
                             id={product.id}
