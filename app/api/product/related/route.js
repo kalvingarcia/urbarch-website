@@ -26,7 +26,7 @@ export async function GET(request) {
             INNER JOIN product_tag_match USING(id, extension) INNER JOIN categories USING(id)
         WHERE id != ${id} OR extension != ${extension}
         GROUP BY id, name, subname, category
-        HAVING COUNT(tag_id) > 5
+        HAVING COUNT(tag_id) > 1
         ORDER BY COUNT(tag_id) DESC LIMIT 10;
     `
 
