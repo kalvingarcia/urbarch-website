@@ -50,7 +50,7 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                 </Spotlight>
                 <div className='data'>
                     <SalvageData salvage={salvage} serial={serial} />
-                    <Variations>
+                    <Variations from="salvage">
                         {salvage.items.map(item => (
                             <Variation
                                 key={item.serial}

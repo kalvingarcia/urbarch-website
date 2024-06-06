@@ -20,10 +20,10 @@ export function Variation({from, active, id, extension, name, subname, price}) {
     );
 }
 
-export default function Variations({children}) {
+export default function Variations({from = "products", children}) {
     return (
         <div className='variations'>
-            <Heading>Variations</Heading>
+            <Heading>{from === "products"? "Variations" : "Items"}</Heading>
             <div className='links'>
                 {children}
             </div>
