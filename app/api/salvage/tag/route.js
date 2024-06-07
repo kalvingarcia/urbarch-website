@@ -19,7 +19,7 @@ export async function GET(request) {
         ${search !== ""? 
             Database`
                 WITH search_filtered AS (
-                    SELECT DISTINCT id FROM salvage_listing WHERE index @@ to_tsquery(${search + ':*'})
+                    SELECT DISTINCT id AS listing_id FROM salvage_listing WHERE index @@ to_tsquery(${search + ':*'})
                 ),
             `
             :
@@ -29,7 +29,7 @@ export async function GET(request) {
             Database`
                 ${search === ""? Database`WITH` : Database``} tag_filtered AS (
                     ${Database.unsafe(Object.entries(filters).map(([_, value]) => (`
-                        SELECT DISTINCT id FROM salvage_item__tag WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
+                        SELECT DISTINCT listing_id FROM salvage_item__tag WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
                     `)).join(" INTERSECT "))}
                 ),
             `
@@ -37,10 +37,10 @@ export async function GET(request) {
             Database``
         }
         ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} listings AS (
-            SELECT DISTINCT listing_id AS id
+            SELECT DISTINCT listing_id
             FROM salvage_item__tag
-                ${search !== ""? Database`INNER JOIN search_filtered USING(id)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id)` : Database``}
+                ${search !== ""? Database`INNER JOIN search_filtered USING(listing_id)` : Database``}
+                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(listing_id)` : Database``}
         )
         SELECT id, name, (
             SELECT json_agg(json_build_object(
@@ -51,7 +51,7 @@ export async function GET(request) {
             WHERE tag.category_id = tag_category.id AND (tag.id IN (
                 SELECT DISTINCT tag_id 
                 FROM salvage_item__tag
-                WHERE listing_id IN (SELECT id FROM listings)
+                WHERE listing_id IN (SELECT listing_id FROM listings)
             ) OR tag_category.name = 'Class')
         ) AS tags
         FROM tag_category;
