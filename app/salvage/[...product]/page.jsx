@@ -50,20 +50,24 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                 </Spotlight>
                 <div className='data'>
                     <SalvageData salvage={salvage} serial={serial} />
-                    <Variations from="salvage">
-                        {salvage.items.map(item => (
-                            <Variation
-                                key={item.serial}
-                                from="salvage"
-                                active={serial === item.serial.toString()}
-                                id={salvage.id}
-                                extension={item.serial}
-                                name={salvage.name}
-                                subname={item.serial}
-                                price={item.price}
-                            />
-                        ))}
-                    </Variations>
+                    {salvage.items.length > 1?
+                        <Variations from="salvage">
+                            {salvage.items.map(item => (
+                                <Variation
+                                    key={item.serial}
+                                    from="salvage"
+                                    active={serial === item.serial.toString()}
+                                    id={salvage.id}
+                                    extension={item.serial}
+                                    name={salvage.name}
+                                    subname={item.serial}
+                                    price={item.price}
+                                />
+                            ))}
+                        </Variations>
+                        :
+                        ""
+                    }
                 </div>
             </section>
             <Related>
