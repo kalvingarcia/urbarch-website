@@ -6,7 +6,7 @@ import {OptionsContext} from "./product-data";
 import '../styles/components/dropdown-menu.scss';
 import useRippleEffect from "../hooks/ripple";
 
-export default function DropdownMenu({name, choices, linkName = "", linkValue, updateChoiceValues, onChange}) {
+export default function DropdownMenu({name, choices, linkName = "", linkValue, updateChoiceValues}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
 
     const [currentChoice, setCurrentChoice] = useState(() => (
@@ -36,8 +36,7 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
         return options;
     });
     useEffect(() => {
-        onChange(choices[currentChoice].differenceToCurrent);
-        updateChoiceValues(name, choices[currentChoice].value);
+        updateChoiceValues(name, choices[currentChoice].value, choices[currentChoice].differenceToBase);
 
         let options = [];
         for(let choice of choices) {
@@ -58,6 +57,19 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
             options.push(choice);
         }
         setOptions(options);
+
+        if(options.length === 0)
+            updateChoiceValues(name, "None", 0);
+        else if(options.every(option => option.value !== choices[currentChoice].value))
+            options[0].onClick();
+        else if(options.find(option => option.value === choices[currentChoice].value && option.onClick === choices[currentChoice].onClick))
+            updateChoiceValues(name, choices[currentChoice].value, choices[currentChoice].differenceToBase);
+        else {
+            options.forEach(option => {
+                if(option.value === choices[currentChoice].value && option.onClick !== choices[currentChoice].onClick)
+                    option.onClick();
+            });
+        }
     }, [linkValue]);
 
     const after = useCallback(() => {
@@ -72,16 +84,23 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
     const [open, setOpen] = useState(false);
     return (options.length !== 0?
         <div id={name} ref={after} className={["dropdown-menu", linkName !== "" && linkName !== "finishes"? "dependent" : ""].join(" ")}>
-            <Subheading>{name}</Subheading>
+            <div className="name">
+                <Subheading>{name}</Subheading>
+                {choices[currentChoice].differenceToBase > 0? 
+                    <span className="difference">(+${choices[currentChoice].differenceToBase} to starting price)</span>
+                    :
+                    ""
+                }
+            </div>
             <span className="display" onClick={() => setOpen(!open)} onMouseDown={rippleExpand} onMouseUp={rippleFade}>
-                {choices[currentChoice].display} ({Math.sign(choices[currentChoice].differenceToCurrent) === -1? "-" : "+"}${Math.abs(choices[currentChoice].differenceToCurrent)})
+                {choices[currentChoice].display} {/*<span className="price">({Math.sign(choices[currentChoice].differenceToCurrent) === -1? "-" : "+"}${Math.abs(choices[currentChoice].differenceToCurrent)} to current price)</span>*/}
             </span>
             <div className={["modal", open? "open" : ""].join(" ")}>
                 <div className="scrim" onMouseDown={() => setOpen(false)} />
                 <div className="menu">
                     {options.map(option => (
                         <span className="option" key={option.display + option.differenceToBase} onClick={() => option.onClick() || setOpen(false)}>
-                            {option.display} <span className="price">({Math.sign(option.differenceToCurrent) === -1? "-" : "+"}${Math.abs(option.differenceToCurrent)})</span>
+                            {option.display} <span className="price">({Math.sign(option.differenceToCurrent) === -1? "-" : "+"}${Math.abs(option.differenceToCurrent)} to current price)</span>
                         </span>
                     ))}
                 </div>
