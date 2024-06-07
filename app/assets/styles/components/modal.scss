@@ -1,0 +1,39 @@
+@use "../theme" as *;
+
+.modal {
+    position: absolute;
+    z-index: 1000;
+
+    & .scrim {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0.75;
+        @include themed() {
+            background-color: t('dark-font');
+        }
+    }
+
+    & .pop-up {
+        @include themed() {
+            background-color: t('primary');
+            color: t('on-primary');
+        }
+        position: fixed;
+        height: 80%;
+        width: 80%;
+        top: 10%;
+        left: 10%;
+        padding: 40px;
+        border-radius: 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        & .close {
+            align-self: flex-end;
+        }
+    }
+}
