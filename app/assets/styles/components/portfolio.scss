@@ -1,0 +1,108 @@
+@use '../theme' as *;
+@use 'sass:color' as *;
+
+.portfolio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 20px;
+    padding: 40px;
+
+    & .piece {
+        position: relative;
+        flex: 1 0 basis;
+        overflow: hidden;
+        height: 300px;
+
+        &.skeleton {
+            aspect-ratio: 5/3;
+            font-family: var(--material-icons);
+            font-size: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @include themed() {
+                background-image: linear-gradient(135deg, t('surface'), adjust(t('body'), $alpha: -0.8));
+                color: adjust(t('body'), $alpha: -0.75);
+            }
+            background-position: 0% 0%;
+            background-size: 200% 200%;
+            animation: loading-gradient 3s infinite;
+        }
+
+        &::after {
+            content: "Learn more";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @include themed() {
+                background-color: t('body');
+                color: t('background');
+            }
+            opacity: 0;
+            transition: opacity 300ms ease-in-out;
+        }
+
+        &:hover:not(.skeleton) {
+            &::after {
+                opacity: 0.5;
+            }
+        }
+
+        & img {
+            width: auto;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+}
+
+.piece-metadata {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    & .product {
+        padding-top: 0;
+
+        & .card {
+            @include themed() {
+                background-color: t('on-primary');
+                color: t('primary');
+
+                & .content .metadata .category {
+                    background-color: t('primary');
+                    color: t('on-primary');
+                }
+
+                &::after {
+                    background-color: t('primary');
+                }
+
+                & .ripple {
+                    background-color: t('primary');
+                }
+            }
+        }
+    }
+}
+
+@keyframes loading-gradient {
+    0% {
+        background-position: 0% 10%;
+    }
+    50% {
+        background-position: 100% 90%;
+    }
+    100% {
+        background-position: 0% 10%;
+    }
+}
