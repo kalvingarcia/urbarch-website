@@ -12,14 +12,15 @@ export const OptionsContext = createContext();
 
 export default function ProductData({product, extension, drawing}) {
     const variation = product.variations.find(variation => variation.extension === extension);
-    const [price, onPriceChange] = usePriceChange(variation.price);
+    const [price, updatePrice] = usePriceChange(variation.price);
 
     const [choiceValues, setChoiceValues] = useState({});
-    const updateChoiceValues = useCallback((optionName, choiceValue) => {
+    const updateChoiceValues = useCallback((optionName, choiceValue, choicePricing) => {
         choiceValues[optionName.toLowerCase()] = choiceValue;
         setChoiceValues({
             ...choiceValues
         });
+        updatePrice(optionName, choicePricing);
     }, [choiceValues]);
 
     const [open, setOpen] = useState(false);
@@ -39,12 +40,12 @@ export default function ProductData({product, extension, drawing}) {
                 <Heading>Options</Heading>
                 <OptionsContext.Provider value={{updateChoiceValues}}>
                     {variation.overview.finishes.length !== 0?
-                        <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} onChange={onPriceChange} />
+                        <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} />
                         :
                         ""
                     }
                     {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
-                        <DropdownMenu key={name} name={name} choices={content} linkName={link_name} linkValue={choiceValues[link_name.toLowerCase()]} updateChoiceValues={updateChoiceValues} onChange={onPriceChange} />
+                            updateChoiceValues={updateChoiceValues}
                     ))}
                 </OptionsContext.Provider>
             </div>
