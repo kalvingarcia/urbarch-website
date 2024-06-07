@@ -9,4 +9,5 @@ export const GET_SALVAGE = `${BASE_URL}/api/salvage`;
 export const GET_RELATED_SALVAGE = `${BASE_URL}/api/salvage/related`;
 export const GET_SALVAGE_TAGS = `${BASE_URL}/api/salvage/tag`;
 
+export const GET_CUSTOMS = `${BASE_URL}/api/custom`;
 export const GET_RELATED_CUSTOMS = `${BASE_URL}/api/custom/related`;
