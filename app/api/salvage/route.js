@@ -40,7 +40,7 @@ export async function GET(request) {
             SELECT DISTINCT listing_id AS id, tag.name AS category
             FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
                 INNER JOIN salvage_item__tag ON salvage_item__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_category.name = 'Category'
+            WHERE tag_category.name = 'Class'
         )
         SELECT salvage_listing.id AS id, name, MIN(price) AS price, category
         FROM salvage_listing INNER JOIN salvage_item ON salvage_listing.id = salvage_item.listing_id
@@ -48,7 +48,7 @@ export async function GET(request) {
             ${search !== ""? Database`INNER JOIN search_filtered USING(id)` : Database``}
             ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id)` : Database``}
         GROUP BY id, name, category
-        HAVING COUNT((SELECT serial FROM salvage_item WHERE listing_id = id AND display = TRUE)) > 0;
+        HAVING COUNT(salvage_item.serial) > 0;
     `
 
     return new Response(JSON.stringify(result), {
