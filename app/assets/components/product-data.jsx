@@ -32,7 +32,14 @@ export default function ProductData({product, extension, drawing}) {
                     {extension !== "DEFAULT"? <Subtitle>{variation.subname}</Subtitle> : ""}
                 </div>
                 <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
-                <span className='price'>{price === 0? "Call for pricing" : `$${price}.00`}</span>
+                <div className='price'>
+                    <span className='current'>{price === 0? "Call for pricing" : `$${price}.00`}</span>
+                    {price !== variation.price?
+                        <span className='base'>(Starting at ${variation.price})</span>
+                        :
+                        ""
+                    }
+                </div>
                 <p className='description'>{product.description}</p>
                 <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
             </div>
@@ -45,7 +52,14 @@ export default function ProductData({product, extension, drawing}) {
                         ""
                     }
                     {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
+                        <DropdownMenu 
+                            key={name}
+                            name={name}
+                            choices={content}
+                            linkName={link_name}
+                            linkValue={choiceValues[link_name.toLowerCase()]}
                             updateChoiceValues={updateChoiceValues}
+                        />
                     ))}
                 </OptionsContext.Provider>
             </div>

@@ -8,7 +8,21 @@
         flex-direction: column;
         gap: 10px;
 
+        & .name {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+
+            & .difference {
+                font-size: 0.75rem;
+                opacity: 0.75;
+            }
+        }
+
         & .display {
+            display: flex;
+            gap: 5px;
+            align-items: center;
             padding: 5px 10px;
             min-width: 400px;
             width: fit-content;
@@ -17,6 +31,11 @@
 
             @include themed() {
                 border: 1pt solid adjust(t('body'), $alpha: -0.5);
+            }
+
+            & .price {
+                font-size: 0.75rem;
+                opacity: 0.75;
             }
 
             &::after {
@@ -81,7 +100,15 @@
     
                 & .option {
                     position: relative;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
                     padding: 5px 10px;
+
+                    & .price {
+                        font-size: 0.75rem;
+                        opacity: 0.75;
+                    }
     
                     &::after {
                         content: "";
