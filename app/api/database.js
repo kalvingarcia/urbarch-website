@@ -5,12 +5,12 @@ const Database = postgres(environment?
     environment 
     :
     {
-        database: process.env.DBNAME, //"productdb",
-        username: process.env.DBUSER, //"dashboard",
-        password: process.env.DBPASS, //"KQrIInGFvRr6Vqm5KF0_Zw",
-        host: process.env.DBHOST, //"urban-website-737.jxf.cockroachlabs.cloud",
-        port: process.env.DBPORT, //26257,
-        ssl: process.env.DBMODE, //true
+        database: process.env.DBNAME,
+        username: process.env.DBUSER,
+        password: process.env.DBPASS,
+        host: process.env.DBHOST,
+        port: process.env.DBPORT,
+        ssl: process.env.DBMODE
     }
 );
 
