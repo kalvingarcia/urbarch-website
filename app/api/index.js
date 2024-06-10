@@ -2,7 +2,7 @@ let BASE_URL;
 if(process.env.NODE_ENV === "development")
     BASE_URL = "http://localhost:3000";
 else
-    BASE_URL = "http://urbarch-website.projects.kalvingarcia.com";
+    BASE_URL = "http://urbarch-website.kalvin.live";
 
 export const GET_PRODUCTS = `${BASE_URL}/api/product`;
 export const GET_FEATURED_PRODUCTS = `${BASE_URL}/api/product/featured`;
