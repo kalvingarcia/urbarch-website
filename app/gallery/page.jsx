@@ -4,7 +4,7 @@ import Portfolio, {Piece} from "../assets/components/portfolio";
 import {GET_CUSTOMS} from "../api";
 
 export default async function Gallery({searchParams}) {
-    const customs = [] //await fetch(GET_CUSTOMS).then(response => response.json());
+    const customs = await fetch(GET_CUSTOMS).then(response => response.json());
     return (
         <main>
             <Banner src="gallery.jpg">

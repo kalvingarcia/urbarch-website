@@ -64,7 +64,7 @@ function GalleryLink() {
         <div 
             className='gallery-link'
             onMouseDown={rippleExpand} onMouseUp={rippleFade} 
-            onClick={() => setTimeout(() => router.push(`/custom`), 100)}
+            onClick={() => setTimeout(() => router.push(`/gallery`), 100)}
         >
             <Image src={image} alt="" />
             <div className='overlay' />
