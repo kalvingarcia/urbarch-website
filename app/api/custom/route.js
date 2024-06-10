@@ -26,8 +26,6 @@ export async function GET(request) {
         LIMIT 30 OFFSET ${offset};
     `
 
-    console.log(result);
-
     return new Response(JSON.stringify(result), {
         "status": 200
     });
