@@ -6,6 +6,7 @@
         padding: 40px;
         display: flex;
         flex-direction: column;
+        justify-content: center;
         gap: 20px;
     
         @include themed() {
@@ -24,16 +25,15 @@
             padding-left: 40px;
             padding-right: 40px;
             gap: 10px;
+
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
     
             & * {
                 flex: 0 0 auto;
             }
         }
-    }
-}
-
-@media print {
-    .related {
-        display: none;
     }
 }
