@@ -1,6 +1,8 @@
 @use '../theme.scss' as *;
 
 .catalog {
+    max-width: 1500px;
+    margin: auto;
     width: 100%;
     display: flex;
     gap: 40px;

@@ -2,6 +2,8 @@
 @use 'sass:color' as *;
 
 .portfolio {
+    max-width: 1500px;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
