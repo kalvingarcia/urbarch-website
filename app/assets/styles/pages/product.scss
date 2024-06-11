@@ -5,6 +5,7 @@
         padding-top: 100px;
     
         & .info {
+            max-width: 1500px;
             margin: auto;
             width: 100%;
             display: flex;
@@ -32,24 +33,6 @@
                 display: flex;
                 flex-direction: column;
                 gap: 40px;
-            }
-        }
-    }
-}
-
-
-@media print {
-    .product {
-        & .info {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            padding: 1.5in 1in;
-
-            & > * {
-                flex: 1 0 main-size;
-                width: 50%;
             }
         }
     }
