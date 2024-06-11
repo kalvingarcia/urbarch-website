@@ -1,0 +1,21 @@
+@use "../theme" as *;
+
+.terms {
+    & .info {
+        padding: 20px;
+        max-width: 1280px;
+        margin: auto;
+
+        & h3 {
+            padding: 20px;
+        }
+
+        & h4 {
+            padding: 10px 20px;
+        }
+
+        & p {
+            padding: 5px 20px;
+        }
+    }
+}
