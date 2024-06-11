@@ -23,7 +23,7 @@ export async function GET(request) {
         ) AS product
         FROM custom_item
         WHERE display = TRUE
-        LIMIT 30 OFFSET ${offset};
+        LIMIT 10 OFFSET ${offset};
     `
 
     return new Response(JSON.stringify(result), {

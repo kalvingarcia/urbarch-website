@@ -2,9 +2,16 @@ import Banner from "../assets/components/banner";
 import {Display} from "../assets/components/typography";
 import Portfolio, {Piece} from "../assets/components/portfolio";
 import {GET_CUSTOMS} from "../api";
+import {useCallback} from "react";
 
 export default async function Gallery({searchParams}) {
-    const customs = await fetch(GET_CUSTOMS).then(response => response.json());
+    let offset = searchParams.offset? searchParams.offset : 0;
+    const customs = await fetch(`${GET_CUSTOMS}?${offset}`).then(response => response.json());
+    const addNextCustoms = async () => {
+        offset += 10;
+        customs.concat(await fetch(`${GET_CUSTOMS}?${offset}`).then(response => response.json()));
+    };
+
     return (
         <main>
             <Banner src="gallery.jpg">
