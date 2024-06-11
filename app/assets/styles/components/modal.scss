@@ -28,6 +28,8 @@
         left: 10%;
         padding: 40px;
         border-radius: 20px;
+        overflow: hidden;
+        overflow-y: scroll;
 
         display: flex;
         flex-direction: column;
