@@ -72,7 +72,7 @@ export async function GET(request) {
                 SELECT DISTINCT tag_id 
                 FROM product_variation__tag
                 WHERE (listing_id, variation_extension) IN (SELECT listing_id, variation_extension FROM variations)
-            ) OR tag_category.name = 'Class')
+            ) OR tag_category.name = 'Class' AND tag.id IN (SELECT tag_id FROM product_variation__tag))
         ) AS tags
         FROM tag_category;
     `

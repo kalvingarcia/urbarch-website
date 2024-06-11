@@ -52,7 +52,7 @@ export async function GET(request) {
                 SELECT DISTINCT tag_id 
                 FROM salvage_item__tag
                 WHERE listing_id IN (SELECT listing_id FROM listings)
-            ) OR tag_category.name = 'Class')
+            ) OR tag_category.name = 'Class' AND tag.id IN (SELECT tag_id FROM salvage_item__tag))
         ) AS tags
         FROM tag_category;
     `
