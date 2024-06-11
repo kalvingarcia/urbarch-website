@@ -87,7 +87,7 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
             <div className="name">
                 <Subheading>{name}</Subheading>
                 {choices[currentChoice].differenceToBase > 0? 
-                    <span className="difference">(+${choices[currentChoice].differenceToBase} to starting price)</span>
+                    <span className="difference">(+${choices[currentChoice].differenceToBase.toLocaleString('en', {useGrouping: true})} to starting price)</span>
                     :
                     ""
                 }
@@ -100,7 +100,7 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
                 <div className="menu">
                     {options.map(option => (
                         <span className="option" key={option.display + option.differenceToBase} onClick={() => option.onClick() || setOpen(false)}>
-                            {option.display} <span className="price">({Math.sign(option.differenceToCurrent) === -1? "-" : "+"}${Math.abs(option.differenceToCurrent)} to current price)</span>
+                            {option.display} <span className="price">({Math.sign(option.differenceToCurrent) === -1? "-" : "+"}${Math.abs(option.differenceToCurrent).toLocaleString('en', {useGrouping: true})} to current price)</span>
                         </span>
                     ))}
                 </div>

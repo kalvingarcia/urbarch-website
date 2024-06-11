@@ -33,9 +33,9 @@ export default function ProductData({product, extension, drawing}) {
                 </div>
                 <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
                 <div className='price'>
-                    <span className='current'>{price === 0? "Call for pricing" : `$${price}.00`}</span>
+                    <span className='current'>{price === 0? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
                     {price !== variation.price?
-                        <span className='base'>(Starting at ${variation.price})</span>
+                        <span className='base'>(Starting at ${variation.price.toLocaleString('en', {useGrouping: true})})</span>
                         :
                         ""
                     }
@@ -109,7 +109,7 @@ export default function ProductData({product, extension, drawing}) {
                                         <div key={`${replacement.id}-${replacement.extension}`} className="replacement">
                                             <span>{replacement.name}{replacement.subname === "DEFAULT"? "" : ` [${replacement.subname}]`}</span>
                                             <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : `-${replacement.extension}`}</span>
-                                            <span>${replacement.price}</span>
+                                            <span>${replacement.price.toLocaleString('en', {useGrouping: true})}</span>
                                         </div>
                                     ))}
                                 </div>
