@@ -3,17 +3,30 @@
 
 @media screen {
     .related {
+        position: relative;
+        width: 100%;
+        max-width: 1500px;
+        margin: auto;
         padding: 40px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         gap: 20px;
-    
-        @include themed() {
-            background-color: adjust(t('surface'), $alpha: -0.5);
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 100vw;
+            height: 100%;
+            top: 0;
+            z-index: 0;
+            left: calc(-1 * max(calc((100vw - 1500px) / 2), 0px));
+            @include themed() {
+                background-color: adjust(t('surface'), $alpha: -0.5);
+            }
         }
     
-        &.alone {
+        &.alone::before {
             background-color: transparent;
         }
     
@@ -22,8 +35,8 @@
             align-self: center;
             display: flex;
             overflow-x: auto;
-            padding-left: 40px;
-            padding-right: 40px;
+            padding-left: calc(max(calc((100vw - 1500px) / 2), 0px) + 40px);
+            padding-right: calc(max(calc((100vw - 1500px) / 2), 0px) + 40px);
             gap: 10px;
 
             scrollbar-width: none;
@@ -33,6 +46,25 @@
     
             & * {
                 flex: 0 0 auto;
+            }
+        }
+
+        &::after {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            width: 100vw;
+            height: 100%;
+            top: 0;
+            left: calc(-1 * (100vw - 1500px) / 2);
+            @include themed() {
+                background: linear-gradient(
+                    90deg,
+                    t('surface') 0%,
+                    transparent max(calc((100vw - 1500px) / 2), 0px),
+                    transparent calc(1500px + max(calc((100vw - 1500px) / 2), 0px)),
+                    t('surface') 100%
+                );
             }
         }
     }

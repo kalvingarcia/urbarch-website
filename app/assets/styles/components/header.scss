@@ -2,22 +2,10 @@
 
 @media screen {
     .header {
-        // This is the styling to keep the header formatted in an appealing way
         width: 100%;
-        padding: 20px;
-
-        // This is the styling to make the header stay at the top of the screen
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         position: fixed;
         top: 0;
         z-index: 100;
-
-        & a {
-            text-decoration: none;
-        }
-
         // This styles the background and text colors which will change when the user
         // hovers or scrolls since the header is fixed to the top
         background-color: transparent;
@@ -35,81 +23,98 @@
                 & a {
                     color: t('body');
                 }
-                & .menu .navigation .cart.text {
+                & .header-content .menu .navigation .cart.text {
                     color: t('body');
                 }
-                & .modal .navigation .buttons .cart.text {
+                & .header-content .modal .navigation .buttons .cart.text {
                     color: t('body');
                 }
-                & .menu .modal-button.text {
+                & .header-content .menu .modal-button.text {
                     color: t('body');
                 }
             }
         }
 
-        // The branding part of the header
-        // Formatting the logo icon and logo text
-        & .branding {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            & .urban {
-                font-weight: bold;
-                font-size: 1.25rem;
-                margin: 10px;
-                @media (max-width: 500px) { // On mobile, we hide the logo text
-                    display: none;
-                }
-            }
-            & .archaeology {
-                font-family: var(--trajan);
-                font-weight: bold;
-                font-size: 1.25rem;
-                font-kerning: none;
-                letter-spacing: 0.5rem;
-                @media (max-width: 500px) { // On mobile, we hide the logo text
-                    display: none;
-                }
-            }
+        & a {
+            text-decoration: none;
         }
 
-        & .menu {
+        & .header-content {
+            // This is the styling to keep the header formatted in an appealing way
+            width: 100%;
+            max-width: 1500px;
+            margin: auto;
+            padding: 20px;
+
+            // This is the styling to make the header stay at the top of the screen
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 30px;
-            // The navigation part of the header where the text is evenly spaced
-            // We use media queries to make the text go away and instead show a hamburger
-            & .navigation {
+
+            // The branding part of the header
+            // Formatting the logo icon and logo text
+            & .branding {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                & .urban {
+                    font-weight: bold;
+                    font-size: 1.25rem;
+                    margin: 10px;
+                    @media (max-width: 500px) { // On mobile, we hide the logo text
+                        display: none;
+                    }
+                }
+                & .archaeology {
+                    font-family: var(--trajan);
+                    font-weight: bold;
+                    font-size: 1.25rem;
+                    font-kerning: none;
+                    letter-spacing: 0.5rem;
+                    @media (max-width: 500px) { // On mobile, we hide the logo text
+                        display: none;
+                    }
+                }
+            }
+
+            & .menu {
                 display: flex;
                 align-items: center;
                 gap: 30px;
-
-                @media (max-width: 900px) {
-                    display: none;
-                }
-
-                & .active {
-                    font-weight: bold;
-                }
-
-                & .cart.text {
-                    @include themed() {
-                        color: t('light-font');
-                    }
-                }
-            }
-            & .modal-button.text {
-                display: none;
-                @media (max-width: 900px) {
-                    @include themed() {
-                        color: t('light-font');
-                    }
+                // The navigation part of the header where the text is evenly spaced
+                // We use media queries to make the text go away and instead show a hamburger
+                & .navigation {
                     display: flex;
+                    align-items: center;
+                    gap: 30px;
+
+                    @media (max-width: 900px) {
+                        display: none;
+                    }
+
+                    & .active {
+                        font-weight: bold;
+                    }
+
+                    & .cart.text {
+                        @include themed() {
+                            color: t('light-font');
+                        }
+                    }
                 }
-            }
-            & .dark-mode {
-                @media (max-width: 600px) { // When the text is close enough to the buttons it starts to push them off the page
-                    display: none; // I'd rather hide the buttons
+                & .modal-button.text {
+                    display: none;
+                    @media (max-width: 900px) {
+                        @include themed() {
+                            color: t('light-font');
+                        }
+                        display: flex;
+                    }
+                }
+                & .dark-mode {
+                    @media (max-width: 600px) { // When the text is close enough to the buttons it starts to push them off the page
+                        display: none; // I'd rather hide the buttons
+                    }
                 }
             }
         }
@@ -188,54 +193,6 @@
                     width: fit-content;
                     max-width: 80%;
                     transition: max-width 300ms ease-in, padding 300ms cubic-bezier(0,1,0,1), background-color 300ms ease-in-out;
-                }
-            }
-        }
-    }
-}
-
-@media print {
-    .header {
-        width: 100%;
-        padding: 0.5in;
-        position: fixed;
-        top: 0;
-        left: 0;
-
-        & > * {
-            display: none;
-        }
-
-        & a {
-            text-decoration: none;
-        }
-
-        & .branding {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.5;
-
-            @include themed() {
-                color: t('body');
-            }
-
-            & .urban {
-                font-weight: bold;
-                font-size: 1.25rem;
-                margin: 10px;
-                @media (max-width: 500px) { // On mobile, we hide the logo text
-                    display: none;
-                }
-            }
-            & .archaeology {
-                font-family: var(--trajan);
-                font-weight: bold;
-                font-size: 1.25rem;
-                font-kerning: none;
-                letter-spacing: 0.5rem;
-                @media (max-width: 500px) { // On mobile, we hide the logo text
-                    display: none;
                 }
             }
         }
