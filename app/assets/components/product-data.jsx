@@ -1,6 +1,7 @@
 "use client"
 import Image from 'next/image';
-import {createContext, useCallback, useState} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {createContext, useCallback, useEffect, useState} from 'react';
 import {Heading, Subheading, Subtitle, Title} from './typography';
 import Button from './button';
 import DropdownMenu from './dropdown-menu';
@@ -8,6 +9,7 @@ import FinishesMenu from './finishes-menu';
 import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
 import Modal from './modal';
+import IconButton from './icon-button';
 
 export default function ProductData({product, extension, images}) {
     const variation = product.variations.find(variation => variation.extension === extension);
@@ -21,6 +23,36 @@ export default function ProductData({product, extension, images}) {
         });
         updatePrice(optionName, choicePricing);
     }, [choiceValues]);
+
+    const createPDF = useCallback(async () => {
+        const pdf = window.open('', '', 'width=200,height=100');
+        pdf.document.write(renderToStaticMarkup(
+            <div className='cutsheet'>
+                <div className='header'>
+
+                </div>
+                <div className='body'>
+                    <div className='left-column'>
+                        <Image src={images.thumbnail} />
+                    </div>
+                    <div className='right-column'>
+                        <div>
+                            <span>{product.name}</span>
+                            {extension !== "DEFAULT"? <span>{variation.subname}</span> : ""}
+                        </div>
+                        <div>{variation.price === 0? "Call for pricing" : `$${variation.price.toLocaleString('en', {useGrouping: true})}.00`}</div>
+                        <p>{product.description}</p>
+                    </div>
+                </div>
+                <div className='footer'>
+                    Copyright © 2012-2024 Urban Archaeology Ltd. All rights reserved.
+                </div>
+            </div> 
+        ));
+        pdf.document.close();
+        setTimeout(() => pdf.print(), 0);
+        // `${product.name}${variation.subname !== "DEFAULT"? variation.subname : ""}`
+    }, [extension]);
 
     const [open, setOpen] = useState(false);
     return (
@@ -40,27 +72,28 @@ export default function ProductData({product, extension, images}) {
                     }
                 </div>
                 <p className='description'>{product.description}</p>
-                <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
+                <div className='buttons'>
+                    <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
+                    <IconButton style="text" icon="picture_as_pdf" onPress={createPDF} />
+                </div>
             </div>
             <div className='options'>
                 <Heading>Options</Heading>
-                <OptionsContext.Provider value={{updateChoiceValues}}>
-                    {variation.overview.finishes.length !== 0?
-                        <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} />
-                        :
-                        ""
-                    }
-                    {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
-                        <DropdownMenu 
-                            key={name}
-                            name={name}
-                            choices={content}
-                            linkName={link_name}
-                            linkValue={choiceValues[link_name.toLowerCase()]}
-                            updateChoiceValues={updateChoiceValues}
-                        />
-                    ))}
-                </OptionsContext.Provider>
+                {variation.overview.finishes.length !== 0?
+                    <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} />
+                    :
+                    ""
+                }
+                {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
+                    <DropdownMenu 
+                        key={name}
+                        name={name}
+                        choices={content}
+                        linkName={link_name}
+                        linkValue={choiceValues[link_name.toLowerCase()]}
+                        updateChoiceValues={updateChoiceValues}
+                    />
+                ))}
             </div>
             <Modal open={open} setOpen={setOpen}>
                 <div className='metadata-overview'>
