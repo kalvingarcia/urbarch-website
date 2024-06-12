@@ -7,10 +7,9 @@ import DropdownMenu from './dropdown-menu';
 import FinishesMenu from './finishes-menu';
 import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
+import Modal from './modal';
 
-export const OptionsContext = createContext();
-
-export default function ProductData({product, extension, drawing}) {
+export default function ProductData({product, extension, images}) {
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, updatePrice] = usePriceChange(variation.price);
 
@@ -63,12 +62,11 @@ export default function ProductData({product, extension, drawing}) {
                     ))}
                 </OptionsContext.Provider>
             </div>
-            <div className={['modal', open? 'open' : ''].join(" ")}>
-                <div className='scrim' onClick={() => setOpen(false)} />
-                <div className='overview'>
+            <Modal open={open} setOpen={setOpen}>
+                <div className='metadata-overview'>
                     <div className='drawing'>
                         <Heading>Drawing</Heading>
-                        <Image src={drawing} alt="" />
+                        <Image src={images.drawing} alt="" />
                     </div>
                     <div className='miscellaneous'>
                         <Heading>Overview</Heading>
@@ -127,7 +125,7 @@ export default function ProductData({product, extension, drawing}) {
                         }
                     </div>
                 </div>
-            </div>
+            </Modal>
         </div>
     );
 }

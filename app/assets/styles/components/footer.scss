@@ -124,71 +124,27 @@
                 padding: 10px;
             }
         }
+    }
 
-        // Here we style the modal popup for mobile viewing
-        & .modal {
-            height: 0;
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+    .locations-popup {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow: auto;
 
-            & .scrim { // This is the slightly transparent background that hides the content behind the modal
-                height: 100vh;
-                width: 100vw;
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
+        & .location {
+            display: flex;
+            flex-direction: column;
+        }
 
-                @include themed() {
-                    background-color: t('dark-font');
-                }
-                opacity: 0.75;
+        & .divider {
+            height: 1pt;
+            width: 66%;
+            align-self: center;
+            @include themed() {
+                background-color: t('body')
             }
-
-            & .popup {
-                height: 80%;
-                width: 80%;
-                top: 10%;
-                left: 10%;
-                display: none;
-                flex-direction: column;
-                gap: 20px;
-                overflow: auto;
-                position: fixed;
-                padding: 30px;
-
-                @include themed() {
-                    background-color: t('surface');
-                }
-                border-radius: 20px;
-
-                & .location {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                & .divider {
-                    height: 1pt;
-                    width: 66%;
-                    align-self: center;
-                    @include themed() {
-                        background-color: t('body')
-                    }
-                    opacity: 0.5;
-                }
-            }
-
-            &.open {
-                & .scrim {
-                    display: block;
-                }
-                & .popup {
-                    display: flex;
-                }
-            }
+            opacity: 0.5;
         }
     }
 }

@@ -95,8 +95,8 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
             <span className="display" onClick={() => setOpen(!open)} onMouseDown={rippleExpand} onMouseUp={rippleFade}>
                 {choices[currentChoice].display} {/*<span className="price">({Math.sign(choices[currentChoice].differenceToCurrent) === -1? "-" : "+"}${Math.abs(choices[currentChoice].differenceToCurrent)} to current price)</span>*/}
             </span>
-            <div className={["modal", open? "open" : ""].join(" ")}>
-                <div className="scrim" onMouseDown={() => setOpen(false)} />
+            <div className={["dropdown", open? "open" : ""].join(" ")}>
+                <div className="close-menu" onMouseDown={() => setOpen(false)} />
                 <div className="menu">
                     {options.map(option => (
                         <span className="option" key={option.display + option.differenceToBase} onClick={() => option.onClick() || setOpen(false)}>

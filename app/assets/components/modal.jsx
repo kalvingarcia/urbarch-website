@@ -8,7 +8,6 @@ export default function Modal({open, setOpen, children}) {
             <div className="modal">
                 <div className="scrim" onClick={() => setOpen(false)} />
                 <div className="pop-up">
-                    <IconButton className="close" icon="close" onPress={() => setOpen(false)} />
                     {children}
                 </div>
             </div>,

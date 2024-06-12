@@ -5,6 +5,7 @@ import {useState} from 'react';
 import {Heading, Subheading} from './typography';
 import Button from './button';
 import '../styles/components/footer.scss';
+import Modal from './modal';
 
 /**
  * This is the footer of the website. It will hold the company location/contact information,
@@ -24,7 +25,7 @@ export default function Footer() {
                         <span>156 Franklin Street, New York, NY 10013</span>
                         <span>Phone: (212) 371-4646</span>
                         <span>Fax: (212) 371-1601</span>
-                        <Link href="ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
+                        <Link href="mailto:ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <b>Showroom Hours</b>
@@ -44,24 +45,24 @@ export default function Footer() {
                         <span>43-34 32nd Place, 2R Long Island City, NY 11101</span>
                         <span>Phone: (212) 413-4646</span>
                         <span>Fax: (212) 334-4659</span>
-                        <Link href="gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
+                        <Link href="mailto:gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
                     </div>
                     <div className='divider' />
                     <div className='location'>
                         <Subheading>Boston and San Francisco</Subheading>
                         <span>Phone: (617) 737-4646</span>
                         <span>Fax: (617) 737 6699</span>
-                        <Link href="mary@urbanarchaeology.com">mary@urbanarchaeology.com</Link>
+                        <Link href="mailto:mary@urbanarchaeology.com">mary@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <Subheading>Chicago</Subheading>
                         <span>Phone: (312) 371 2249</span>
-                        <Link href="melissa@urbanarchaeology.com">melissa@urbanarchaeology.com</Link>
+                        <Link href="mailto:melissa@urbanarchaeology.com">melissa@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <Subheading>Southeast</Subheading>
                         <span>Phone: (917) 685-6113</span>
-                        <Link href="adrienne@urbanarchaeology.com">adrienne@urbanarchaeology.com</Link>
+                        <Link href="mailto:adrienne@urbanarchaeology.com">adrienne@urbanarchaeology.com</Link>
                     </div>
                 </div>
                 <div className='links'>
@@ -89,16 +90,15 @@ export default function Footer() {
                 <Link className='terms' href="/terms">Terms and conditions apply.</Link>
                 <span className='accredation'>Designed and built by <Link href="https://github.com/ochakaru">Kalvin Garcia</Link></span>
             </div>
-            <div className={['modal', open? "open" : ""].join(" ")}>
-                <div className='scrim' onMouseDown={() => setOpen(false)} />
-                <div className='popup'>
+            <Modal open={open} setOpen={setOpen}>
+                <div className='locations-popup'>
                     <Heading>Locations</Heading>
                     <div className='location'>
                         <Subheading>New York</Subheading>
                         <span>156 Franklin Street, New York, NY 10013</span>
                         <span>Phone: (212) 371-4646</span>
                         <span>Fax: (212) 371-1601</span>
-                        <Link href="ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
+                        <Link href="mailto:ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <b>Showroom Hours</b>
@@ -116,27 +116,27 @@ export default function Footer() {
                         <span>43-34 32nd Place, 2R Long Island City, NY 11101</span>
                         <span>Phone: (212) 413-4646</span>
                         <span>Fax: (212) 334-4659</span>
-                        <Link href="gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
+                        <Link href="mailto:gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
                     </div>
                     <div className='divider' />
                     <div className='location'>
                         <Subheading>Boston and San Francisco</Subheading>
                         <span>Phone: (617) 737-4646</span>
                         <span>Fax: (617) 737 6699</span>
-                        <Link href="mary@urbanarchaeology.com">mary@urbanarchaeology.com</Link>
+                        <Link href="mailto:mary@urbanarchaeology.com">mary@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <Subheading>Chicago</Subheading>
                         <span>Phone: (312) 371 2249</span>
-                        <Link href="melissa@urbanarchaeology.com">melissa@urbanarchaeology.com</Link>
+                        <Link href="mailto:melissa@urbanarchaeology.com">melissa@urbanarchaeology.com</Link>
                     </div>
                     <div className='location'>
                         <Subheading>Southeast</Subheading>
                         <span>Phone: (917) 685-6113</span>
-                        <Link href="adrienne@urbanarchaeology.com">adrienne@urbanarchaeology.com</Link>
+                        <Link href="mailto:adrienne@urbanarchaeology.com">adrienne@urbanarchaeology.com</Link>
                     </div>
                 </div>
-            </div>
+            </Modal>
         </section>
     );
 }
