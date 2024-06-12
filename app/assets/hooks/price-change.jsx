@@ -16,7 +16,5 @@ export default function usePriceChange(basePrice) {
         setPrice(basePrice + Object.values(choicePricings).reduce((sum, value) => sum + value, 0));
     }, [choicePricings]);
 
-    console.log(choicePricings);
-
     return [price, updatePrice];
 }
