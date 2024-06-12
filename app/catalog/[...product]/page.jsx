@@ -54,7 +54,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     ))}
                 </Spotlight>
                 <div className='data'>
-                    <ProductData product={product} extension={extension} drawing={drawing} />
+                    <ProductData product={product} extension={extension} images={{thumbnail: images[0].src, drawing}} />
                     {product.variations.length !== 1?
                         <Variations>
                             {product.variations.map(variation => (
@@ -75,7 +75,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     }
                 </div>
             </section>
-            {related.length !== 0?
+            {related.length > 0?
                 <Related>
                     {related.map(product => (
                         <Card 

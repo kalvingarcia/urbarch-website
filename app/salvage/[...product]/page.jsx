@@ -70,18 +70,22 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                     }
                 </div>
             </section>
-            <Related>
-                {related.map(salvage => (
-                    <Card 
-                        key={salvage.id}
-                        type="small"
-                        from='salvage'
-                        id={salvage.id}
-                        name={salvage.name}
-                        category={salvage.category}
-                    />
-                ))}
-            </Related>
+            {related.length > 0?
+                <Related>
+                    {related.map(salvage => (
+                        <Card 
+                            key={salvage.id}
+                            type="small"
+                            from='salvage'
+                            id={salvage.id}
+                            name={salvage.name}
+                            category={salvage.category}
+                        />
+                    ))}
+                </Related>
+                :
+                ""
+            }
         </main>
     );
 }
