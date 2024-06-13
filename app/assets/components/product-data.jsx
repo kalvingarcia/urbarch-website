@@ -11,7 +11,7 @@ import '../styles/components/metadata.scss';
 import Modal from './modal';
 import IconButton from './icon-button';
 
-export default function ProductData({product, extension, images}) {
+export default function ProductData({product, extension, images, pdfURI}) {
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, updatePrice] = usePriceChange(variation.price);
 
@@ -24,35 +24,19 @@ export default function ProductData({product, extension, images}) {
         updatePrice(optionName, choicePricing);
     }, [choiceValues]);
 
-    const createPDF = useCallback(async () => {
-        const pdf = window.open('', '', 'width=200,height=100');
-        pdf.document.write(renderToStaticMarkup(
-            <div className='cutsheet'>
-                <div className='header'>
+    const openPDF = useCallback(() => {
+        const pdf = window.open();
+        pdf.document.body.style.margin = 0;
+        pdf.document.body.style.overflow = "hidden";
 
-                </div>
-                <div className='body'>
-                    <div className='left-column'>
-                        <Image src={images.thumbnail} />
-                    </div>
-                    <div className='right-column'>
-                        <div>
-                            <span>{product.name}</span>
-                            {extension !== "DEFAULT"? <span>{variation.subname}</span> : ""}
-                        </div>
-                        <div>{variation.price === 0? "Call for pricing" : `$${variation.price.toLocaleString('en', {useGrouping: true})}.00`}</div>
-                        <p>{product.description}</p>
-                    </div>
-                </div>
-                <div className='footer'>
-                    Copyright © 2012-2024 Urban Archaeology Ltd. All rights reserved.
-                </div>
-            </div> 
-        ));
-        pdf.document.close();
-        setTimeout(() => pdf.print(), 0);
-        // `${product.name}${variation.subname !== "DEFAULT"? variation.subname : ""}`
-    }, [extension]);
+        const object = pdf.document.createElement('object');
+        object.data = pdfURI;
+        object.type = "application/pdf";
+        object.width = "100%";
+        object.height = "100%";
+
+        pdf.document.body.appendChild(object);
+    });
 
     const [open, setOpen] = useState(false);
     return (
@@ -74,7 +58,7 @@ export default function ProductData({product, extension, images}) {
                 <p className='description'>{product.description}</p>
                 <div className='buttons'>
                     <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
-                    <IconButton style="text" icon="picture_as_pdf" onPress={createPDF} />
+                    <IconButton style="text" icon="picture_as_pdf" onPress={openPDF} />
                 </div>
             </div>
             <div className='options'>
