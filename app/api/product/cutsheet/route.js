@@ -96,11 +96,13 @@ export async function GET(request) {
         if(value.link && value.link_name !== "finishes")
             serialized[value.link_name].deps.push(name);
 
+    const currentDay = new Date();
+
     const pdf = await PDFDocument.create();
-    pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""}`);
+    pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""} Cutsheet`);
     pdf.setAuthor('Kalvin Garcia');
     pdf.setCreator('Urban Archaeology');
-    pdf.setCreationDate(new Date());
+    pdf.setCreationDate(currentDay);
 
     pdf.registerFontkit(fontkit);
     // add fonts using base64 converted font files
@@ -116,16 +118,13 @@ export async function GET(request) {
     const thumbnailDimensions = thumbnail.scale(1);
     page.drawImage(thumbnail, {x: 300, y: 3000 - (900 / thumbnailDimensions.width) * thumbnailDimensions.height, width: 900, height: (900 / thumbnailDimensions.width) * thumbnailDimensions.height});
 
-    page.setSize(2550, 3300);
-    page.setFont(cinzel);
-    page.setFontSize(80);
-    page.drawText(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""}`, {font: openSansBold, x: 1350, y: 3000});
-    page.setFont(openSansLight);
-    page.setFontSize(40);
-    page.drawText(`${productData.id}${productData.extension !== "DEFAULT"? `-${productData.extension}` : ""}`, {x: 1350, y: 2940});
-    page.setFont(openSansMedium);
-    page.setFontSize(60);
-    page.drawText(`$${parseInt(productData.price).toLocaleString('en', {useGrouping: true})}.00`, {x: 1350, y: 2840});
+    page.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
+        size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
+    });
+    const generatedOn = `Auto-generated on ${currentDay.toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'})}.`;
+    page.drawText(generatedOn, {
+        size: 20, x: 2550 - body.widthOfTextAtSize(generatedOn, 20) - 20, y: 20, opacity: 0.5
+    });
 
     const pdfDataURI = await pdf.saveAsBase64({dataUri: true});
     return new Response(pdfDataURI, {
