@@ -120,6 +120,24 @@ export async function GET(request) {
     // const drawing  = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
 
     const page = pdf.addPage();
+    page.setSize(2550, 3300);
+
+    const titleColor = rgb(0.066, 0.227, 0.329);
+    const subtitleColor = rgb(0.671, 0.561, 0.361);
+    const headingColor = rgb(0.475, 0.620, 0.702);
+    const subheadingColor = rgb(0.784, 0.678, 0.424);
+    const bodyColor = rgb(0.120, 0.118, 0.149);
+
+    page.setFontColor(bodyColor);
+    page.setFont(body);
+
+    page.drawText(productData.class.name.toLowerCase(), {font: icons, size: 2500, x: 1000, y: -400, color: titleColor, opacity: 0.1});
+    page.drawText("urbarch_logo", {font: icons, size: 200, x: 150, y: 2950, color: titleColor, opacity: 0.1});
+    page.drawText("urban", {font: urban, size: 60, x: 300, y: 3020, color: titleColor, opacity: 0.5});
+    page.drawText("A R C H A E O L O G Y", {font: archaeology, size: 60, x: 480, y: 3020, color: titleColor, opacity: 0.5});
+    page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
+
+    const columnWidth = 1050;
     
     const thumbnailDimensions = thumbnail.scale(1);
     page.drawImage(thumbnail, {x: 300, y: 3000 - (900 / thumbnailDimensions.width) * thumbnailDimensions.height, width: 900, height: (900 / thumbnailDimensions.width) * thumbnailDimensions.height});
