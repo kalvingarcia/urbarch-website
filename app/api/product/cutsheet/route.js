@@ -1,6 +1,7 @@
 import Database from "../../database";
-import {PDFDocument} from 'pdf-lib';
+import {PDFDocument, rgb, breakTextIntoLines} from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
+import pdfFonts from '../../../assets/fonts/pdf.json';
 
 let BASE_URL;
 if(process.env.NODE_ENV === "development")
@@ -138,7 +139,7 @@ export async function GET(request) {
     page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
 
     const columnWidth = 1050;
-    
+
     const thumbnailDimensions = thumbnail.scale(1);
     page.drawImage(thumbnail, {
         x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
