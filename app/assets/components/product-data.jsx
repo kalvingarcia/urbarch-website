@@ -25,18 +25,19 @@ export default function ProductData({product, extension, images}) {
         updatePrice(optionName, choicePricing);
     }, [choiceValues]);
 
-    const openPDF = useCallback(async () => {
-        const pdfURI = (await fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`).then(response => response.text()));
+    const openPDF = useCallback(() => {
+        // const pdfURI = (await );
         const pdf = window.open();
         pdf.document.body.style.margin = 0;
         pdf.document.body.style.overflow = "hidden";
 
         const object = pdf.document.createElement('object');
-        object.data = pdfURI;
+        // object.data = pdfURI;
         object.type = "application/pdf";
         object.width = "100%";
         object.height = "100%";
 
+        fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`).then(response => response.text()).then(pdfURI => object.data = pdfURI);
         pdf.document.body.appendChild(object);
     });
 
