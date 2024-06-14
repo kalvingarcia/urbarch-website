@@ -140,7 +140,30 @@ export async function GET(request) {
     const columnWidth = 1050;
     
     const thumbnailDimensions = thumbnail.scale(1);
-    page.drawImage(thumbnail, {x: 300, y: 3000 - (900 / thumbnailDimensions.width) * thumbnailDimensions.height, width: 900, height: (900 / thumbnailDimensions.width) * thumbnailDimensions.height});
+    page.drawImage(thumbnail, {
+        x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
+        width: columnWidth, height: (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height
+    });
+
+    page.drawText(productData.name, {font: title, size: 60, x: 1350, y: 2740, color: titleColor});
+
+    let longTitle = false;
+    if(productData.subname !== "DEFAULT") {
+        longTitle = title.widthOfTextAtSize(productData.name, 60) + title.widthOfTextAtSize(productData.subname, 60) + 20 > 1350;
+        page.drawText(productData.subname, {
+            font: title, size: 60,
+            x: 1350 + title.widthOfTextAtSize(productData.name, 60) + 20, y: 2740,
+            color: subtitleColor
+        });
+    }
+    page.drawText(
+        `${productData.id}${productData.extension !== "DEFAULT"? `-${productData.extension}` : ""}`,
+        {size: 40, x: 1350, y: longTitle? 2600 : 2680, opacity: 0.75}
+    );
+    page.drawText(
+        `Starting at $${parseInt(productData.price).toLocaleString('en', {useGrouping: true})}`,
+        {font: emphasis, size: 30, x: 1350, y: longTitle? 2520 : 2600}
+    );
 
     page.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
         size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
