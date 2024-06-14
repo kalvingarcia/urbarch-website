@@ -105,9 +105,15 @@ export async function GET(request) {
     pdf.setCreationDate(currentDay);
 
     pdf.registerFontkit(fontkit);
-    // add fonts using base64 converted font files
+    const body = await pdf.embedFont(pdfFonts.universLight);
+    const emphasis = await pdf.embedFont(pdfFonts.universRoman);
+    const heading = await pdf.embedFont(pdfFonts.universBold);
+    const title = await pdf.embedFont(pdfFonts.universBlack);
 
-    // maybe do the same with the images
+    const icons = await pdf.embedFont(pdfFonts.urbanIcons);
+    const urban = await pdf.embedFont(pdfFonts.universBold);
+    const archaeology = await pdf.embedFont(pdfFonts.trajan);
+
     let image = (await import(`../../../assets/images/products/${id}/${extension}/card.jpg`)).default;
     const thumbnail = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
     // image = (await import(`../../../assets/images/products/${id}/${extension}/drawing.jpg`)).default;
