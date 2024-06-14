@@ -25,6 +25,7 @@ export default function ProductData({product, extension, images, pdfURI}) {
     }, [choiceValues]);
 
     const openPDF = useCallback(() => {
+        console.log(pdfURI);
         const pdf = window.open();
         pdf.document.body.style.margin = 0;
         pdf.document.body.style.overflow = "hidden";
