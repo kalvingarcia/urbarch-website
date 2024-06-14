@@ -147,7 +147,6 @@ export async function GET(request) {
     });
 
     page.drawText(productData.name, {font: title, size: 60, x: 1350, y: 2740, color: titleColor});
-
     let longTitle = false;
     if(productData.subname !== "DEFAULT") {
         longTitle = title.widthOfTextAtSize(productData.name, 60) + title.widthOfTextAtSize(productData.subname, 60) + 20 > 1350;
