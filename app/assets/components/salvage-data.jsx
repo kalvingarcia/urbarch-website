@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {Heading, Subheading, Subtitle, Title} from './typography';
 import Button from './button';
 import '../styles/components/metadata.scss';
+import Modal from './modal';
 
 export default function ProductData({salvage, serial}) {
     const item = salvage.items.find(item => item.serial.toString() === serial);
@@ -20,8 +21,7 @@ export default function ProductData({salvage, serial}) {
                 <p className='description'>{salvage.description}</p>
                 <Button role="primary" style="filled" onPress={() => setOpen(true)}>Salvage Details</Button>
             </div>
-            <div className={['modal', open? 'open' : ''].join(" ")}>
-                <div className='scrim' onClick={() => setOpen(false)} />
+            <Modal open={open} setOpen={setOpen}>
                 <div className='overview'>
                     <div className='miscellaneous'>
                         <Heading>Overview</Heading>
@@ -43,7 +43,7 @@ export default function ProductData({salvage, serial}) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Modal>
         </div>
     );
 }
