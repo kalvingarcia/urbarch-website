@@ -54,6 +54,48 @@ export async function GET(request) {
         WHERE id = ${id} AND extension = ${extension};
     `)[0];
 
+    const finishes = {
+        "PB": "Polished Brass",
+        "GP": "Green Patina",
+        "BP": "Brown Patina",
+        "AB": "Antique Brass",
+        "STBL": "Statuary Black",
+        "STBR": "Statuary Brown",
+        "PN": "Polished Nickel",
+        "SN": "Satin Nickel",
+        "PC": "Polished Chrome",
+        "LP": "Light Pewter",
+        "BN": "Black Nickel"
+    };
+    let options = {
+        finishes: {
+            content: productData.overview.finishes.map(finish => ({...finish, display: finishes[finish.finish]})),
+            link: false,
+            link_name: ""
+        },
+        ...productData.overview.options
+    };
+
+    const serialized = {};
+    options = Object.entries(options);
+    for(const [name, value] of options) {
+        const prices = {};
+        for(const {difference, display} of value.content) {
+            if(!prices[difference])
+                prices[difference] = [];
+            prices[difference].push(display);
+        }
+
+        serialized[name] = {
+            link: value.link && value.link_name !== "finishes",
+            prices: prices,
+            deps: [],
+        };
+    }
+    for(const [name, value] of options)
+        if(value.link && value.link_name !== "finishes")
+            serialized[value.link_name].deps.push(name);
+
     const pdf = await PDFDocument.create();
     pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""}`);
     pdf.setAuthor('Kalvin Garcia');
