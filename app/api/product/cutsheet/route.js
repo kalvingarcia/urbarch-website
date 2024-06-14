@@ -245,6 +245,39 @@ export async function GET(request) {
     recursiveDrawOptions("Finishes", serialized["finishes"]);
     yPos -= sectionGap;
 
+    if(productData.overview.bulb.quantity > 0) {
+        yPos -= subtitleSize;
+        page.drawText("Bulb Info", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+        yPos -= subtitleGap;
+        const bulbInfo = `${productData.overview.bulb.shape.name} Bulb (${productData.overview.bulb.shape.code}) ${productData.overview.bulb.socket.name} Base (${productData.overview.bulb.socket.code})`;
+        for(const line of [...breakTextIntoLines(bulbInfo, [' '], columnWidth, (word) => body.widthOfTextAtSize(word, bodySize)), `${productData.overview.bulb.specifications} recommended`, `(${productData.overview.bulb.quantity} count)`]) {
+            yPos -= bodySize;
+            page.drawText(line, {
+                size: bodySize,
+                x: xPos, y: yPos,
+                maxWidth: columnWidth
+            });
+            yPos -= bodyGap;
+        }
+        yPos -= sectionGap;
+    }
+
+    if(productData.replacements.length > 0) {
+        yPos -= subtitleSize;
+        page.drawText("Replacements", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+        yPos -= subtitleGap;
+        for(const replacement of productData.replacements) {
+            yPos -= bodySize;
+            page.drawText(`$${replacement.price}\t${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}\t${replacement.id}${replacement.extension !== "DEFAULT"? `-${replacement.extension}` : ""}`, {
+                size: bodySize,
+                x: xPos, y: yPos,
+                maxWidth: columnWidth
+            });
+            yPos -= bodyGap;
+        }
+        yPos -= sectionGap;
+    }
+
     page.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
         size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
     });
