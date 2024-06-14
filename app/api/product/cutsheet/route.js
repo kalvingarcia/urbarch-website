@@ -165,6 +165,86 @@ export async function GET(request) {
         {font: emphasis, size: 30, x: 1350, y: longTitle? 2520 : 2600}
     );
 
+    const sectionGap = 45;
+    const subtitleSize = 50;
+    const subtitleGap = 25;
+    const headingSize = 40;
+    const headingGap = 20;
+    const bodySize = 30;
+    const bodyGap = 15;
+    const tabSize = 30;
+
+    const xPos = 1350;
+    let yPos = 2440;
+
+    const recursiveDrawOptions = (name, value, level = 0, links = []) => {
+        const drawOption = prices => {
+            const currentHeadingSize = Math.max(headingSize / (level + 1), 15);
+            const currentBodySize = Math.max(bodySize / (level + 1), 10);
+
+            yPos -= currentHeadingSize;
+            page.drawText(name[0].toUpperCase() + name.slice(1), {
+                font: heading, size: currentHeadingSize,
+                x: xPos + level * tabSize, y: yPos,
+                color: level % 2? subheadingColor : headingColor, maxWidth: columnWidth - level * tabSize
+            });
+            yPos -= headingGap;
+
+            for(const [difference, choices] of prices) {
+                const priceChange = `${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference).toLocaleString('en', {useGrouping: true})} to starting price`;
+                page.drawText(priceChange, {
+                    font: emphasis, size: currentBodySize,
+                    x: xPos + (level + 1) * tabSize, y: yPos - currentBodySize,
+                    maxWidth: columnWidth - (level + 1) * tabSize
+                });
+                const choiceList = choices.map(choice => choice.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "")).join(', ');
+
+                for(const line of breakTextIntoLines(choiceList, [' '], columnWidth - (emphasis.widthOfTextAtSize(priceChange, currentBodySize) + tabSize + (level + 1) * tabSize), (word) => body.widthOfTextAtSize(word, currentBodySize))) {
+                    yPos -= currentBodySize;
+                    page.drawText(line, {
+                        size: currentBodySize,
+                        x: emphasis.widthOfTextAtSize(priceChange, bodySize) + tabSize + xPos + (level + 1) * tabSize, y: yPos,
+                        maxWidth: columnWidth - (emphasis.widthOfTextAtSize(priceChange, bodySize) + tabSize + (level + 1) * tabSize)
+                    });
+                    yPos -= bodyGap;
+
+                    for(const dep of value.deps) 
+                        recursiveDrawOptions(dep, serialized[dep], level + 1, choices);
+                }
+            }
+        }
+
+        if(links.length === 0) {
+            drawOption(Object.entries(value.prices));
+        } else {
+            let prices = {}
+            for(const [difference, choices] of Object.entries(value.prices))
+                for(const choice of choices) {
+                    const match = choice.match(/\${([A-z\-\[\] ]+,?)+}/g);
+                    const deps = match? match[0].replace(/\${|}/g, "").split(",") : [];
+
+                    if(deps.length === 0 || deps.find(dep => links.includes(dep))) {
+                        if(!prices[difference])
+                            prices[difference] = [];
+                        prices[difference].push(choice);
+                    }
+                }
+            
+            prices = Object.entries(prices);
+            if(prices.length > 0) {
+                drawOption(prices);
+            }
+
+            // const links = choice.display.match(/\${([A-z\-\[\] ]+,?)+}/g);
+            // const display = choice.display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "");
+        }
+    };
+
+    // for(const [name, value] of Object.entries(serialized))
+    //     if(!value.link)
+    recursiveDrawOptions("Finishes", serialized["finishes"]);
+    yPos -= sectionGap;
+
     page.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
         size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
     });
