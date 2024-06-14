@@ -10,8 +10,9 @@ import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
 import Modal from './modal';
 import IconButton from './icon-button';
+import {GET_PRODUCT_CUTSHEET} from '../../api';
 
-export default function ProductData({product, extension, images, pdfURI}) {
+export default function ProductData({product, extension, images}) {
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, updatePrice] = usePriceChange(variation.price);
 
@@ -24,7 +25,8 @@ export default function ProductData({product, extension, images, pdfURI}) {
         updatePrice(optionName, choicePricing);
     }, [choiceValues]);
 
-    const openPDF = useCallback(() => {
+    const openPDF = useCallback(async () => {
+        const pdfURI = (await fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`).then(response => response.text()));
         const pdf = window.open();
         pdf.document.body.style.margin = 0;
         pdf.document.body.style.overflow = "hidden";

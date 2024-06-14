@@ -7,7 +7,7 @@ import Related from '../../assets/components/related';
 import Customs from '@/app/assets/components/customs';
 import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
-import {GET_PRODUCTS, GET_PRODUCT_CUTSHEET, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
+import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
 
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}) {
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
@@ -43,7 +43,6 @@ export default async function Product({params: {product: [id, extension, ...rest
     const drawing = (await import(`../../assets/images/products/${id}/${extension}/drawing.jpg`).catch(() => undefined))?.default
 
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
-    const pdfDataURI = (await fetch(`${GET_PRODUCT_CUTSHEET}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.text()));
     const related = await fetch(`${GET_RELATED_PRODUCTS}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.json());
     const customs = await fetch(`${GET_RELATED_CUSTOMS}?id=${id}&extension=${extension}`).then(response => response.json());
     return (
@@ -55,7 +54,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     ))}
                 </Spotlight>
                 <div className='data'>
-                    <ProductData product={product} extension={extension} images={{thumbnail: images[0].src, drawing}} pdfURI={pdfDataURI} />
+                    <ProductData product={product} extension={extension} images={{thumbnail: images[0].src, drawing}} />
                     {product.variations.length !== 1?
                         <Variations>
                             {product.variations.map(variation => (
