@@ -13,8 +13,8 @@ export default function DropdownMenu({name, choices, linkName = "", linkValue, u
         choices.findIndex(choice => choice.default)
     ));
     choices = choices.map((choice, index, choices) => {
-        const links = choice.display.match(/\${([A-z\-\[\] ]+,?)+}/g);
-        const display = choice.display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "");
+        const links = choice.display.match(/\${([A-z0-9\-\[\] ]+,?)+}/g);
+        const display = choice.display.replace(/ \${([A-z0-9\-\[\] ]+,?)+}/g, "");
 
         return {
             value: choice.value? choice.value : display,
