@@ -9,6 +9,54 @@ if(process.env.NODE_ENV === "development")
 else
     BASE_URL = "http://urbarch-website.kalvin.live";
 
+const pdfObject = await PDFDocument.create();
+pdfObject.setAuthor('Kalvin Garcia');
+pdfObject.setCreator('Urban Archaeology');
+
+pdfObject.registerFontkit(fontkit);
+const body = await pdfObject.embedFont(pdfFonts.universLight);
+const emphasis = await pdfObject.embedFont(pdfFonts.universRoman);
+const heading = await pdfObject.embedFont(pdfFonts.universBold);
+const title = await pdfObject.embedFont(pdfFonts.universBlack);
+
+const titleColor = rgb(0.066, 0.227, 0.329);
+const subtitleColor = rgb(0.671, 0.561, 0.361);
+const headingColor = rgb(0.475, 0.620, 0.702);
+const subheadingColor = rgb(0.784, 0.678, 0.424);
+const bodyColor = rgb(0.120, 0.118, 0.149);
+
+const icons = await pdfObject.embedFont(pdfFonts.urbanIcons);
+const urban = await pdfObject.embedFont(pdfFonts.universBold);
+const archaeology = await pdfObject.embedFont(pdfFonts.trajan);
+
+const pageObject = pdfObject.addPage();
+pageObject.setSize(2550, 3300);
+
+pageObject.setFontColor(bodyColor);
+pageObject.setFont(body);
+
+pageObject.drawText("urbarch_logo", {font: icons, size: 200, x: 150, y: 2950, color: titleColor, opacity: 0.1});
+pageObject.drawText("urban", {font: urban, size: 60, x: 300, y: 3020, color: titleColor, opacity: 0.5});
+pageObject.drawText("A R C H A E O L O G Y", {font: archaeology, size: 60, x: 480, y: 3020, color: titleColor, opacity: 0.5});
+
+pageObject.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
+    size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
+});
+
+const finishes = {
+    "PB": "Polished Brass",
+    "GP": "Green Patina",
+    "BP": "Brown Patina",
+    "AB": "Antique Brass",
+    "STBL": "Statuary Black",
+    "STBR": "Statuary Brown",
+    "PN": "Polished Nickel",
+    "SN": "Satin Nickel",
+    "PC": "Polished Chrome",
+    "LP": "Light Pewter",
+    "BN": "Black Nickel"
+};
+
 export async function GET(request) {
     const searchParameters = request.nextUrl.searchParams;
 
@@ -43,7 +91,8 @@ export async function GET(request) {
                     'extension', product_variation.extension,
                     'name', product_listing.name,
                     'subname', product_variation.subname,
-                    'price', product_variation.price
+                    'price', product_variation.price,
+                    'overview', product_variation.overview
                 )), '[]') FROM json_to_recordset(overview->'replacements') AS replacements(id VARCHAR(10), extension VARCHAR(10))
                     INNER JOIN product_listing USING(id) 
                     INNER JOIN product_variation ON replacements.id = product_variation.listing_id AND product_variation.extension = replacements.extension
@@ -55,239 +104,215 @@ export async function GET(request) {
         WHERE id = ${id} AND extension = ${extension};
     `)[0];
 
-    const finishes = {
-        "PB": "Polished Brass",
-        "GP": "Green Patina",
-        "BP": "Brown Patina",
-        "AB": "Antique Brass",
-        "STBL": "Statuary Black",
-        "STBR": "Statuary Brown",
-        "PN": "Polished Nickel",
-        "SN": "Satin Nickel",
-        "PC": "Polished Chrome",
-        "LP": "Light Pewter",
-        "BN": "Black Nickel"
-    };
-    let options = {
-        finishes: {
-            content: productData.overview.finishes.map(finish => ({...finish, display: finishes[finish.finish]})),
-            link: false,
-            link_name: ""
-        },
-        ...productData.overview.options
-    };
+    const generatePDF = async (pdf, page) => {
+        pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""} Cutsheet`);
 
-    const serialized = {};
-    options = Object.entries(options);
-    for(const [name, value] of options) {
-        const prices = {};
-        for(const {difference, display} of value.content) {
-            if(!prices[difference])
-                prices[difference] = [];
-            prices[difference].push(display);
-        }
-
-        serialized[name] = {
-            link: value.link && value.link_name !== "finishes",
-            prices: prices,
-            deps: [],
-        };
-    }
-    for(const [name, value] of options)
-        if(value.link && value.link_name !== "finishes")
-            serialized[value.link_name].deps.push(name);
-
-    const currentDay = new Date();
-
-    const pdf = await PDFDocument.create();
-    pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""} Cutsheet`);
-    pdf.setAuthor('Kalvin Garcia');
-    pdf.setCreator('Urban Archaeology');
-    pdf.setCreationDate(currentDay);
-
-    pdf.registerFontkit(fontkit);
-    const body = await pdf.embedFont(pdfFonts.universLight);
-    const emphasis = await pdf.embedFont(pdfFonts.universRoman);
-    const heading = await pdf.embedFont(pdfFonts.universBold);
-    const title = await pdf.embedFont(pdfFonts.universBlack);
-
-    const icons = await pdf.embedFont(pdfFonts.urbanIcons);
-    const urban = await pdf.embedFont(pdfFonts.universBold);
-    const archaeology = await pdf.embedFont(pdfFonts.trajan);
-
-    let image = (await import(`../../../assets/images/products/${id}/${extension}/card.jpg`)).default;
-    const thumbnail = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
-    // image = (await import(`../../../assets/images/products/${id}/${extension}/drawing.jpg`)).default;
-    // const drawing  = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
-
-    const page = pdf.addPage();
-    page.setSize(2550, 3300);
-
-    const titleColor = rgb(0.066, 0.227, 0.329);
-    const subtitleColor = rgb(0.671, 0.561, 0.361);
-    const headingColor = rgb(0.475, 0.620, 0.702);
-    const subheadingColor = rgb(0.784, 0.678, 0.424);
-    const bodyColor = rgb(0.120, 0.118, 0.149);
-
-    page.setFontColor(bodyColor);
-    page.setFont(body);
-
-    page.drawText(productData.class.name.toLowerCase(), {font: icons, size: 2500, x: 1000, y: -400, color: titleColor, opacity: 0.1});
-    page.drawText("urbarch_logo", {font: icons, size: 200, x: 150, y: 2950, color: titleColor, opacity: 0.1});
-    page.drawText("urban", {font: urban, size: 60, x: 300, y: 3020, color: titleColor, opacity: 0.5});
-    page.drawText("A R C H A E O L O G Y", {font: archaeology, size: 60, x: 480, y: 3020, color: titleColor, opacity: 0.5});
-    page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
-
-    const columnWidth = 1050;
-
-    const thumbnailDimensions = thumbnail.scale(1);
-    page.drawImage(thumbnail, {
-        x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
-        width: columnWidth, height: (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height
-    });
-
-    page.drawText(productData.name, {font: title, size: 60, x: 1350, y: 2740, color: titleColor});
-    let longTitle = false;
-    if(productData.subname !== "DEFAULT") {
-        longTitle = title.widthOfTextAtSize(productData.name, 60) + title.widthOfTextAtSize(productData.subname, 60) + 20 > 1350;
-        page.drawText(productData.subname, {
-            font: title, size: 60,
-            x: 1350 + title.widthOfTextAtSize(productData.name, 60) + 20, y: 2740,
-            color: subtitleColor
+        const currentDay = new Date();
+        pdf.setCreationDate(currentDay);
+        const generatedOn = `Auto-generated on ${currentDay.toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'})}.`;
+        page.drawText(generatedOn, {
+            size: 20, x: 2550 - body.widthOfTextAtSize(generatedOn, 20) - 40, y: 40, opacity: 0.5
         });
-    }
-    page.drawText(
-        `${productData.id}${productData.extension !== "DEFAULT"? `-${productData.extension}` : ""}`,
-        {size: 40, x: 1350, y: longTitle? 2600 : 2680, opacity: 0.75}
-    );
-    page.drawText(
-        `Starting at $${parseInt(productData.price).toLocaleString('en', {useGrouping: true})}`,
-        {font: emphasis, size: 30, x: 1350, y: longTitle? 2520 : 2600}
-    );
+    
+        page.drawText(productData.class.name.toLowerCase().replace(" ", "_"), {font: icons, size: 2000, x: 1000, y: -200, color: titleColor, opacity: 0.05});
+        page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
+    
+        const columnWidth = 1050;
 
-    const sectionGap = 45;
-    const subtitleSize = 50;
-    const subtitleGap = 25;
-    const headingSize = 40;
-    const headingGap = 20;
-    const bodySize = 30;
-    const bodyGap = 15;
-    const tabSize = 30;
+        let image = (await import(`../../../assets/images/products/${id}/${extension}/card.jpg`)).default;
+        const thumbnail = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
+        // image = (await import(`../../../assets/images/products/${id}/${extension}/drawing.jpg`)).default;
+        // const drawing  = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
+        const thumbnailDimensions = thumbnail.scale(1);
+        page.drawImage(thumbnail, {
+            x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
+            width: columnWidth, height: (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height
+        });
 
-    const xPos = 1350;
-    let yPos = 2440;
-
-    const recursiveDrawOptions = (name, value, level = 0, links = []) => {
-        const drawOption = prices => {
-            const currentHeadingSize = Math.max(headingSize / (level + 1), 15);
-            const currentBodySize = Math.max(bodySize / (level + 1), 10);
-
-            yPos -= currentHeadingSize;
-            page.drawText(name[0].toUpperCase() + name.slice(1), {
-                font: heading, size: currentHeadingSize,
-                x: xPos + level * tabSize, y: yPos,
-                color: level % 2? subheadingColor : headingColor, maxWidth: columnWidth - level * tabSize
+        page.drawText(productData.name, {font: title, size: 60, x: 1350, y: 2740, color: titleColor});
+        let longTitle = false;
+        if(productData.subname !== "DEFAULT") {
+            longTitle = title.widthOfTextAtSize(productData.name, 60) + title.widthOfTextAtSize(productData.subname, 60) + 20 > 1350;
+            page.drawText(productData.subname, {
+                font: title, size: 60,
+                x: 1350 + title.widthOfTextAtSize(productData.name, 60) + 20, y: 2740,
+                color: subtitleColor
             });
-            yPos -= headingGap;
+        }
+        page.drawText(
+            `${productData.id}${productData.extension !== "DEFAULT"? `-${productData.extension}` : ""}`,
+            {size: 40, x: 1350, y: longTitle? 2600 : 2680, opacity: 0.75}
+        );
+        page.drawText(
+            `Starting at $${parseInt(productData.price).toLocaleString('en', {useGrouping: true})}`,
+            {font: emphasis, size: 30, x: 1350, y: longTitle? 2520 : 2600}
+        );
 
-            for(const [difference, choices] of prices) {
-                const priceChange = `${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference).toLocaleString('en', {useGrouping: true})} to starting price`;
-                page.drawText(priceChange, {
-                    font: emphasis, size: currentBodySize,
-                    x: xPos + (level + 1) * tabSize, y: yPos - currentBodySize,
-                    maxWidth: columnWidth - (level + 1) * tabSize
+        const sectionGap = 40;
+        const subtitleSize = 45;
+        const subtitleGap = 20;
+        const headingSize = 35;
+        const headingGap = 15;
+        const bodySize = 30;
+        const bodyGap = 12;
+        const tabSize = 30;
+
+        const xPos = 1350;
+        let yPos = 2500;
+
+        if(productData.overview.finishes.length > 0) {
+            const finishPrices = {};
+            for(const {finish, difference} of productData.overview.finishes) {
+                if(!finishPrices[difference])
+                    finishPrices[difference] = [];
+                finishPrices[difference].push(finishes[finish]);
+            }
+
+            yPos -= subtitleSize;
+            page.drawText("Finishes", {font: title, size: subtitleSize, x: xPos, y: yPos, color: subtitleColor});
+            yPos -= subtitleGap;
+            const maxWidth = Math.max(...Object.entries(finishPrices).map(([difference]) => (
+                emphasis.widthOfTextAtSize(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)} to starting price`, bodySize)
+            )));
+            for(const [difference, entries] of Object.entries(finishPrices)) {
+                page.drawText(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)} to starting price`, {
+                    font: emphasis, size: bodySize, x: xPos, y: yPos - bodySize
                 });
-                const choiceList = choices.map(choice => choice.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "")).join(', ');
 
-                for(const line of breakTextIntoLines(choiceList, [' '], columnWidth - (emphasis.widthOfTextAtSize(priceChange, currentBodySize) + tabSize + (level + 1) * tabSize), (word) => body.widthOfTextAtSize(word, currentBodySize))) {
-                    yPos -= currentBodySize;
+                for(const line of breakTextIntoLines(entries.join(", "), [' '], columnWidth - (maxWidth + tabSize), word => body.widthOfTextAtSize(word, bodySize))) {
+                    yPos -= bodySize;
                     page.drawText(line, {
-                        size: currentBodySize,
-                        x: emphasis.widthOfTextAtSize(priceChange, bodySize) + tabSize + xPos + (level + 1) * tabSize, y: yPos,
-                        maxWidth: columnWidth - (emphasis.widthOfTextAtSize(priceChange, bodySize) + tabSize + (level + 1) * tabSize)
+                        size: bodySize, x: xPos + maxWidth + tabSize, y: yPos, maxWidth: columnWidth - (maxWidth + tabSize)
                     });
                     yPos -= bodyGap;
-
-                    for(const dep of value.deps) 
-                        recursiveDrawOptions(dep, serialized[dep], level + 1, choices);
                 }
+                yPos -= bodyGap;
             }
+            yPos -= sectionGap;
         }
 
-        if(links.length === 0) {
-            drawOption(Object.entries(value.prices));
-        } else {
-            let prices = {}
-            for(const [difference, choices] of Object.entries(value.prices))
-                for(const choice of choices) {
-                    const match = choice.match(/\${([A-z\-\[\] ]+,?)+}/g);
-                    const deps = match? match[0].replace(/\${|}/g, "").split(",") : [];
+        if(Object.entries(productData.overview.options).length > 0 && !Object.entries(productData.overview.options).every(([_, {link, link_name}]) => link && link_name !== "finishes")) {
+            yPos -= subtitleSize;
+            page.drawText("Options", {font: title, size: subtitleSize, x: xPos, y: yPos, color: subtitleColor});
+            yPos -= subtitleGap;
+            for(const [name, {link, link_name, content}] of Object.entries(productData.overview.options)) {
+                if(!link || link_name === "finishes") {
+                    yPos -= headingSize;
+                    page.drawText(name, {font: heading, size: headingSize, x: xPos, y: yPos, color: headingColor});
+                    page.drawText("(See replacements for detailed pricing.)", {
+                        font: heading, size: bodySize,
+                        x: xPos + heading.widthOfTextAtSize(name, headingSize) + tabSize, y: yPos + ((headingSize - bodySize) / 2),
+                        color: headingColor, opacity: 0.5
+                    });
+                    yPos -= headingGap;
 
-                    if(deps.length === 0 || deps.find(dep => links.includes(dep))) {
-                        if(!prices[difference])
-                            prices[difference] = [];
-                        prices[difference].push(choice);
+                    const options = new Set(content.map(({display}) => display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "")));
+                    for(const line of breakTextIntoLines(Array.from(options).join(", "), [' '], columnWidth, word => body.widthOfTextAtSize(word, bodySize))) {
+                        yPos -= bodySize;
+                        page.drawText(line, {size: bodySize, x: xPos, y: yPos, maxWidth: columnWidth});
+                        yPos -= bodyGap;
                     }
+                    yPos -= bodyGap;
                 }
-            
-            prices = Object.entries(prices);
-            if(prices.length > 0) {
-                drawOption(prices);
             }
-
-            // const links = choice.display.match(/\${([A-z\-\[\] ]+,?)+}/g);
-            // const display = choice.display.replace(/ \${([A-z\-\[\] ]+,?)+}/g, "");
+            yPos -= sectionGap;
         }
-    };
+    
+        if(productData.overview.bulb.quantity > 0) {
+            yPos -= subtitleSize;
+            page.drawText("Bulb Info", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+            yPos -= subtitleGap;
+            const bulbInfo = `${productData.overview.bulb.shape.name} Bulb (${productData.overview.bulb.shape.code}) ${productData.overview.bulb.socket.name} Base (${productData.overview.bulb.socket.code})`;
+            for(const line of [...breakTextIntoLines(bulbInfo, [' '], columnWidth, (word) => body.widthOfTextAtSize(word, bodySize)), `${productData.overview.bulb.specifications} recommended`, `(${productData.overview.bulb.quantity} count)`]) {
+                yPos -= bodySize;
+                page.drawText(line, {
+                    size: bodySize,
+                    x: xPos, y: yPos,
+                    maxWidth: columnWidth
+                });
+                yPos -= bodyGap;
+            }
+            yPos -= sectionGap;
+        }
 
-    // for(const [name, value] of Object.entries(serialized))
-    //     if(!value.link)
-    recursiveDrawOptions("Finishes", serialized["finishes"]);
-    yPos -= sectionGap;
-
-    if(productData.overview.bulb.quantity > 0) {
-        yPos -= subtitleSize;
-        page.drawText("Bulb Info", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
-        yPos -= subtitleGap;
-        const bulbInfo = `${productData.overview.bulb.shape.name} Bulb (${productData.overview.bulb.shape.code}) ${productData.overview.bulb.socket.name} Base (${productData.overview.bulb.socket.code})`;
-        for(const line of [...breakTextIntoLines(bulbInfo, [' '], columnWidth, (word) => body.widthOfTextAtSize(word, bodySize)), `${productData.overview.bulb.specifications} recommended`, `(${productData.overview.bulb.quantity} count)`]) {
+        if(productData.overview.ul.length > 0 && productData.overview.ul[0] !== "None") {
+            yPos -= subtitleSize;
+            page.drawText("UL Listing", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+            yPos -= subtitleGap;
             yPos -= bodySize;
-            page.drawText(line, {
-                size: bodySize,
-                x: xPos, y: yPos,
-                maxWidth: columnWidth
-            });
+            page.drawText(`This product is listed for use in ${productData.overview.ul[0].toUpperCase()} environments.`, {size: bodySize, x: xPos, y: yPos});
             yPos -= bodyGap;
+            yPos -= sectionGap;
         }
-        yPos -= sectionGap;
+    
+        if(productData.replacements.length > 0) {
+            yPos -= subtitleSize;
+            page.drawText("Replacements", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+            yPos -= subtitleGap;
+
+            let column0MaxWidth = 0, column1MaxWidth = 0;
+            productData.replacements.forEach(replacement => {
+                let check = 0;
+
+                check = body.widthOfTextAtSize(`$${replacement.price}`, bodySize);
+                column0MaxWidth = check > column0MaxWidth? check : column0MaxWidth;
+
+                check = body.widthOfTextAtSize(`${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}`, bodySize);
+                column1MaxWidth = check > column1MaxWidth? check : column1MaxWidth;
+            })
+            for(const replacement of productData.replacements) {
+                yPos -= bodySize;
+                page.drawText(`$${replacement.price}`, {size: bodySize, x: xPos, y: yPos});
+                page.drawText(`${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}`, {
+                    size: bodySize, x: xPos + column0MaxWidth + tabSize, y: yPos
+                });
+                page.drawText(`${replacement.id}${replacement.extension !== "DEFAULT"? `-${replacement.extension}` : ""}`, {
+                    size: bodySize, x: xPos + column0MaxWidth + column1MaxWidth + tabSize * 2, y: yPos
+                });
+                yPos -= bodyGap;
+
+                const optionsSize = bodySize * 0.8;
+                const optionsGap = bodyGap * 0.8;
+                if(replacement.overview.finishes.length > 0) {
+                    const finishPrices = {};
+                    for(const {finish, difference} of replacement.overview.finishes) {
+                        if(!finishPrices[difference])
+                            finishPrices[difference] = [];
+                        finishPrices[difference].push(finishes[finish]);
+                    }
+
+                    yPos -= optionsSize;
+                    page.drawText("Finishes", {font: emphasis, size: optionsSize, x: xPos + tabSize, y: yPos});
+                    yPos -= optionsGap;
+
+                    let priceGroup = 1;
+                    const maxWidth = Math.max(...Object.keys(finishPrices).map(difference => body.widthOfTextAtSize(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)}`, optionsSize)));
+                    for(const difference of Object.keys(finishPrices)) {
+                        yPos -= optionsSize;
+                        page.drawText(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)}`, {size: optionsSize, x: xPos + tabSize * 2, y: yPos});
+                        page.drawText(`Price Group ${priceGroup++}`, {size: optionsSize, x: xPos + tabSize * 3 + maxWidth, y: yPos});
+                        yPos -= optionsGap;
+                    }
+                    yPos -= optionsGap;
+                }
+            }
+            yPos -= sectionGap;
+        }
+
+        if(productData.overview.notes !== "") {
+            yPos -= subtitleSize;
+            page.drawText("Notes", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
+            yPos -= subtitleGap;
+            yPos -= bodySize;
+            page.drawText(productData.overview.notes, {size: bodySize, x: xPos, y: yPos});
+            yPos -= bodyGap;
+            yPos -= sectionGap;
+        }
+
+        return await pdf.saveAsBase64({dataUri: true});
     }
 
-    if(productData.replacements.length > 0) {
-        yPos -= subtitleSize;
-        page.drawText("Replacements", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
-        yPos -= subtitleGap;
-        for(const replacement of productData.replacements) {
-            yPos -= bodySize;
-            page.drawText(`$${replacement.price}\t${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}\t${replacement.id}${replacement.extension !== "DEFAULT"? `-${replacement.extension}` : ""}`, {
-                size: bodySize,
-                x: xPos, y: yPos,
-                maxWidth: columnWidth
-            });
-            yPos -= bodyGap;
-        }
-        yPos -= sectionGap;
-    }
-
-    page.drawText("Copyright © Urban Archaeology Ltd. All rights reserved.", {
-        size: 30, x: (2550 - body.widthOfTextAtSize("Copyright © Urban Archaeology Ltd. All rights reserved.", 30)) / 2.0, y: 150, opacity: 0.75
-    });
-    const generatedOn = `Auto-generated on ${currentDay.toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'})}.`;
-    page.drawText(generatedOn, {
-        size: 20, x: 2550 - body.widthOfTextAtSize(generatedOn, 20) - 20, y: 20, opacity: 0.5
-    });
-
-    const pdfDataURI = await pdf.saveAsBase64({dataUri: true});
-    return new Response(pdfDataURI, {
+    return new Response(await generatePDF(pdfObject, pageObject), {
         "status": 200
     });
 }

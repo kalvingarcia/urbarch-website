@@ -25,21 +25,28 @@ export default function ProductData({product, extension, images}) {
         updatePrice(optionName, choicePricing);
     }, [choiceValues]);
 
-    const openPDF = useCallback(() => {
-        // const pdfURI = (await );
+    const [loading, setLoading] = useState(true);
+    const [pdfURI, setPDFURI] = useState(undefined);
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            setPDFURI(await fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`, {cache: 'no-store'}).then(response => response.text()));
+            setLoading(false);
+        })();
+    }, []);
+    const openPDF = useCallback(dataURI => {
         const pdf = window.open();
         pdf.document.body.style.margin = 0;
         pdf.document.body.style.overflow = "hidden";
 
         const object = pdf.document.createElement('object');
-        // object.data = pdfURI;
+        object.data = dataURI;
         object.type = "application/pdf";
         object.width = "100%";
         object.height = "100%";
 
-        fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`).then(response => response.text()).then(pdfURI => object.data = pdfURI);
         pdf.document.body.appendChild(object);
-    });
+    }, []);
 
     const [open, setOpen] = useState(false);
     return (
@@ -61,7 +68,7 @@ export default function ProductData({product, extension, images}) {
                 <p className='description'>{product.description}</p>
                 <div className='buttons'>
                     <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
-                    <IconButton style="text" icon="picture_as_pdf" onPress={openPDF} />
+                    {loading? "" : <IconButton style="text" icon="picture_as_pdf" onPress={() => openPDF(pdfURI)} />}
                 </div>
             </div>
             <div className='options'>
@@ -101,7 +108,7 @@ export default function ProductData({product, extension, images}) {
                             :
                             ""
                         }
-                        {variation.overview.ul.length > 0 || variation.overview.ul[0] === "None"?
+                        {variation.overview.ul.length > 0 && variation.overview.ul[0] !== "None"?
                             <div className='ul-info'>
                                 <Subheading>UL Listing</Subheading>
                                 <span>This product is listed for use in {variation.overview.ul[0].toUpperCase()} environments.</span>
