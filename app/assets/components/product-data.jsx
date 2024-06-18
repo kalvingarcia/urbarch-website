@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {createContext, useCallback, useEffect, useState} from 'react';
+import {createContext, useCallback, useContext, useEffect, useState} from 'react';
 import {Heading, Subheading, Subtitle, Title} from './typography';
 import Button from './button';
 import DropdownMenu from './dropdown-menu';
@@ -11,8 +11,11 @@ import '../styles/components/metadata.scss';
 import Modal from './modal';
 import IconButton from './icon-button';
 import {GET_PRODUCT_CUTSHEET} from '../../api';
+import {ErrorContext} from './error-handler';
 
-export default function ProductData({product, extension, images}) {
+export default function ProductData({product, extension, drawing}) {
+    const triggerErrorMessage = useContext(ErrorContext);
+
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, updatePrice] = usePriceChange(variation.price);
 
@@ -30,8 +33,18 @@ export default function ProductData({product, extension, images}) {
     useEffect(() => {
         (async () => {
             setLoading(true);
-            setPDFURI(await fetch(`${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`, {cache: 'no-store'}).then(response => response.text()));
-            setLoading(false);
+            const uri = await fetch(
+                `${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`,
+                {cache: 'no-store'}
+            ).then(response => {
+                if(!response.ok)
+                    throw new Error("Couldn't generate PDF.");
+                return response.text()
+            }).catch(error => triggerErrorMessage(error.message));
+            if(uri) {
+                setPDFURI(uri);
+                setLoading(false);
+            }
         })();
     }, []);
     const openPDF = useCallback(dataURI => {
@@ -93,7 +106,7 @@ export default function ProductData({product, extension, images}) {
                 <div className='metadata-overview'>
                     <div className='drawing'>
                         <Heading>Drawing</Heading>
-                        <Image src={images.drawing} alt="" />
+                        <Image src={drawing} alt="" />
                     </div>
                     <div className='miscellaneous'>
                         <Heading>Overview</Heading>
