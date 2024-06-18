@@ -1,4 +1,4 @@
-import {redirect} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
 import Image from 'next/image';
 import Spotlight from '../../assets/components/spotlight';
 import ProductData from '@/app/assets/components/product-data';
@@ -10,10 +10,20 @@ import '../../assets/styles/pages/product.scss';
 import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
 
 export async function generateMetadata({params: {product: [id, extension, ...rest]}}) {
-    const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
+    const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => {
+        if(!response.ok) {
+            extension = undefined;
+            if(response.status === 404)
+                return {name: "404 Not Found"};
+            else
+                return {name: "An error occured"};
+        }
+        return response.json();
+    }));
+
     if(!extension)
         extension = "DEFAULT";
-    const variation = product.variations.find(variation => variation.extension === extension);
+    const variation = product.variations?.find(variation => variation.extension === extension);
 
     return {
         title: `Urban Archaeology | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""} Product Page`,
@@ -42,7 +52,16 @@ export default async function Product({params: {product: [id, extension, ...rest
     }
     const drawing = (await import(`../../assets/images/products/${id}/${extension}/drawing.jpg`).catch(() => undefined))?.default
 
-    const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => response.json()))[0];
+    const product = (await fetch(`${GET_PRODUCTS}/${id}`, {cache: 'no-store'}).then(response => {
+        if(!response.ok)
+            if(response.status === 404) 
+                return notFound();
+            else 
+                throw new Error("An error occured while attempting to get the product data.");
+        return response.json()
+    }));
+    if(!product)
+        throw new Error("An error occured while attempting to get the product data.");
     const related = await fetch(`${GET_RELATED_PRODUCTS}?id=${id}&extension=${extension}`, {cache: 'no-store'}).then(response => response.json());
     const customs = await fetch(`${GET_RELATED_CUSTOMS}?id=${id}&extension=${extension}`).then(response => response.json());
     return (
@@ -54,7 +73,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                     ))}
                 </Spotlight>
                 <div className='data'>
-                    <ProductData product={product} extension={extension} images={{thumbnail: images[0].src, drawing}} />
+                    <ProductData product={product} extension={extension} drawing={drawing} />
                     {product.variations.length !== 1?
                         <Variations>
                             {product.variations.map(variation => (
