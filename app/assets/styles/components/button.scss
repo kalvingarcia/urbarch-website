@@ -54,6 +54,16 @@
                     background-color: t('secondary');
                 }
             }
+            &.error {
+                background-color: t('on-error');
+                color: t('error');
+                &::after {
+                    background-color: t('error');
+                }
+                & .ripple {
+                    background-color: t('error');
+                }
+            }
         }
     }
     &.tonal {
@@ -126,6 +136,16 @@
                 }
                 & .ripple {
                     background-color: t('on-secondary');
+                }
+            }
+            &.error {
+                background-color: transparent;
+                color: t('on-error');
+                &::after {
+                    background-color: t('on-error');
+                }
+                & .ripple {
+                    background-color: t('on-error');
                 }
             }
         }
