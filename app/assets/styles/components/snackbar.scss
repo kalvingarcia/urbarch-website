@@ -1,0 +1,55 @@
+@use '../theme' as *;
+@use 'sass:color' as *;
+
+@media screen {
+    .snackbar {
+        position: fixed;
+        bottom: 25px;
+        left: calc((100% - min(80%, 400px)) / 2);
+        width: 80%;
+        max-width: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        border-radius: 20px;
+        z-index: 1000;
+
+        @include themed() {
+            background-color: t('error');
+            color: t('on-error');
+            border: 1pt solid t('on-error');
+            box-shadow: 0px 8px 16px 0px adjust(t('dark-font'), $alpha: -0.8);
+        }
+
+        &.enter {
+            animation: fade-in-upward 200ms ease-in forwards;
+        }
+
+        &.leave {
+            animation: fade-out-downward 200ms ease-in forwards;
+        }
+    }
+}
+
+@keyframes fade-in-upward {
+    0% {
+        transform: translate(0, 50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out-downward {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 50px);
+        opacity: 0;
+    }
+}
