@@ -6,6 +6,7 @@ import Button from './button';
 import IconButton from "./icon-button";
 import useRippleEffect from "../hooks/ripple";
 import "../styles/components/filters.scss";
+import { navigate } from "../auxillary/actions";
 
 export function FilterListSkeleton() {
     return (
@@ -157,7 +158,7 @@ export default function Filters({filters}) {
                 </div>
                 <FilterList filters={filters} />
                 <div className="buttons">
-                    <Button role="secondary" style="tonal">Clear</Button>
+                    <Button role="secondary" style="tonal" onPress={() => navigate("/catalog")}>Clear</Button>
                     <Button role="primary" style="filled" onPress={() => applyRoute() || setOpen(false)}>Filter</Button>
                 </div>
             </section>
