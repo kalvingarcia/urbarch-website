@@ -37,7 +37,8 @@ export async function GET(request, {params: {id}}) {
         ) as variations
         FROM product_listing WHERE id = ${id};
     `
-    return new Response(JSON.stringify(result), {
-        "status": 200
+
+    return new Response(JSON.stringify(result[0]), {
+        "status": result.length === 0? 404 : 200
     });
 }
