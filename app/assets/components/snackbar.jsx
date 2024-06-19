@@ -6,7 +6,7 @@ import "../styles/components/snackbar.scss";
 const SNACKBAR_TIMEOUT = 5000;
 const ANIMATION_TIME = 200;
 
-export default function Snackbar({open, setOpen, message, action}) {
+export default function Snackbar({role = "primary", open, setOpen, message, action}) {
     const [state, setState] = useState("inactive");
     useEffect(() => {
         setState("inactive");
@@ -22,9 +22,9 @@ export default function Snackbar({open, setOpen, message, action}) {
 
     return (open?
         createPortal(
-            <div className={["snackbar", state].join(" ")}>
+            <div className={["snackbar", state, role].join(" ")}>
                 <span>{message}</span>
-                <IconButton role="error" style="text" onPress={() => action.callback()} icon={action.icon} />
+                <IconButton role={role} style="text" onPress={() => action.callback()} icon={action.icon} />
             </div>,
             document.getElementsByClassName("root")[0]
         )

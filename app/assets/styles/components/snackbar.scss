@@ -11,15 +11,25 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 20px;
+        padding: 5px 20px;
         border-radius: 20px;
         z-index: 1000;
 
-        @include themed() {
-            background-color: t('error');
-            color: t('on-error');
-            border: 1pt solid t('on-error');
-            box-shadow: 0px 8px 16px 0px adjust(t('dark-font'), $alpha: -0.8);
+        &.primary {
+            @include themed() {
+                background-color: t('primary');
+                color: t('on-primary');
+                border: 1pt solid t('on-primary');
+                box-shadow: 0px 8px 16px 0px adjust(t('dark-font'), $alpha: -0.8);
+            }
+        }
+        &.error {
+            @include themed() {
+                background-color: t('error');
+                color: t('on-error');
+                border: 1pt solid t('on-error');
+                box-shadow: 0px 8px 16px 0px adjust(t('dark-font'), $alpha: -0.8);
+            }
         }
 
         &.enter {
