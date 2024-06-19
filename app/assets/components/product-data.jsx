@@ -11,10 +11,10 @@ import '../styles/components/metadata.scss';
 import Modal from './modal';
 import IconButton from './icon-button';
 import {GET_PRODUCT_CUTSHEET} from '../../api';
-import {ErrorContext} from './error-handler';
+import {MessageContext} from './message-handler';
 
 export default function ProductData({product, extension, drawing}) {
-    const triggerErrorMessage = useContext(ErrorContext);
+    const {triggerInfoMessage, triggerErrorMessage} = useContext(MessageContext);
 
     const variation = product.variations.find(variation => variation.extension === extension);
     const [price, updatePrice] = usePriceChange(variation.price);
@@ -31,6 +31,7 @@ export default function ProductData({product, extension, drawing}) {
     const [loading, setLoading] = useState(true);
     const [pdfURI, setPDFURI] = useState(undefined);
     useEffect(() => {
+        triggerInfoMessage("Generating PDF!");
         (async () => {
             setLoading(true);
             const uri = await fetch(
