@@ -4,7 +4,7 @@ import Theme from './assets/components/theme';
 import Header from './assets/components/header';
 import Footer from './assets/components/footer';
 import './assets/styles/global.scss';
-import ErrorHandler from './assets/components/error-handler';
+import MessageHandler from './assets/components/message-handler';
 
 const univers = Local({
     variable: "--univers",
@@ -132,13 +132,13 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en" className={`${univers.variable} ${trajan.variable} ${material_icons.variable} ${urban_icons.variable}`}>
             <body>
-                <ErrorHandler>
+                <MessageHandler>
                     <Theme>
                         <Header />
                         {children}
                         <Footer />
                     </Theme>
-                </ErrorHandler>
+                </MessageHandler>
             </body>
         </html>
     )
