@@ -21,6 +21,7 @@
             top: 0;
             z-index: 0;
             left: calc(-1 * max(calc((100vw - 1500px) / 2), 0px));
+            transition: background-color 300ms ease-in-out;
             @include themed() {
                 background-color: adjust(t('surface'), $alpha: -0.5);
             }
@@ -57,6 +58,7 @@
             height: 100%;
             top: 0;
             left: calc(-1 * (100vw - 1500px) / 2);
+            transition: background-image 300ms ease-in-out;
             @include themed() {
                 background: linear-gradient(
                     90deg,
