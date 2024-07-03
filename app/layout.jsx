@@ -133,7 +133,7 @@ export default async function RootLayout({ children }) {
         <html lang="en" className={`${univers.variable} ${trajan.variable} ${material_icons.variable} ${urban_icons.variable}`}>
             <body>
                 <MessageHandler>
-                    <Theme defaultDarkMode={(/true/i).test((await getDarkMode()).value)} setDarkModeCookie={setDarkMode}>
+                    <Theme defaultDarkMode={(/true/i).test((await getDarkMode())?.value)} setDarkModeCookie={setDarkMode}>
                         <Header />
                         {children}
                         <Footer />
