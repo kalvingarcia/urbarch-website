@@ -3,14 +3,12 @@ import {useState, useCallback, createContext} from 'react';
 
 export const DarkModeContext = createContext();
 
-export default function Theme({children}) {
-    const [darkMode, setDarkMode] = useState(false); // This keeps track of dark mode
+export default function Theme({defaultDarkMode, setDarkModeCookie, children}) {
+    const [darkMode, setDarkMode] = useState(defaultDarkMode); // This keeps track of dark mode
     // The function to toggle dark mode
-    const toggleDarkMode = useCallback(() => {
-        if(darkMode) // If in dark mode
-            setDarkMode(false); // Become light mode
-        else // If light mode
-            setDarkMode(true); // Become dark mode
+    const toggleDarkMode = useCallback(async () => {
+        setDarkMode(!darkMode);
+        await setDarkModeCookie(!darkMode);
     }, [darkMode]); // Here we will optain 2 cached functions
 
     // We send darkMode and toggleDarkMode so that any component can access the darkMode information and change it

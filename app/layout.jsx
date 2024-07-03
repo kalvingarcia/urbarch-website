@@ -1,10 +1,10 @@
 import Local from 'next/font/local';
-import {Roboto, Cinzel} from 'next/font/google';
 import Theme from './assets/components/theme';
 import Header from './assets/components/header';
 import Footer from './assets/components/footer';
 import './assets/styles/global.scss';
 import MessageHandler from './assets/components/message-handler';
+import {setDarkMode, getDarkMode} from './assets/auxillary/actions';
 
 const univers = Local({
     variable: "--univers",
@@ -128,12 +128,12 @@ export const metadata = {
     description: 'The online catalog for the historic, salvage-inspired furnishing company.',
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
     return (
         <html lang="en" className={`${univers.variable} ${trajan.variable} ${material_icons.variable} ${urban_icons.variable}`}>
             <body>
                 <MessageHandler>
-                    <Theme>
+                    <Theme defaultDarkMode={(/true/i).test((await getDarkMode()).value)} setDarkModeCookie={setDarkMode}>
                         <Header />
                         {children}
                         <Footer />
