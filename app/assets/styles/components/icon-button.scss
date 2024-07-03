@@ -1,13 +1,14 @@
 @use '../theme' as *;
 
 .icon-button {
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 58px !important;
-    max-width: 58px !important;
-    min-height: 58px !important;
-    max-height: 58px !important;
+    min-width: fit-content;
+    max-width: fit-content;
+    min-height: fit-content;
+    max-height: fit-content;
     & i {
         font-size: 30px;
     }
