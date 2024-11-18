@@ -16,10 +16,12 @@ export async function GET(request) {
         }
     
     const result = await Database`
-        ${search !== ""? 
+        ${search !== ""?
             Database`
                 WITH search_filtered AS (
-                    SELECT DISTINCT id AS listing_id FROM salvage_listing WHERE index @@ to_tsquery(${search + ':*'})
+                    SELECT item.id AS itemID
+                    FROM salvage INNER JOIN item ON salvage.id = item.salvageID
+                    WHERE salvage.index @@ to_tsquery(${search + ':*'}) OR item.index @@ to_tsquery(${search + ':*'})
                 ),
             `
             :
@@ -29,32 +31,33 @@ export async function GET(request) {
             Database`
                 ${search === ""? Database`WITH` : Database``} tag_filtered AS (
                     ${Database.unsafe(Object.entries(filters).map(([_, value]) => (`
-                        SELECT DISTINCT listing_id FROM salvage_item__tag WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
+                        SELECT DISTINCT itemID
+                        FROM item_tag
+                        WHERE tagID IN (${value.map(id => `${id}`).join(", ")})
                     `)).join(" INTERSECT "))}
                 ),
             `
             :
             Database``
         }
-        ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} listings AS (
-            SELECT DISTINCT listing_id
-            FROM salvage_item__tag
-                ${search !== ""? Database`INNER JOIN search_filtered USING(listing_id)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(listing_id)` : Database``}
+        ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} items AS (
+            SELECT item.id AS itemID
+            FROM item_tag INNER JOIN item ON item.id = item_tag.itemID
+                ${search !== ""? Database`INNER JOIN search_filtered USING(itemID)` : Database``}
+                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING (itemID)` : Database``}
+            WHERE display = TRUE
         )
-        SELECT id, name, (
-            SELECT json_agg(json_build_object(
-                'id', CAST(tag.id AS TEXT),
-                'name', tag.name,
-                'category', tag_category.name
-            )) FROM tag
-            WHERE tag.category_id = tag_category.id AND (tag.id IN (
-                SELECT DISTINCT tag_id 
-                FROM salvage_item__tag
-                WHERE listing_id IN (SELECT listing_id FROM listings)
-            ) OR tag_category.name = 'Class' AND tag.id IN (SELECT tag_id FROM salvage_item__tag))
-        ) AS tags
-        FROM tag_category;
+        SELECT category, json_agg(json_build_object(
+            'id', CAST(id AS TEXT),
+            'name', name
+        )) AS tags
+        FROM tag
+        WHERE id IN (
+            SELECT DISTINCT tagID
+            FROM item_tag
+            WHERE itemID IN (SELECT itemID FROM items)
+        ) OR category = 'Class' AND id IN (SELECT tagID FROM item_tag)
+        GROUP BY category;
     `
 
     return new Response(JSON.stringify(result), {

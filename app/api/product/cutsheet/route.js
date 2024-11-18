@@ -9,20 +9,6 @@ if(process.env.NODE_ENV === "development")
 else
     BASE_URL = "http://urbarch-website.kalvin.live";
 
-const finishes = {
-    "PB": "Polished Brass",
-    "GP": "Green Patina",
-    "BP": "Brown Patina",
-    "AB": "Antique Brass",
-    "STBL": "Statuary Black",
-    "STBR": "Statuary Brown",
-    "PN": "Polished Nickel",
-    "SN": "Satin Nickel",
-    "PC": "Polished Chrome",
-    "LP": "Light Pewter",
-    "BN": "Black Nickel"
-};
-
 export async function GET(request) {
     try {
         const searchParameters = request.nextUrl.searchParams;
@@ -66,47 +52,35 @@ export async function GET(request) {
 
         const productData = (await Database`
             WITH variations AS (
-                SELECT listing_id AS id, extension, subname, price, overview, (
+                SELECT productID, extension, subname, description, (
+                    SELECT COALESCE(json_agg(json_build_object(
+                        'id', finish.code,
+                        'display', finish.name,
+                        'value', variation_finish.price
+                    )), '[]') FROM finish INNER JOIN variation_finish ON variation_finish.finishCode = finish.code
+                    WHERE variation_finish.variationID = variation.id
+                ) AS finishes, overview, (
                     SELECT json_build_object(
-                        'id', tag.id,
                         'name', tag.name,
-                        'category_id', tag_category.name,
-                        'listing_id', product_variation__tag.listing_id
-                    ) FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id
-                        INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id
-                    WHERE product_variation__tag.listing_id = ${id} AND product_variation__tag.variation_extension = extension
-                        AND tag_category.name = 'Class'
+                        'category', tag.category
+                    ) FROM tag INNER JOIN variation_tag ON variation_tag.tagID = tag.id
+                    WHERE variation_tag.variationID = variation.id AND tag.category = 'Class'
                 ) AS class, (
                     SELECT json_build_object(
-                        'id', tag.id,
                         'name', tag.name,
-                        'category_id', tag_category.name,
-                        'listing_id', product_variation__tag.listing_id
-                    ) FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id
-                        INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id
-                    WHERE product_variation__tag.listing_id = ${id} AND product_variation__tag.variation_extension = extension
-                        AND tag_category.name = 'Category'
-                    LIMIT 1
-                ) AS category, (
-                    SELECT DISTINCT COALESCE(json_agg(json_build_object(
-                        'id', product_listing.id,
-                        'extension', product_variation.extension,
-                        'name', product_listing.name,
-                        'subname', product_variation.subname,
-                        'price', product_variation.price,
-                        'overview', product_variation.overview
-                    )), '[]') FROM json_to_recordset(overview->'replacements') AS replacements(id VARCHAR(10), extension VARCHAR(10))
-                        INNER JOIN product_listing USING(id) 
-                        INNER JOIN product_variation ON replacements.id = product_variation.listing_id AND product_variation.extension = replacements.extension
-                ) AS replacements
-                FROM product_variation WHERE listing_id = ${id} AND display = TRUE
+                        'category', tag.category
+                    ) FROM tag INNER JOIN variation_tag ON variation_tag.tagID = tag.id
+                    WHERE variation_tag.variationID = variation.id AND tag.category = 'Category'
+                ) AS category
+                FROM variation WHERE productID = ${id} AND display = TRUE
             )
-            SELECT id, extension, name, subname, description, price, overview, class, category, replacements
-            FROM product_listing INNER JOIN variations USING(id)
-            WHERE id = ${id} AND extension = ${extension};
+            SELECT product.id, variations.extension, product.name, variations.subname, product.description, variations.description, 
+                variations.finishes, variations.overview, variations.class, variations.category
+            FROM product INNER JOIN variations ON product.id = variations.productID
+            WHERE product.id = ${id} AND variations.extension = ${extension};
         `)[0];
 
-        pdf.setTitle(`${productData.name}${productData.subname !== "DEFAULT"? ` [${productData.subname}]` : ""} Cutsheet`);
+        pdf.setTitle(`${productData.name}${productData.subname !== ""? ` [${productData.subname}]` : ""} Cutsheet`);
 
         const currentDay = new Date();
         pdf.setCreationDate(currentDay);
@@ -116,7 +90,7 @@ export async function GET(request) {
         });
 
         page.drawText(productData.class.name.toLowerCase().replace(" ", "_"), {font: icons, size: 2000, x: 1000, y: -200, color: titleColor, opacity: 0.05});
-        page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
+        // page.drawText(productData.category.name, {font: title, size: 50, x: 2550 - (title.widthOfTextAtSize(productData.category.name, 50) + 150), y: 3020, color: subtitleColor, opacity: 0.5});
 
         const columnWidth = 1050;
 
@@ -145,7 +119,7 @@ export async function GET(request) {
             {size: 40, x: 1350, y: longTitle? 2600 : 2680, opacity: 0.75}
         );
         page.drawText(
-            `Starting at $${parseInt(productData.price).toLocaleString('en', {useGrouping: true})}`,
+            `Starting at $${parseFloat(productData.finishes.reduce((min, {value}) => min < value? min : value, Infinity)).toLocaleString('en', {useGrouping: true})}`,
             {font: emphasis, size: 30, x: 1350, y: longTitle? 2520 : 2600}
         );
 
@@ -161,22 +135,24 @@ export async function GET(request) {
         const xPos = 1350;
         let yPos = 2500;
 
-        if(productData.overview.finishes.length > 0) {
+        if(productData.finishes.length > 1) {
             const finishPrices = {};
-            for(const {finish, difference} of productData.overview.finishes) {
-                if(!finishPrices[difference])
-                    finishPrices[difference] = [];
-                finishPrices[difference].push(finishes[finish]);
+            for(const {display, value} of productData.finishes) {
+                if(!finishPrices[value])
+                    finishPrices[value] = [];
+                finishPrices[value].push(display);
             }
 
             yPos -= subtitleSize;
             page.drawText("Finishes", {font: title, size: subtitleSize, x: xPos, y: yPos, color: subtitleColor});
             yPos -= subtitleGap;
-            const maxWidth = Math.max(...Object.entries(finishPrices).map(([difference]) => (
-                emphasis.widthOfTextAtSize(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)} to starting price`, bodySize)
-            )));
-            for(const [difference, entries] of Object.entries(finishPrices)) {
-                page.drawText(`${Math.sign(difference) === -1? "-" : "+"}$${Math.abs(difference)} to starting price`, {
+            const maxWidth = Math.max(...Object.entries(finishPrices).map(([value]) => {
+                value = parseFloat(value);
+                return emphasis.widthOfTextAtSize(value === Infinity? "Call for pricing" : `$${value}`, bodySize)
+            }));
+            for(const [value, entries] of Object.entries(finishPrices)) {
+                const valueAsFloat = parseFloat(value);
+                page.drawText(valueAsFloat === Infinity? "Call for pricing" : `$${valueAsFloat}`, {
                     font: emphasis, size: bodySize, x: xPos, y: yPos - bodySize
                 });
 
@@ -192,34 +168,7 @@ export async function GET(request) {
             yPos -= sectionGap;
         }
 
-        if(Object.entries(productData.overview.options).length > 0 && !Object.entries(productData.overview.options).every(([_, {link, link_name}]) => link && link_name !== "finishes")) {
-            yPos -= subtitleSize;
-            page.drawText("Options", {font: title, size: subtitleSize, x: xPos, y: yPos, color: subtitleColor});
-            yPos -= subtitleGap;
-            for(const [name, {link, link_name, content}] of Object.entries(productData.overview.options)) {
-                if(!link || link_name === "finishes") {
-                    yPos -= headingSize;
-                    page.drawText(name, {font: heading, size: headingSize, x: xPos, y: yPos, color: headingColor});
-                    // page.drawText("(See replacements for detailed pricing.)", {
-                    //     font: heading, size: bodySize,
-                    //     x: xPos + heading.widthOfTextAtSize(name, headingSize) + tabSize, y: yPos + ((headingSize - bodySize) / 2),
-                    //     color: headingColor, opacity: 0.5
-                    // });
-                    yPos -= headingGap;
-
-                    const options = new Set(content.map(({display}) => display.replace(/ \${([A-z0-9\-\[\] ]+,?)+}/g, "")));
-                    for(const line of breakTextIntoLines(Array.from(options).join(", "), [' '], columnWidth, word => body.widthOfTextAtSize(word, bodySize))) {
-                        yPos -= bodySize;
-                        page.drawText(line, {size: bodySize, x: xPos, y: yPos, maxWidth: columnWidth});
-                        yPos -= bodyGap;
-                    }
-                    yPos -= bodyGap;
-                }
-            }
-            yPos -= sectionGap;
-        }
-
-        if(productData.overview.bulb.quantity > 0) {
+        if(productData.overview.bulb?.quantity > 0) {
             yPos -= subtitleSize;
             page.drawText("Bulb Info", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
             yPos -= subtitleGap;
@@ -236,7 +185,7 @@ export async function GET(request) {
             yPos -= sectionGap;
         }
 
-        if(productData.overview.ul.length > 0 && productData.overview.ul[0] !== "None") {
+        if(productData.overview.ul?.length > 0 && productData.overview.ul[0] !== "None") {
             yPos -= subtitleSize;
             page.drawText("UL Listing", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
             yPos -= subtitleGap;
@@ -246,7 +195,7 @@ export async function GET(request) {
             yPos -= sectionGap;
         }
 
-        if(productData.replacements.length > 0) {
+        if(productData.replacements?.length > 0) {
             yPos -= subtitleSize;
             page.drawText("Replacements", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
             yPos -= subtitleGap;
@@ -300,7 +249,7 @@ export async function GET(request) {
             yPos -= sectionGap;
         }
 
-        if(productData.overview.notes !== "") {
+        if(productData.overview.notes && productData.overview.notes !== "") {
             yPos -= subtitleSize;
             page.drawText("Notes", {font: title, size: subtitleSize, x: xPos, y: yPos, maxWidth: columnWidth, color: subtitleColor});
             yPos -= subtitleGap;
@@ -316,7 +265,8 @@ export async function GET(request) {
         return new Response(await pdf.saveAsBase64({dataUri: true}), {
             "status": 200
         });
-    } catch {
+    } catch(error) {
+        console.log(error);
         return new Response("Server Error: Couldn't generate PDF.", {
             "status": 500
         });

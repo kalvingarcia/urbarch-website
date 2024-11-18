@@ -4,9 +4,11 @@ import {bton} from "../../assets/auxillary/helpers";
 export async function GET(request) {
     const searchParameters = request.nextUrl.searchParams;
 
-    var {search, filters} = {search: "", filters: {}};
+    var {alphaSort, search, filters} = {alphaSort: true, search: "", filters: {}};
     for(const [parameter, value] of searchParameters.entries())
-        if(parameter === "search")
+        if(parameter === "alphaSort")
+            alphaSort = value;
+        else if(parameter === "search")
             search = value;
         else for(const id of value.split("|")) {
             if(!filters.hasOwnProperty(parameter))
@@ -15,12 +17,12 @@ export async function GET(request) {
         }
 
     const result = await Database`
-        ${search !== ""?
+        ${search != "" ?
             Database`
                 WITH search_filtered AS (
-                    SELECT DISTINCT product_variation.listing_id AS id, product_variation.extension AS extension
-                    FROM product_listing INNER JOIN product_variation ON product_variation.listing_id = product_listing.id
-                    WHERE product_listing.index @@ to_tsquery(${search + ':*'}) OR product_variation.index @@ to_tsquery(${search + ':*'})
+                    SELECT DISTINCT product.id AS id, variation.extension AS extension
+                    FROM product INNER JOIN variation ON product.id = variation.productID
+                    WHERE product.index @@ to_tsquery(${search + ':*'}) OR variation.index @@ to_tsquery(${search + ':*'})
                 ),
             `
             :
@@ -30,9 +32,9 @@ export async function GET(request) {
             Database`
                 ${search === ""? Database`WITH` : Database``} tag_filtered AS (
                     ${Database.unsafe(Object.entries(filters).map(([_, value]) => (`
-                        SELECT DISTINCT product_variation__tag.listing_id AS id, product_variation__tag.variation_extension AS extension
-                        FROM product_variation__tag
-                        WHERE tag_id = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
+                        SELECT DISTINCT variation.productID AS id, variation.extension AS extension
+                        FROM variation INNER JOIN variation_tag ON variation.id = variation_tag.variationID
+                        WHERE variation_tag.tagID = ANY ARRAY[${value.map(id => `${id}`).join(",")}]
                     `)).join(" INTERSECT "))}
                 ),
             `
@@ -40,22 +42,25 @@ export async function GET(request) {
             Database``
         }
         ${search === "" && Object.entries(filters).length === 0? Database`WITH` : Database``} categories AS (
-            /* Create a table with the tag name and listing id */
-            SELECT DISTINCT listing_id AS id, tag.name AS category
-            FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
-                INNER JOIN product_variation__tag ON product_variation__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_category.name = 'Class'
+            SELECT DISTINCT variation.productID AS id, variation.extension AS extension, tag.name AS category
+            FROM variation INNER JOIN variation_tag ON variation_tag.variationID = variation.id
+                INNER JOIN tag ON variation_tag.tagID = tag.id
+            WHERE tag.category = 'Class'
         ), results AS (
-            SELECT id, extension, name, subname, category, price, featured
-            FROM product_listing INNER JOIN product_variation ON product_listing.id = product_variation.listing_id
-                INNER JOIN categories USING(id)
-                ${search !== ""? Database`INNER JOIN search_filtered USING(id, extension)` : Database``}
-                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered USING(id, extension)` : Database``}
-            WHERE display = TRUE
+            SELECT product.id AS id, variation.extension AS extension, name, subname, category, MIN(variation_finish.price) AS starting, featured
+            FROM product INNER JOIN variation ON variation.productID = product.id
+                INNER JOIN categories ON product.id = categories.id AND variation.extension = categories.extension
+                INNER JOIN variation_finish ON variation.id = variation_finish.variationID
+                ${search !== ""? Database`INNER JOIN search_filtered ON search_filtered.id = product.id AND search_filtered.extension = variation.extension` : Database``}
+                ${Object.entries(filters).length !== 0? Database`INNER JOIN tag_filtered ON tag_filtered.id = product.id AND tag_filtered.extension = variation.extension` : Database``}
+            WHERE variation.display = TRUE
+            GROUP BY product.id, variation.extension, name, subname, category, featured
+            ORDER BY ${alphaSort? Database`name` : Database`starting`}
         )
-        SELECT DISTINCT id, extension, name, subname, category, price
+        SELECT DISTINCT id, extension, name, subname, category, starting AS price
         FROM results
-        WHERE (id, extension) NOT IN (SELECT id, extension FROM results WHERE featured = TRUE LIMIT 3);
+        WHERE (id, extension) NOT IN (SELECT id, extension FROM results WHERE featured = TRUE LIMIT 3)
+        ORDER BY id;
     `
 
     return new Response(JSON.stringify(result), {

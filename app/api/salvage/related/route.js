@@ -7,26 +7,28 @@ export async function GET(request) {
     const serial = searchParameters.get("serial");
 
     const result = await Database`
-        WITH product_tag_match AS (
-            SELECT listing_id AS id, item_serial AS serial, tag_id
-            FROM salvage_item__tag
-            WHERE tag_id IN (
-                SELECT tag_id FROM salvage_item__tag
-                WHERE listing_id = ${id} AND item_serial = ${serial}
+        WITH tag_match AS (
+            SELECT itemID, tagID
+            FROM item_tag
+            WHERE tagID IN (
+                SELECT tagID 
+                FROM item_tag INNER JOIN item ON item.id = item_tag.itemID
+                WHERE item.salvageID = ${id} AND item.serial = ${serial}
             )
         ), categories AS (
-            /* Create a table with the tag name and listing id */
-            SELECT DISTINCT listing_id AS id, tag.name AS category
-            FROM tag INNER JOIN tag_category ON tag.category_id = tag_category.id  /* First we combine the tag and tag category information */
-                INNER JOIN salvage_item__tag ON salvage_item__tag.tag_id = tag.id /* Then we combine the tags specific to the variations we have */
-            WHERE tag_category.name = 'Category' AND listing_id IN (SELECT id AS listing_id FROM product_tag_match)
+            SELECT DISTINCT itemID, tag.category AS category
+            FROM tag INNER JOIN item_tag ON item_tag.tagID = tag.id
+                INNER JOIN item ON item_tag.itemID = item.id
+            WHERE tag.category = 'Class' AND itemID IN (SELECT itemID FROM tag_match)
         )
-        SELECT DISTINCT id, name, category, COUNT(tag_id)
-        FROM salvage_listing INNER JOIN product_tag_match USING(id) INNER JOIN categories USING(id)
-        WHERE id != ${id} OR serial != ${serial}
-        GROUP BY id, name, category
-        HAVING COUNT(tag_id) > 5
-        ORDER BY COUNT(tag_id) DESC LIMIT 10;
+        SELECT DISTINCT salvage.id AS id, serial, name, subname, category, COUNT(tagID)
+        FROM salvage INNER JOIN item ON salvage.id = item.salvageID
+            INNER JOIN tag_match ON item.id = tag_match.itemID
+            INNER JOIN categories ON categories.itemID = item.id
+        WHERE salvage.id != ${id} AND serial != ${serial}
+        GROUP BY salvage.id, serial, name, subname, category
+        HAVING COUNT(tagID) > 0
+        ORDER BY COUNT(tagID) DESC, salvage.id LIMIT 10;
     `
 
     return new Response(JSON.stringify(result), {
