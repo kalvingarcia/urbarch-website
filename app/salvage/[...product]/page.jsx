@@ -78,7 +78,9 @@ export default async function Product({params: {product: [id, serial, ...rest]}}
                             type="small"
                             from='salvage'
                             id={salvage.id}
+                            extension={salvage.serial}
                             name={salvage.name}
+                            subname={salvage.subname}
                             category={salvage.category}
                         />
                     ))}

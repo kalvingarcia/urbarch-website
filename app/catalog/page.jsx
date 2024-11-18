@@ -32,7 +32,7 @@ export default async function Catalog({searchParams}) {
                         <Listings>
                             {listings.map(product => (
                                 <Card
-                                    key={`${product.id}${product.extension !== 'DEFAULT'? `-${product.extension}` : ""}`}
+                                    key={`${product.id}-${product.extension}`}
                                     type="list"
                                     from="products"
                                     id={product.id}

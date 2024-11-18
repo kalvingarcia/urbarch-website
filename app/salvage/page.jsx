@@ -3,7 +3,6 @@ import {Display} from "../assets/components/typography";
 import QueryHandler from "../assets/components/query-handler";
 import Filters from "../assets/components/filters";
 import Search from "../assets/components/search";
-import Featured from "../assets/components/featured";
 import Listings from "../assets/components/listings";
 import Card from "../assets/components/card";
 import "../assets/styles/pages/catalog.scss";
@@ -30,12 +29,13 @@ export default async function Salvage({searchParams}) {
                         <Listings>
                             {listings.map(salvage => (
                                 <Card
-                                    key={salvage.id}
+                                    key={`${salvage.id}-${salvage.serial}`}
                                     type="list"
                                     from="salvage"
                                     id={salvage.id}
                                     extension={salvage.serial}
                                     name={salvage.name}
+                                    subname={salvage.subname}
                                     category={salvage.category}
                                     price={salvage.price}
                                 />
