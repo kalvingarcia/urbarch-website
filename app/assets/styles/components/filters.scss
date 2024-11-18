@@ -4,7 +4,7 @@
 .filter-modal-wrapper {
     max-width: fit-content;
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1113px) {
         display: block;
         position: fixed;
         width: 80%;
@@ -44,7 +44,7 @@
         }
         opacity: 0.5;
 
-        @media (min-width: 1000px) {
+        @media (min-width: 1113px) {
             display: none;
         }
     }
@@ -67,7 +67,7 @@
             width: 400px;
         }
     
-        @media (max-width: 1000px) {
+        @media (max-width: 1113px) {
             display: none;
             position: fixed;
             width: 80%;
@@ -83,7 +83,7 @@
             justify-content: space-between;
     
             & .close {
-                @media (min-width: 1000px) {
+                @media (min-width: 1113px) {
                     display: none;
                 }
             }
@@ -371,7 +371,7 @@
             font-size: 40px;
         }
 
-        @media (min-width: 1000px) {
+        @media (min-width: 1113px) {
             display: none;
         }
     }
