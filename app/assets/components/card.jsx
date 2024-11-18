@@ -29,11 +29,17 @@ export default function Card({type = "normal", from, id, extension, name, subnam
     useEffect(() => {
         (async () => {
             setLoading(true);
+            const timeout = setTimeout(async () => {
+                setImage(await import("../images/unavailable.jpg"));
+                setLoading(false);
+            }, 5000);
             if(from === 'salvage')
                 setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
             else
                 setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
+            clearTimeout(timeout);
             setLoading(false);
+            
         })();
     }, [])
 
