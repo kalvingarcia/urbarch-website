@@ -52,7 +52,7 @@ export default function Header() {
                         <Link className={pathname === '/catalog'? "active" : ""} href="/catalog">Catalog</Link>
                         <Link className={pathname === '/salvage'? "active" : ""} href="/salvage">Salvage</Link>
                         <Link className={pathname === '/gallery'? "active" : ""} href="/gallery">Gallery</Link>
-                        <IconButton className="cart" role="primary" style="text" icon='shopping_cart' />
+                        {/* <IconButton className="cart" role="primary" style="text" icon='shopping_cart' /> */}
                     </div>
                     <IconButton className="dark-mode" role="secondary" style="outlined" icon={darkMode? "dark_mode" : "light_mode"} onPress={toggleDarkMode} />
                     <IconButton className="modal-button" role="primary" style="text" icon="menu_open" onPress={() => setOpen(true)} />
@@ -62,7 +62,7 @@ export default function Header() {
                 <div className="scrim" onMouseDown={() => setOpen(false)} />
                 <div className="navigation">
                     <div className="buttons">
-                        <IconButton className="cart" role="primary" style="text" icon='shopping_cart' />
+                        {/* <IconButton className="cart" role="primary" style="text" icon='shopping_cart' /> */}
                         <IconButton className="dark-mode" role="secondary" style="outlined" icon={darkMode? "dark_mode" : "light_mode"} onPress={toggleDarkMode} />
                         <IconButton icon="close" onPress={() => setOpen(false)} />
                     </div>
