@@ -15,7 +15,7 @@ export function Variation({from, active, id, extension, name, subname, price}) {
         >
             <span className='name'>{name}{subname !== "DEFAULT"? ` [${subname}]` : ""}</span>
             <span className='id'>{id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
-            <span className='price'>{price === 0? "Call for pricing" : `From $${price.toLocaleString('en', {useGrouping: true})}`}</span>
+            <span className='price'>{price === Infinity? "Call for pricing" : `From $${price.toLocaleString('en', {useGrouping: true})}`}</span>
         </div>
     );
 }

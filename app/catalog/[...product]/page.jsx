@@ -85,7 +85,7 @@ export default async function Product({params: {product: [id, extension, ...rest
                                     extension={variation.extension}
                                     name={product.name}
                                     subname={variation.subname}
-                                    price={variation.price}
+                                    price={variation.finishes.reduce((min, {value}) => min < value? min : value, Infinity)}
                                 />
                             ))}
                         </Variations>

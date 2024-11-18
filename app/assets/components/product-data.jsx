@@ -1,12 +1,9 @@
 "use client"
 import Image from 'next/image';
-import {renderToStaticMarkup} from 'react-dom/server';
-import {createContext, useCallback, useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useState} from 'react';
 import {Heading, Subheading, Subtitle, Title} from './typography';
 import Button from './button';
 import DropdownMenu from './dropdown-menu';
-import FinishesMenu from './finishes-menu';
-import usePriceChange from '../hooks/price-change';
 import '../styles/components/metadata.scss';
 import Modal from './modal';
 import IconButton from './icon-button';
@@ -17,23 +14,13 @@ export default function ProductData({product, extension, drawing}) {
     const {triggerInfoMessage, triggerErrorMessage} = useContext(MessageContext);
 
     const variation = product.variations.find(variation => variation.extension === extension);
-    const [price, updatePrice] = usePriceChange(variation.price);
+    
+    const minPrice = variation.finishes.reduce((min, {value}) => min < value? min : value, Infinity)
+    const [price, updatePrice] = useState(minPrice);
 
-    const [choiceValues, setChoiceValues] = useState({});
-    const updateChoiceValues = useCallback((optionName, choiceValue, choicePricing) => {
-        choiceValues[optionName.toLowerCase()] = choiceValue;
-        setChoiceValues({
-            ...choiceValues
-        });
-        updatePrice(optionName, choicePricing);
-    }, [choiceValues]);
-
-    const [loading, setLoading] = useState(true);
-    const [pdfURI, setPDFURI] = useState(undefined);
-    useEffect(() => {
+    const openPDF = useCallback(() => {
         triggerInfoMessage("Generating PDF!");
         (async () => {
-            setLoading(true);
             const uri = await fetch(
                 `${GET_PRODUCT_CUTSHEET}?id=${product.id}&extension=${variation.extension}`,
                 {cache: 'no-store'}
@@ -43,23 +30,20 @@ export default function ProductData({product, extension, drawing}) {
                 return response.text()
             }).catch(error => triggerErrorMessage(error.message));
             if(uri) {
-                setPDFURI(uri);
-                setLoading(false);
+                var download = document.createElement('a');
+                download.setAttribute('href', uri);
+                download.setAttribute('download', 
+                    `${product.name}${variation.subname !== ""? ` [${variation.subname}]` : ""} Cutsheet - ${(new Date()).toLocaleDateString(
+                        undefined, {year: 'numeric', month: 'short', day: 'numeric'})}.pdf`
+                );
+                download.style.display = 'none';
+
+                document.body.appendChild(download);
+                download.click();
+                document.body.removeChild(download);
+                triggerInfoMessage("PDF download initiated!")
             }
         })();
-    }, []);
-    const openPDF = useCallback(dataURI => {
-        const pdf = window.open();
-        pdf.document.body.style.margin = 0;
-        pdf.document.body.style.overflow = "hidden";
-
-        const object = pdf.document.createElement('object');
-        object.data = dataURI;
-        object.type = "application/pdf";
-        object.width = "100%";
-        object.height = "100%";
-
-        pdf.document.body.appendChild(object);
     }, []);
 
     const [open, setOpen] = useState(false);
@@ -72,9 +56,9 @@ export default function ProductData({product, extension, drawing}) {
                 </div>
                 <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
                 <div className='price'>
-                    <span className='current'>{price === 0? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
-                    {price !== variation.price?
-                        <span className='base'>(Starting at ${variation.price.toLocaleString('en', {useGrouping: true})})</span>
+                    <span className='current'>{price === Infinity? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
+                    {price !== minPrice?
+                        <span className='base'>(Starting at ${minPrice.toLocaleString('en', {useGrouping: true})})</span>
                         :
                         ""
                     }
@@ -82,27 +66,17 @@ export default function ProductData({product, extension, drawing}) {
                 <p className='description'>{product.description}</p>
                 <div className='buttons'>
                     <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
-                    {loading? "" : <IconButton style="text" icon="picture_as_pdf" onPress={() => openPDF(pdfURI)} />}
+                    <IconButton style="text" icon="picture_as_pdf" onPress={() => openPDF()} />
                 </div>
             </div>
-            <div className='options'>
-                <Heading>Options</Heading>
-                {variation.overview.finishes.length !== 0?
-                    <FinishesMenu choices={variation.overview.finishes} updateChoiceValues={updateChoiceValues} />
-                    :
-                    ""
-                }
-                {Object.entries(variation.overview.options).map(([name, {link_name, content}]) => (
-                    <DropdownMenu 
-                        key={name}
-                        name={name}
-                        choices={content}
-                        linkName={link_name}
-                        linkValue={choiceValues[link_name.toLowerCase()]}
-                        updateChoiceValues={updateChoiceValues}
-                    />
-                ))}
-            </div>
+            {variation.finishes.length > 1?
+                <div className='options'>
+                    <Heading>Finishes</Heading>
+                    <DropdownMenu choices={variation.finishes} updatePrice={updatePrice} />
+                </div>
+                :
+                ""
+            }
             <Modal open={open} setOpen={setOpen}>
                 <div className='metadata-overview'>
                     <div className='drawing'>
@@ -122,15 +96,15 @@ export default function ProductData({product, extension, drawing}) {
                             :
                             ""
                         }
-                        {variation.overview.ul.length > 0 && variation.overview.ul[0] !== "None"?
+                        {variation.overview.ul?.[0] !== "None"?
                             <div className='ul-info'>
                                 <Subheading>UL Listing</Subheading>
-                                <span>This product is listed for use in {variation.overview.ul[0].toUpperCase()} environments.</span>
+                                <span>This product is listed for use in {variation.overview.ul?.[0].toUpperCase()} environments.</span>
                             </div>
                             :
                             ""
                         }
-                        {variation.overview.bulb.quantity > 0?
+                        {variation.overview.bulb?.quantity > 0?
                             <div className='bulb-info'>
                                 <Subheading>Bulb Information</Subheading>
                                 <span>{variation.overview.bulb.shape.name} Bulb ({variation.overview.bulb.shape.code}) {variation.overview.bulb.socket.name} Base ({variation.overview.bulb.socket.code})</span> 
@@ -140,7 +114,7 @@ export default function ProductData({product, extension, drawing}) {
                             :
                             ""
                         }
-                        {variation.replacements.length > 0?
+                        {variation.replacements?.length > 0?
                             <div className='replacements'>
                                 <Subheading>Replacements</Subheading>
                                 <div className='list'>

@@ -30,9 +30,9 @@ export default function Card({type = "normal", from, id, extension, name, subnam
         (async () => {
             setLoading(true);
             if(from === 'salvage')
-                setImage(await import(`../images/${from}/${id}/card.jpg`));
+                setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
             else
-                setImage(await import(`../images/${from}/${id}/${extension? extension : "DEFAULT"}/card.jpg`));
+                setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
             setLoading(false);
         })();
     }, [])
@@ -44,7 +44,7 @@ export default function Card({type = "normal", from, id, extension, name, subnam
         <div 
             className={['card', type].join(" ")} 
             onMouseDown={rippleExpand} onMouseUp={rippleFade}
-            onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${from === 'products'? extension : 1}`), 100)}
+            onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${extension}`), 100)}
         >
             <div className='image'>
                 <Image src={image} alt="" />

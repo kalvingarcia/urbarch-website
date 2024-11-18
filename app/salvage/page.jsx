@@ -34,6 +34,7 @@ export default async function Salvage({searchParams}) {
                                     type="list"
                                     from="salvage"
                                     id={salvage.id}
+                                    extension={salvage.serial}
                                     name={salvage.name}
                                     category={salvage.category}
                                     price={salvage.price}
