@@ -1,5 +1,4 @@
 "use client"
-import { createPortal } from "react-dom";
 import Card from "./card";
 import { Heading, Subheading } from "./typography";
 import { useEffect, useState } from "react";
