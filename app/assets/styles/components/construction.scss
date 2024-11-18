@@ -1,0 +1,24 @@
+@use '../theme' as *;
+
+.construction {
+    max-width: 1000px;
+    min-height: 500px;
+    margin: auto;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+
+    & .divider {
+        height: 1pt;
+        width: 66%;
+        max-width: 1000px;
+        opacity: 0.5;
+
+        @include themed() {
+            background-color: t('body');
+        }
+    }
+}
