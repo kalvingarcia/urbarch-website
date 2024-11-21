@@ -125,17 +125,16 @@ function FilterGroup({name, children}) {
 }
 
 function FilterList({filters}) {
-    console.log(filters);
     return (
         <div className="filter-list">
             {filters.map(category => (
                 category.tags?
                     category.category === "Class"?
-                    <ChipGroup key={category.id}>
+                    <ChipGroup key={category.category}>
                         {category.tags.map(tag => <Chip key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
                     </ChipGroup>
                     :
-                    <FilterGroup key={category.id} name={category.name}>
+                    <FilterGroup key={category.category} name={category.category}>
                         {category.tags.map(tag => <Filter key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
                     </FilterGroup>
                 :
