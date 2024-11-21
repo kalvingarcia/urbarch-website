@@ -24,19 +24,19 @@ export function CardSkeleton({type = "normal"}) {
 export default function Card({type = "normal", from, id, extension, name, subname, category, price}) {
     const [rippleExpand, rippleFade] = useRippleEffect();
     const [loading, setLoading] = useState(true);
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         (async () => {
             setLoading(true);
             const timeout = setTimeout(async () => {
-                setImage(await import("../images/unavailable.jpg"));
+                setImage((await import("../images/unavailable.jpg")).default);
                 setLoading(false);
             }, 5000);
             if(from === 'salvage')
-                setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
+                setImage((await import(`../images/${from}/${id}/${extension}/card.jpg`)).default);
             else
-                setImage(await import(`../images/${from}/${id}/${extension}/card.jpg`));
+                setImage((await import(`../images/${from}/${id}/${extension}/card.jpg`)).default);
             clearTimeout(timeout);
             setLoading(false);
             
