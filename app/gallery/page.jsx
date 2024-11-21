@@ -6,7 +6,7 @@ import {useCallback} from "react";
 import Construction from "../assets/components/construction";
 
 export default async function Gallery({searchParams}) {
-    // let offset = searchParams.offset? searchParams.offset : 0;
+    // let offset = (await searchParams).offset? searchParams.offset : 0;
     // const customs = await fetch(`${GET_CUSTOMS}?${offset}`).then(response => response.json());
     // const addNextCustoms = async () => {
     //     offset += 10;
