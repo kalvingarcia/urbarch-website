@@ -28,7 +28,7 @@ export default function QueryHandler({children}) {
             queryStringList.push(`search=${queryParameters.search}`)
         if(queryParameters.hasOwnProperty("filters") && Object.keys(queryParameters.filters).length !== 0)
             for(const [key, value] of Object.entries(queryParameters.filters))
-                queryStringList.push(`${key}=${Array.from(value.values().map(id => ntob(id))).join("%7C")}`);
+                queryStringList.push(`${key}=${Array.from(value).map(id => ntob(id)).join("%7C")}`);
 
         const queryString = queryStringList.join("&");
         router.push(`${pathname}?${queryString}`);
