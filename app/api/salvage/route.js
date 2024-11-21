@@ -58,7 +58,7 @@ export async function GET(request) {
         ORDER BY id;
     `
 
-    return new Response(bufferigy.encode(0, result), {
+    return new Response(JSON.stringify(result), {
         "status": 200
     });
 }
