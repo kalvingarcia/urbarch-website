@@ -11,7 +11,7 @@ import {GET_FEATURED_PRODUCTS, GET_PRODUCTS, GET_PRODUCT_TAGS} from '../api';
 
 export default async function Catalog({searchParams}) {
     const queryStringList = []
-    for(const [parameter, value] of Object.entries(searchParams))
+    for(const [parameter, value] of Object.entries(await searchParams))
         queryStringList.push(`${parameter}=${value.replace(/\|/g, "%7C")}`);
     const queryString = queryStringList.join("&");
 

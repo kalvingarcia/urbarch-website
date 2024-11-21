@@ -9,7 +9,8 @@ import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
 import {GET_SALVAGE, GET_RELATED_SALVAGE} from '../../api';
 
-export async function generateMetadata({params: {product: [id, serial, ...rest]}}) {
+export async function generateMetadata({params}) {
+    const {product: [id, ..._]} = await params;
     const salvage = (await fetch(`${GET_SALVAGE}/${id}`).then(response => response.json()))[0];
 
     return {
@@ -18,7 +19,8 @@ export async function generateMetadata({params: {product: [id, serial, ...rest]}
     };
 }
 
-export default async function Product({params: {product: [id, serial, ...rest]}}) {
+export default async function Product({params}) {
+    const {product: [id, serial, ...rest]} = await params;
     if(rest.length > 0)
         redirect(`/catalog/${id}/${extension}`);
     if(!serial)

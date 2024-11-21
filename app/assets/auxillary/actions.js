@@ -7,8 +7,8 @@ export async function navigate(url) {
 }
 
 export async function setDarkMode(darkMode) {
-    cookies().set("urbanDarkMode", darkMode);
+    (await cookies()).set("urbanDarkMode", darkMode);
 }
 export async function getDarkMode() {
-    return await cookies().get("urbanDarkMode");
+    return await (await cookies()).get("urbanDarkMode");
 }

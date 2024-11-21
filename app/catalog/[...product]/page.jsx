@@ -9,7 +9,8 @@ import Card from '@/app/assets/components/card';
 import '../../assets/styles/pages/product.scss';
 import {GET_PRODUCTS, GET_RELATED_PRODUCTS, GET_RELATED_CUSTOMS} from '../../api';
 
-export async function generateMetadata({params: {product: [id, extension, ...rest]}}) {
+export async function generateMetadata({params}) {
+    const {product: [id, extension, ..._]} = await params;
     const product = (await fetch(`${GET_PRODUCTS}/${id}`).then(response => {
         if(!response.ok) {
             extension = undefined;
@@ -31,7 +32,8 @@ export async function generateMetadata({params: {product: [id, extension, ...res
     };
 }
 
-export default async function Product({params: {product: [id, extension, ...rest]}}) {
+export default async function Product({params}) {
+    const {product: [id, extension, ...rest]} = await params;
     if(rest.length > 0)
         redirect(`/catalog/${id}/${extension}`);
     if(!extension)

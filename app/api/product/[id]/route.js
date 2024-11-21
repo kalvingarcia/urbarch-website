@@ -1,6 +1,7 @@
 import Database from "../../database";
 
-export async function GET(request, {params: {id}}) {
+export async function GET(request, {params}) {
+    const {id} = await params;
     const result = await Database`
         WITH variations AS (
             SELECT extension, subname, description, (
