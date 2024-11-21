@@ -6,8 +6,7 @@ const nextConfig = {
         includePaths: [path.join(__dirname, 'app/assets/styles')]
     },
     images: {
-        unoptimized: true,
-        writeToCacheDir: false
+        unoptimized: true
     }
 };
 
