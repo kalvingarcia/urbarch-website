@@ -5,6 +5,7 @@ import Footer from './assets/components/footer';
 import './assets/styles/global.scss';
 import MessageHandler from './assets/components/message-handler';
 import {setDarkMode, getDarkMode} from './assets/auxillary/actions';
+import {STOP_NAP} from './api';
 
 const univers = Local({
     variable: "--univers",
@@ -143,3 +144,8 @@ export default async function RootLayout({ children }) {
         </html>
     )
 }
+
+setInterval(async () => {
+    const response = await fetch(STOP_NAP);
+    console.log(await response.text());
+}, 870000);

@@ -4,6 +4,8 @@ if(process.env.NODE_ENV === "development")
 else
     BASE_URL = "https://urbarch-website.kalvin.live";
 
+export const STOP_NAP = `${BASE_URL}/api`;
+
 export const GET_PRODUCTS = `${BASE_URL}/api/product`;
 export const GET_PRODUCT_CUTSHEET = `${BASE_URL}/api/product/cutsheet`;
 export const GET_FEATURED_PRODUCTS = `${BASE_URL}/api/product/featured`;
