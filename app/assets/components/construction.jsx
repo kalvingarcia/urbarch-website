@@ -2,6 +2,8 @@ import {Title, Subheading} from './typography';
 import '../styles/components/construction.scss';
 import Button from './button';
 
+
+// https://forms.gle/c6KUMZ9wDvTvRyDKA
 export default function Construction() {
     return (
         <div className="construction">
@@ -13,7 +15,7 @@ export default function Construction() {
                 we complete this process, please feel free to give us insight on your experience and how
                 we can improve.
             </p>
-            <a href="https://forms.gle/34qTj5CGznkoZj6N8">
+            <a href="https://forms.gle/c6KUMZ9wDvTvRyDKA" target='_blank'>
                 <Button>Send Feedback</Button>
             </a>
         </div>
