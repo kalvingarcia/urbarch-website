@@ -27,18 +27,11 @@ export default function MessageHandler({children}) {
         setError(true);
     }, []);
 
-    const [report, setReport] = useState(false);
-    const sendErrorReport = useCallback(() => {
-        // setReport(true);
-    }, [report]);
-
     return (
         <MessageContext.Provider value={{triggerInfoMessage, triggerErrorMessage}}>
             {children}
-            <Snackbar role="error" open={error} setOpen={setError} message={message} action={{icon: "bug_report", callback: sendErrorReport}}/>
+            <Snackbar role="error" open={error} setOpen={setError} message={message} action={{icon: "bug_report", callback: () => location.href = "https://forms.gle/6oKdNJisFe6cXYX58"}}/>
             <Snackbar role="primary" open={info} setOpen={setInfo} message={message} action={{icon: "close", callback: close}}/>
-            <Modal open={report} setOpen={setReport}>
-            </Modal>
         </MessageContext.Provider>
     );
 }

@@ -21,7 +21,7 @@ export default function NotFound({error, reset}) {
                 <span className="heading">404 Error</span>
                 <span className="message">The page you were looking for could not be found. If you think this message was given to you in error, please report it to us!</span>
                 <div className="buttons">
-                    <IconButton role="error" style="text" icon="bug_report" />
+                    <IconButton role="error" style="text" icon="bug_report" onPress={() => location.href = "https://forms.gle/6oKdNJisFe6cXYX58"}/>
                     <Button role="error" style="filled" onPress={() => window.history.back()}>Go Back</Button>
                 </div>
             </div>
