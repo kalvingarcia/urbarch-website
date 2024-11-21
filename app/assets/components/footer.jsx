@@ -41,7 +41,7 @@ export default function Footer() {
                     <Heading>Locations</Heading>
                     <div className='location'>
                         <Subheading>New York (Showroom)</Subheading>
-                        <span>156 Franklin Street, New York, NY 10013</span>
+                        <span>158 Franklin Street, New York, NY 10013</span>
                         <span>(212) 371-4646</span>
                         <Link href="mailto:ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
                     </div>
@@ -59,7 +59,7 @@ export default function Footer() {
                 </div>
                 <div className='locations'>
                     <div className='location'>
-                        <Subheading>Long Island City (Factory)</Subheading>
+                        <Subheading>Long Island City (Workshop)</Subheading>
                         <span>43-34 32nd Place, 2R, Long Island City, NY 11101</span>
                         <span>(212) 413-4646</span>
                         <Link href="mailto:gil@urbanarchaeology.com">gil@urbanarchaeology.com</Link>
@@ -85,14 +85,14 @@ export default function Footer() {
             <div className='credits'>
                 <span className='copyright'>Copyright © 2012-2024 Urban Archaeology Ltd. All rights reserved.</span>
                 <Link className='terms' href="/terms">Terms and conditions apply.</Link>
-                <span className='accredation'>Designed and built by <Link href="https://github.com/ochakaru">Kalvin Garcia</Link></span>
+                <span className='accredation'>Designed and built by <Link href="https://www.kalvingarcia.com">Kalvin Garcia</Link></span>
             </div>
             <Modal open={open} setOpen={setOpen}>
                 <div className='locations-popup'>
                     <Heading>Locations</Heading>
                     <div className='location'>
-                        <Subheading>New York</Subheading>
-                        <span>156 Franklin Street, New York, NY 10013</span>
+                        <Subheading>New York (Showroom)</Subheading>
+                        <span>158 Franklin Street, New York, NY 10013</span>
                         <span>(212) 371-4646</span>
                         <span>Fax: (212) 371-1601</span>
                         <Link href="mailto:ny@urbanarchaeology.com">ny@urbanarchaeology.com</Link>
@@ -109,7 +109,7 @@ export default function Footer() {
                         />
                     </div>
                     <div className='location'>
-                        <Subheading>Long Island City</Subheading>
+                        <Subheading>Long Island City (Workshop)</Subheading>
                         <span>43-34 32nd Place, 2R Long Island City, NY 11101</span>
                         <span>(212) 413-4646</span>
                         <span>Fax: (212) 334-4659</span>
