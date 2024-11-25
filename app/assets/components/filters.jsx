@@ -131,11 +131,11 @@ function FilterList({filters}) {
                 category.tags?
                     category.category === "Class"?
                     <ChipGroup key={category.category}>
-                        {category.tags.map(tag => <Chip key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
+                        {category.tags.map(tag => <Chip key={tag.id} id={tag.id} name={tag.name} category={category.category} />)}
                     </ChipGroup>
                     :
                     <FilterGroup key={category.category} name={category.category}>
-                        {category.tags.map(tag => <Filter key={tag.id} id={tag.id} name={tag.name} category={tag.category} />)}
+                        {category.tags.map(tag => <Filter key={tag.id} id={tag.id} name={tag.name} category={category.category} />)}
                     </FilterGroup>
                 :
                 ""
