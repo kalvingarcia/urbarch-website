@@ -56,7 +56,7 @@ export default function ProductData({product, extension, drawing}) {
                 </div>
                 <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
                 <div className='price'>
-                    <span className='current'>{price === Infinity? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
+                    <span className='current'>{price.toString() === "Infinity"? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
                     {price !== minPrice?
                         <span className='base'>(Starting at ${minPrice.toLocaleString('en', {useGrouping: true})})</span>
                         :
