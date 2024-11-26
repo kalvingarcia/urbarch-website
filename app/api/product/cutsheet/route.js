@@ -95,18 +95,27 @@ export async function GET(request) {
         const columnWidth = 1050;
 
         let image = (await import(`../../../assets/images/products/${id}/${extension}/card.jpg`)).default;
-        const thumbnail = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
-        // image = (await import(`../../../assets/images/products/${id}/${extension}/drawing.jpg`)).default;
-        // const drawing  = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
-        const thumbnailDimensions = thumbnail.scale(1);
-        page.drawImage(thumbnail, {
-            x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
-            width: columnWidth, height: (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height
-        });
+        if(image) {
+            const thumbnail = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
+            const thumbnailDimensions = thumbnail.scale(1);
+            page.drawImage(thumbnail, {
+                x: 150, y: 2800 - (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height,
+                width: columnWidth, height: (columnWidth / thumbnailDimensions.width) * thumbnailDimensions.height
+            });
+        }
+        image = (await import(`../../../assets/images/products/${id}/${extension}/drawing.jpg`).catch(() => undefined))?.default;
+        if(image) {
+            const drawing  = await fetch(`${BASE_URL}${image.src}`).then(async response => pdf.embedJpg(await response.arrayBuffer()));
+            const drawingDimensions = drawing.scale(1);
+            page.drawImage(drawing, {
+                x: 150, y: 2800 - (columnWidth / drawingDimensions.width) * drawingDimensions.height - 1200,
+                width: columnWidth, height: (columnWidth / drawingDimensions.width) * drawingDimensions.height
+            });
+        }
 
         page.drawText(productData.name, {font: title, size: 60, x: 1350, y: 2740, color: titleColor});
         let longTitle = false;
-        if(productData.subname !== "DEFAULT") {
+        if(productData.subname !== "NONE") {
             longTitle = title.widthOfTextAtSize(productData.name, 60) + title.widthOfTextAtSize(productData.subname, 60) + 20 > 1350;
             page.drawText(productData.subname, {
                 font: title, size: 60,
@@ -115,7 +124,7 @@ export async function GET(request) {
             });
         }
         page.drawText(
-            `${productData.id}${productData.extension !== "DEFAULT"? `-${productData.extension}` : ""}`,
+            `${productData.id}${productData.extension !== "NONE"? `-${productData.extension}` : ""}`,
             {size: 40, x: 1350, y: longTitle? 2600 : 2680, opacity: 0.75}
         );
         page.drawText(
@@ -207,16 +216,16 @@ export async function GET(request) {
                 check = body.widthOfTextAtSize(`$${replacement.price}`, bodySize);
                 column0MaxWidth = check > column0MaxWidth? check : column0MaxWidth;
 
-                check = body.widthOfTextAtSize(`${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}`, bodySize);
+                check = body.widthOfTextAtSize(`${replacement.name}${replacement.subname !== "NONE"? ` [${replacement.subname}]` : ""}`, bodySize);
                 column1MaxWidth = check > column1MaxWidth? check : column1MaxWidth;
             })
             for(const replacement of productData.replacements) {
                 yPos -= bodySize;
                 page.drawText(`$${replacement.price}`, {size: bodySize, x: xPos, y: yPos});
-                page.drawText(`${replacement.name}${replacement.subname !== "DEFAULT"? ` [${replacement.subname}]` : ""}`, {
+                page.drawText(`${replacement.name}${replacement.subname !== "NONE"? ` [${replacement.subname}]` : ""}`, {
                     size: bodySize, x: xPos + column0MaxWidth + tabSize, y: yPos
                 });
-                page.drawText(`${replacement.id}${replacement.extension !== "DEFAULT"? `-${replacement.extension}` : ""}`, {
+                page.drawText(`${replacement.id}${replacement.extension !== "NONE"? `-${replacement.extension}` : ""}`, {
                     size: bodySize, x: xPos + column0MaxWidth + column1MaxWidth + tabSize * 2, y: yPos
                 });
                 yPos -= bodyGap;
