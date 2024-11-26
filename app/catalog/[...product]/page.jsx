@@ -23,11 +23,11 @@ export async function generateMetadata({params}) {
     }));
 
     if(!extension)
-        extension = "DEFAULT";
+        extension = "NONE";
     const variation = product.variations?.find(variation => variation.extension === extension);
 
     return {
-        title: `Urban Archaeology | ${product.name}${extension !== "DEFAULT"? ` [${variation.subname}]` : ""} Product Page`,
+        title: `Urban Archaeology | ${product.name}${variation.subname !== ""? ` [${variation.subname}]` : ""} Product Page`,
         description: product.description
     };
 }
@@ -37,7 +37,7 @@ export default async function Product({params}) {
     if(rest.length > 0)
         redirect(`/catalog/${id}/${extension}`);
     if(!extension)
-        extension = "DEFAULT";
+        extension = "NONE";
 
     let count = 0;
     const images = [];

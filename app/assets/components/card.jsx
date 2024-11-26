@@ -57,11 +57,11 @@ export default function Card({type = "normal", from, id, extension, name, subnam
             </div>
             <div className='content'>
                 <div className='metadata'>
-                    <span className='name'>{name}{subname && subname !== 'DEFAULT'? ` [${subname}]` : ''}</span>
+                    <span className='name'>{name}{subname && subname !== ""? ` [${subname}]` : ''}</span>
                     <span className='category'>{category}</span>
                     <span className='price'>{price?.toString() === "Infinity"? "Call for pricing" : `${from === 'products'? "From " : ""}$${parseInt(price).toLocaleString('en', {useGrouping: true})}`}</span>
                 </div>
-                <span className='uaid'>{id}{extension && extension !== 'DEFAULT'? `-${extension}` : ''}</span>
+                <span className='uaid'>{id}{extension && extension !== 'NONE'? `-${extension}` : ''}</span>
             </div>
         </div>
     );

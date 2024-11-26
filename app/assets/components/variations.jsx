@@ -13,8 +13,8 @@ export function Variation({from, active, id, extension, name, subname, price}) {
             onMouseDown={rippleExpand} onMouseUp={rippleFade} 
             onClick={() => setTimeout(() => router.push(`/${from === 'products'? 'catalog' : 'salvage'}/${id}/${extension}`), 100)}
         >
-            <span className='name'>{name}{subname !== "DEFAULT"? ` [${subname}]` : ""}</span>
-            <span className='id'>{id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
+            <span className='name'>{name}{subname !== ""? ` [${subname}]` : ""}</span>
+            <span className='id'>{id}{extension !== "NONE"? "-" + extension : ""}</span>
             <span className='price'>{price.toString() === "Infinity"? "Call for pricing" : `From $${price.toLocaleString('en', {useGrouping: true})}`}</span>
         </div>
     );

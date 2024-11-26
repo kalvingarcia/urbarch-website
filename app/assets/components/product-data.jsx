@@ -52,9 +52,9 @@ export default function ProductData({product, extension, drawing}) {
             <div className='general'>
                 <div className='title'>
                     <Title>{product.name}</Title>
-                    {extension !== "DEFAULT"? <Subtitle>{variation.subname}</Subtitle> : ""}
+                    {variation.subname !== ""? <Subtitle>{variation.subname}</Subtitle> : ""}
                 </div>
-                <span className='id'>{product.id}{extension !== "DEFAULT"? "-" + extension : ""}</span>
+                <span className='id'>{product.id}{extension !== "NONE"? "-" + extension : ""}</span>
                 <div className='price'>
                     <span className='current'>{price.toString() === "Infinity"? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
                     {price !== minPrice?
@@ -110,22 +110,6 @@ export default function ProductData({product, extension, drawing}) {
                                 <span>{variation.overview.bulb.shape.name} Bulb ({variation.overview.bulb.shape.code}) {variation.overview.bulb.socket.name} Base ({variation.overview.bulb.socket.code})</span> 
                                 <span>{variation.overview.bulb.specifications} recommended</span>
                                 <span>({variation.overview.bulb.quantity} count)</span>
-                            </div>
-                            :
-                            ""
-                        }
-                        {variation.replacements?.length > 0?
-                            <div className='replacements'>
-                                <Subheading>Replacements</Subheading>
-                                <div className='list'>
-                                    {variation.replacements.map(replacement =>(
-                                        <div key={`${replacement.id}-${replacement.extension}`} className="replacement">
-                                            <span>{replacement.name}{replacement.subname === "DEFAULT"? "" : ` [${replacement.subname}]`}</span>
-                                            <span>{replacement.id}{replacement.extension === "DEFAULT"? "" : `-${replacement.extension}`}</span>
-                                            <span>${replacement.price.toLocaleString('en', {useGrouping: true})}</span>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                             :
                             ""

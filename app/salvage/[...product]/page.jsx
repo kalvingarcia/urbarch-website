@@ -62,7 +62,7 @@ export default async function Product({params}) {
                                     id={salvage.id}
                                     extension={item.serial}
                                     name={salvage.name}
-                                    subname={item.serial}
+                                    subname={item.subname}
                                     price={item.price}
                                 />
                             ))}

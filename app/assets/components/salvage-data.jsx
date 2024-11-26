@@ -16,9 +16,9 @@ export default function ProductData({salvage, serial}) {
             <div className='general'>
                 <div className='title'>
                     <Title>{salvage.name}</Title>
-                    {salvage.items.length > 1? <Subtitle>{item.serial}</Subtitle> : ""}
+                    {item.subname !== ""? <Subtitle>{item.subname}</Subtitle> : ""}
                 </div>
-                <span className='id'>{salvage.id}{salvage.items.length > 1? `-${serial}` : ""}</span>
+                <span className='id'>{salvage.id}{item.serial !== "NONE"? "-" + item.serial : ""}</span>
                 <span className='price'>{item.price === Infinity? 'Call for pricing' : `$${item.price.toLocaleString('en', {useGrouping: true})}.00`}</span>
                 <p className='description'>{salvage.description}</p>
                 <Button role="primary" style="filled" onPress={() => setOpen(true)}>Salvage Details</Button>
