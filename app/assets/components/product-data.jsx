@@ -85,24 +85,20 @@ export default function ProductData({product, extension, drawing}) {
                     </div>
                     <div className='miscellaneous'>
                         <Heading>Overview</Heading>
-                        {variation.overview.specifications?
+                        {variation.overview.specifications &&
                             <div className='specifications'>
                                 <Subheading>Specifications</Subheading>
-                                <span>Height: {variation.overview.specifications.width.measurement} {variation.overview.specifications.width.unit}</span>
-                                <span>Width: {variation.overview.specifications.projection.measurement} {variation.overview.specifications.projection.unit}</span>
-                                <span>Depth: {variation.overview.specifications.height.measurement} {variation.overview.specifications.height.unit}</span>
-                                <span>Weight: {variation.overview.specifications.weight.measurement} {variation.overview.specifications.weight.unit}</span>
+                                {variation.overview.specifications.width && <span>Width: {variation.overview.specifications.width.measurement} {variation.overview.specifications.width.unit}</span>}
+                                {variation.overview.specifications.projection && <span>Projection: {variation.overview.specifications.projection.measurement} {variation.overview.specifications.projection.unit}</span>}
+                                {variation.overview.specifications.height && <span>Height: {variation.overview.specifications.height.measurement} {variation.overview.specifications.height.unit}</span>}
+                                {variation.overview.specifications.weight && <span>Weight: {variation.overview.specifications.weight.measurement} {variation.overview.specifications.weight.unit}</span>}
                             </div>
-                            :
-                            ""
                         }
-                        {variation.overview.ul?
+                        {variation.overview.ul &&
                             <div className='ul-info'>
                                 <Subheading>UL Listing</Subheading>
                                 <span>This product is listed for use in {variation.overview.ul?.[0].toUpperCase()} environments.</span>
                             </div>
-                            :
-                            ""
                         }
                         {variation.overview.bulbs?.length > 0?
                             <div className='bulb-info'>
@@ -117,7 +113,7 @@ export default function ProductData({product, extension, drawing}) {
                         {variation.overview.notes?? "" !== ""?
                             <div className='notes'>
                                 <Subheading>Notes</Subheading>
-                                <span>{variation.overview.notes}</span>
+                                <pre className='text'>{variation.overview.notes}</pre>
                             </div> 
                             :
                             ""

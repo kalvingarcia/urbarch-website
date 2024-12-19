@@ -85,6 +85,13 @@
                 flex-direction: column;
             }
 
+            & .notes {
+                & .text {
+                    text-wrap: wrap;
+                    font-family: inherit;
+                }
+            }
+
             & .replacements {
                 & .list {
                     display: flex;
