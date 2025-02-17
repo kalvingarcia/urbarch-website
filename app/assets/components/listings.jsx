@@ -1,3 +1,4 @@
+"use client"
 import {Children} from "react";
 import {tss} from "tss-react";
 import {useTheme} from "./theme";
