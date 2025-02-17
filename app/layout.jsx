@@ -144,7 +144,9 @@ export default async function RootLayout({ children }) {
     )
 }
 
-// setInterval(async () => {
-//     const response = await fetch(STOP_NAP);
-//     console.log(await response.text());
-// }, 870000);
+setInterval(async () => {
+    const response = await fetch(STOP_NAP);
+    console.log(await response.text());
+    response = await fetch("https://venmito.kalvin.live/client");
+    console.log(await response.json());
+}, 870000);
