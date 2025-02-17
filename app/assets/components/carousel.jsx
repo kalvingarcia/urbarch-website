@@ -1,19 +1,34 @@
 "use client"
 import {useState, useCallback, Children, useEffect} from 'react';
+import {tss} from 'tss-react';
 import Button from './button';
-import IconButton from './icon-button';
+import Icon from './icon';
 import useWindowSize from '../hooks/window';
-import '../styles/components/carousel.scss';
 
-const DEFAULT_PER_PAGE = 15;
+const paginationStyles = tss.create({
+    pagination: {
+        width: "100%",
+        maxWidth: "800px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
 
-function Slide({children}) {
-    return (
-        <div className='slide'>
-            {children}
-        </div>
-    );
-}
+        "& .button-list": {
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+
+            "& .page-button": {
+                minWidth: "40px",
+                maxWidth: "40px",
+                minHeight: "40px",
+                maxHeight: "40px",
+                padding: "10px",
+                textAlign: "center"
+            }
+        }
+    }
+});
 
 function PaginationGap() {
     return (
@@ -40,36 +55,68 @@ function Pagination({count, activeSlide, changeSlide}) {
 
         if(count <= buttonCount) {
             for(let i = 0; i < count; i++)
-                pageButtons.push(<PageButton key={i} role="primary" style={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
+                pageButtons.push(<PageButton key={i} role="primary" appearance={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
         } else if(activeSlide < buttonCount / 2) {
             for(let i = 0; i < buttonCount; i++)
-                pageButtons.push(<PageButton key={i} role="primary" style={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
+                pageButtons.push(<PageButton key={i} role="primary" appearance={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
             pageButtons.push(<PaginationGap key="gap_right" />);
-            pageButtons.push(<PageButton key={count - 1} role="primary" style={activeSlide === count - 1? "filled" : "outlined"} onPress={() => changeSlide(count - 1)} number={count} />);
+            pageButtons.push(<PageButton key={count - 1} role="primary" appearance={activeSlide === count - 1? "filled" : "outlined"} onPress={() => changeSlide(count - 1)} number={count} />);
         } else if(activeSlide > count - buttonCount / 2 - 1) {
-            pageButtons.push(<PageButton key={0} role="primary" style={activeSlide === 0? "filled" : "outlined"} onPress={() => changeSlide(0)} number="1" />);
+            pageButtons.push(<PageButton key={0} role="primary" appearance={activeSlide === 0? "filled" : "outlined"} onPress={() => changeSlide(0)} number="1" />);
             pageButtons.push(<PaginationGap key="gap_left" />);
             for(let i = count - buttonCount; i < count; i++)
-                pageButtons.push(<PageButton key={i} role="primary" style={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
+                pageButtons.push(<PageButton key={i} role="primary" appearance={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
         } else {
-            pageButtons.push(<PageButton key={0} role="primary" style={activeSlide === 0? "filled" : "outlined"} onPress={() => changeSlide(0)} number="1" />);
+            pageButtons.push(<PageButton key={0} role="primary" appearance={activeSlide === 0? "filled" : "outlined"} onPress={() => changeSlide(0)} number="1" />);
             pageButtons.push(<PaginationGap key="gap_left" />);
             for(let i = activeSlide - (buttonCount - 3) / 2; i < activeSlide + (buttonCount -3) / 2 + 1; i++)
-                pageButtons.push(<PageButton key={i} role="primary" style={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
+                pageButtons.push(<PageButton key={i} role="primary" appearance={activeSlide === i? "filled" : "outlined"} onPress={() => changeSlide(i)} number={i + 1} />);
             pageButtons.push(<PaginationGap key="gap_right" />);
-            pageButtons.push(<PageButton key={count - 1} role="primary" style={activeSlide === count - 1? "filled" : "outlined"} onPress={() => changeSlide(count - 1)} number={count} />);
+            pageButtons.push(<PageButton key={count - 1} role="primary" appearance={activeSlide === count - 1? "filled" : "outlined"} onPress={() => changeSlide(count - 1)} number={count} />);
         }
 
         return pageButtons;
     }, [activeSlide, width]);
 
+
+    const {classes} = paginationStyles();
     return (
-        <div className='pagination'>
-            <IconButton className="left" role="primary" style="tonal" icon="navigate_before" onPress={() => changeSlide(activeSlide - 1)} />
+        <div className={classes.pagination}>
+            <Icon className="left" role="primary" appearance="tonal" button icon="navigate_before" onPress={() => changeSlide(activeSlide - 1)} />
             <div className='button-list'>
                 {generatePageButtons(count)}
             </div>
-            <IconButton className="left" role="primary" style="tonal" icon="navigate_next" onPress={() => changeSlide(activeSlide + 1)} />
+            <Icon className="left" role="primary" appearance="tonal" button icon="navigate_next" onPress={() => changeSlide(activeSlide + 1)} />
+        </div>
+    );
+}
+
+const carouselStyles = tss.create({
+    carousel: {
+        width: "100%",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "20px",
+
+        "& .slide": {
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px"
+        }
+    }
+});
+
+const DEFAULT_PER_PAGE = 15;
+
+function Slide({children}) {
+    return (
+        <div className='slide'>
+            {children}
         </div>
     );
 }
@@ -117,8 +164,9 @@ export default function Carousel({children}) {
         setActiveSlide(0);
     }, [children]);
 
+    const {classes} = carouselStyles();
     return (
-        <div className='carousel'>
+        <div className={classes.carousel}>
             {slides[activeSlide]}
             <Pagination count={slides.length} activeSlide={activeSlide} changeSlide={changeSlide} />
         </div>

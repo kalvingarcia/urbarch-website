@@ -18,8 +18,8 @@ export default async function Home() {
                     <Button role="secondary" style="filled">See more now!</Button>
                 </Link>
             </Hero>
-            {/* <Featured featured={featured} changeWidth={1000} home /> */}
-            <Construction />
+            <Featured featured={featured} changeWidth={1000} home />
+            {/* <Construction /> */}
             <Banner src="custom.png">
                 <Display size="small">Making dreams come true!</Display>
                 <span>If you do not see what you are looking for on this website, we are able to customize new pieces to meet your specifications.</span>

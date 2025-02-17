@@ -1,48 +1,69 @@
 "use client"
-import {useCallback} from 'react';
-import '../styles/hooks/ripple.scss';
+import {useCallback} from "react";
+import {tss, keyframes} from 'tss-react';
+
+const rippleEffect = keyframes`
+    to {
+        transform: scale(4);
+    }
+`
+const fadeEffect = keyframes`
+    to {
+        opacity: 0;
+    }
+`
+console.log(tss);
+const useStyles = tss.create({
+    ripple: {
+        position: "fixed",
+        pointerEvents: "none",
+        borderRadius: "50%",
+        opacity: 0.3,
+        transform: "scale(0)",
+        animation: `${rippleEffect} 1800ms forwards`,
+        "&.fade": {
+            animation: `${rippleEffect} 1200ms forwards, ${fadeEffect} 600ms forwards`
+        }
+    }
+});
 
 export default function useRippleEffect() {
-    // Here we have the onMouseDown, which will be just the ripple animation
-    // The goal is to have the circle grow slowly as the user holds the button
-    const rippleExpand = useCallback(event => {
-        const target = event.currentTarget; // We find the button being used
+    const rippleClass = useStyles().classes.ripple;
 
-        // We create a circle
+    const rippleExpand = useCallback(event => {
+        const target = event.currentTarget;
+
         const circle = document.createElement("span");
         const diameter = Math.max(target.clientWidth, target.clientHeight);
-        const radius = diameter / 2
+        const radius = diameter / 2;
 
-        // We set the styles for the circle
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${event.clientX - radius}px`;
         circle.style.top = `${event.clientY - radius}px`;
-        circle.classList.add("ripple");
+        circle.classList.add(rippleClass);
 
-        // We check if there is already a ripple on the button
-        const ripple = target.getElementsByClassName("ripple")[0];
-        if(ripple)
-            ripple.remove(); // We remove any ripples already on the button
+        // const ripple = target.getElementsByClassName(rippleClass)[0];
+        // if(ripple) ripple.remove();
 
-        target.appendChild(circle); // We add our new ripple
-
-        event.stopPropagation(); // We stop the MouseDown event from propagating outwards
-    }, []); // Ideally this callback should only be recached if the style changes for some reason
-
-    // Here we complete the ripple effect by speeding up the scaling and fading the circle away
-    // when the user lifts the mouse button
-    const rippleFade = useCallback(event => {
-        const target = event.currentTarget; // Finding our button
-
-        const ripple = target.getElementsByClassName("ripple")[0]; // checking if there is a ripple in place
-        if(ripple) {
-            ripple.classList.add("fade"); // adding the fade style to the ripple
-            setTimeout(() => ripple?.remove(), 600);
-        }
-
-        event.stopPropagation(); // we stop the MouseUp event from propagating outwards
+        target.appendChild(circle);
+        event.stopPropagation();
     }, []);
 
-    return [rippleExpand, rippleFade];
-}
+    const rippleFade = useCallback(event => {
+        const target = event.currentTarget;
 
+        // const ripple = target.getElementsByClassName(rippleClass)[0];
+        // if(ripple) {
+        //     ripple.classList.add("fade");
+        //     setTimeout(() => ripple?.remove(), 600);
+        // }
+        [...target.getElementsByClassName(rippleClass)].map(ripple => {
+            ripple.classList.add("fade");
+            setTimeout(() => ripple?.remove(), 600);
+        });
+
+        event.stopPropagation();
+    }, []);
+
+    return [rippleClass, rippleExpand, rippleFade];
+}

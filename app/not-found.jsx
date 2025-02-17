@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import image from './assets/images/backgrounds/custom.png';
 import './assets/styles/pages/error.scss';
 import Button from "./assets/components/button";
-import IconButton from "./assets/components/icon-button";
+import IconButton from "./assets/components/icon";
 
 export default function NotFound({error, reset}) {
     useEffect(() => {

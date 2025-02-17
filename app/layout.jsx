@@ -2,7 +2,6 @@ import Local from 'next/font/local';
 import Theme from './assets/components/theme';
 import Header from './assets/components/header';
 import Footer from './assets/components/footer';
-import './assets/styles/global.scss';
 import MessageHandler from './assets/components/message-handler';
 import {setDarkMode, getDarkMode} from './assets/auxillary/actions';
 import {STOP_NAP} from './api';
@@ -145,7 +144,7 @@ export default async function RootLayout({ children }) {
     )
 }
 
-setInterval(async () => {
-    const response = await fetch(STOP_NAP);
-    console.log(await response.text());
-}, 870000);
+// setInterval(async () => {
+//     const response = await fetch(STOP_NAP);
+//     console.log(await response.text());
+// }, 870000);

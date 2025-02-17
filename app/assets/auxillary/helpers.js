@@ -35,3 +35,7 @@ export function ntob(number) {
 export function bton(string) {
     return Base64.toInt(string);
 }
+
+export function capitalize(string) {
+    return string[0].toUpperCase() + string.slice(1);
+}

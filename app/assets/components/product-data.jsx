@@ -6,7 +6,7 @@ import Button from './button';
 import DropdownMenu from './dropdown-menu';
 import '../styles/components/metadata.scss';
 import Modal from './modal';
-import IconButton from './icon-button';
+import Icon from './icon';
 import {GET_PRODUCT_CUTSHEET} from '../../api';
 import {MessageContext} from './message-handler';
 
@@ -15,8 +15,8 @@ export default function ProductData({product, extension, drawing}) {
 
     const variation = product.variations.find(variation => variation.extension === extension);
     
-    const minPrice = variation.finishes.reduce((min, {value}) => min < value? min : value, Infinity)
-    const [price, updatePrice] = useState(minPrice);
+    const minOption = variation.finishes.reduce((min, {display, value}) => min.value < value? min : {display, value}, Infinity);
+    const [price, updatePrice] = useState(minOption.value);
 
     const openPDF = useCallback(() => {
         triggerInfoMessage("Generating PDF!");
@@ -57,8 +57,8 @@ export default function ProductData({product, extension, drawing}) {
                 <span className='id'>{product.id}{extension !== "NONE"? "-" + extension : ""}</span>
                 <div className='price'>
                     <span className='current'>{price.toString() === "Infinity"? "Call for pricing" : `$${price.toLocaleString('en', {useGrouping: true})}.00`}</span>
-                    {price !== minPrice?
-                        <span className='base'>(Starting at ${minPrice.toLocaleString('en', {useGrouping: true})})</span>
+                    {price !== minOption.value?
+                        <span className='base'>(Starting at ${minOption.value.toLocaleString('en', {useGrouping: true})})</span>
                         :
                         ""
                     }
@@ -66,13 +66,13 @@ export default function ProductData({product, extension, drawing}) {
                 <p className='description'>{product.description}</p>
                 <div className='buttons'>
                     <Button role="primary" style="filled" onPress={() => setOpen(true)}>Product Details</Button>
-                    <IconButton style="text" icon="picture_as_pdf" onPress={() => openPDF()} />
+                    <Icon appearance="text" button icon="picture_as_pdf" onPress={() => openPDF()} />
                 </div>
             </div>
             {variation.finishes.length > 1?
                 <div className='options'>
                     <Heading>Finishes</Heading>
-                    <DropdownMenu choices={variation.finishes} updatePrice={updatePrice} />
+                    <DropdownMenu options={variation.finishes} defaultOption={minOption} onChange={updatePrice} />
                 </div>
                 :
                 ""

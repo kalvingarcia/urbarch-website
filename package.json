@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "@pdf-lib/fontkit": "^1.1.1",
     "@types/react": "^18.3.12",
     "eslint-config-next": "^15.0.3",
@@ -18,6 +19,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sass": "^1.81.0",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "tss-react": "^4.9.15"
   }
 }

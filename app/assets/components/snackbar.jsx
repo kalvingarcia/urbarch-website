@@ -1,6 +1,6 @@
 import {createPortal} from "react-dom";
 import {useEffect, useState} from "react";
-import IconButton from "./icon-button";
+import Icon from "./icon";
 import "../styles/components/snackbar.scss";
 
 const SNACKBAR_TIMEOUT = 5000;
@@ -24,7 +24,7 @@ export default function Snackbar({role = "primary", open, setOpen, message, acti
         createPortal(
             <div className={["snackbar", state, role].join(" ")}>
                 <span>{message}</span>
-                <IconButton role={role} style="text" onPress={() => action.callback()} icon={action.icon} />
+                <Icon role={role} appearance="text" button onPress={() => action.callback()} icon={action.icon} />
             </div>,
             document.getElementsByClassName("root")[0]
         )

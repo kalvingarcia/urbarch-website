@@ -1,20 +1,5 @@
 @use '../theme' as *;
 
-.preloader {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-
-    & .progress {
-        height: fit-content;
-        width: fit-content;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-}
-
 .results {
     width: 100%;
     display: flex;
