@@ -1,6 +1,6 @@
 import {createPortal} from "react-dom";
 import {useEffect, useState} from "react";
-import Icon from "./icon";
+import Icon from "./icon-comp";
 import "../styles/components/snackbar.scss";
 
 const SNACKBAR_TIMEOUT = 5000;

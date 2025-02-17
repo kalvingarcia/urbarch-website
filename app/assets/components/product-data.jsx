@@ -6,7 +6,7 @@ import Button from './button';
 import DropdownMenu from './dropdown-menu';
 import '../styles/components/metadata.scss';
 import Modal from './modal';
-import Icon from './icon';
+import Icon from './icon-comp';
 import {GET_PRODUCT_CUTSHEET} from '../../api';
 import {MessageContext} from './message-handler';
 

@@ -1,7 +1,7 @@
 "use client"
 import {useContext, useState} from 'react';
 import {QueryContext} from './query-handler';
-import Icon from "./icon";
+import Icon from "./icon-comp";
 import useRippleEffect from '../hooks/ripple';
 import '../styles/components/search.scss';
 

@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import  {useCallback, useEffect, useState} from 'react';
 import {tss} from 'tss-react';
-import Icon from './icon';
+import Icon from './icon-comp';
 import {useTheme} from './theme';
 
 const useStyles = tss.create(({theme, hide}) => ({

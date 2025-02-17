@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {useState, useEffect, useContext} from 'react';
 import {tss} from 'tss-react';
 import {DarkModeContext, useTheme} from './theme';
-import Icon from './icon';
+import Icon from './icon-comp';
 
 const useStyles = tss.create(({theme, transparent, open}) => ({
     header: {
